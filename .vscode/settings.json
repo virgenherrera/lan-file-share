@@ -1,0 +1,49 @@
+{
+  "codemetrics.basics.CodeLensHiddenUnder": 7,
+  "codemetrics.basics.ComplexityLevelExtreme": 20,
+  "codemetrics.basics.ComplexityLevelHigh": 15,
+  "codemetrics.basics.ComplexityLevelNormal": 10,
+  "codemetrics.basics.EnabledForHTML": false,
+  "codemetrics.basics.MetricsForClassDeclarationsToggled": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true,
+    "source.fixAll.eslint": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.multiCursorModifier": "alt",
+  "editor.renderWhitespace": "selection",
+  "editor.wordWrap": "on",
+  "emmet.triggerExpansionOnTab": true,
+  "errorLens.delay": 3000,
+  "errorLens.messageTemplate": "$severity: $message",
+  "files.eol": "\n",
+  "git.autofetch": true,
+  "npm.exclude": "node_modules",
+  "eslint.validate": ["typescript"],
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "search.exclude": {
+    "**/bin": true,
+    "**/obj": true
+  },
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true
+  },
+  "workbench.iconTheme": "material-icon-theme",
+  "cSpell.words": [
+    "dtos",
+    "linebreak",
+    "metatype",
+    "nestjs",
+    "paren",
+    "postgres",
+    "prebuild",
+    "signin",
+    "signup",
+    "typeorm"
+  ]
+}
