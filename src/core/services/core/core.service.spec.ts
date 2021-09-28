@@ -5,34 +5,34 @@ import {
   MockLoggerProvider,
 } from '../../../utils/testing';
 import { SystemHealth } from '../../models';
-import { HealthService } from './health.service';
+import { CoreService } from './core.service';
 
-describe('UT:HealthService', () => {
+describe('UT:CoreService', () => {
   const enum should {
     createInstance = 'should create instance Properly.',
     getHealth = 'should get SystemHealth.',
   }
-  let service: HealthService = null;
+  let service: CoreService = null;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        HealthService,
+        CoreService,
         MockLoggerProvider,
         MockAppConfigServiceProvider,
       ],
     }).compile();
 
-    service = module.get(HealthService);
+    service = module.get(CoreService);
   });
 
   it(should.createInstance, () => {
     expect(service).not.toBeNull();
-    expect(service).toBeInstanceOf(HealthService);
+    expect(service).toBeInstanceOf(CoreService);
   });
 
   it(should.getHealth, () => {
-    const maxLoad = 3;
+    const maxLoad = Math.floor(Math.random() * (50 - 3) + 3);
     let systemHealth: SystemHealth = null;
 
     mockAppConfigService.get = jest.fn().mockReturnValue(maxLoad);

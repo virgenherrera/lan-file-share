@@ -1,3 +1,4 @@
 export enum AppRoute {
-  health = 'health',
+  coreHealth = 'core/health',
+  coreLogs = 'core/logs',
 }

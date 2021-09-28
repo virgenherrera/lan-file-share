@@ -1,31 +1,31 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockLoggerProvider } from '../../utils/testing';
-import { HealthService } from '../services';
-import { HealthController } from './health.controller';
+import { CoreService } from '../services';
+import { CoreController } from './core.controller';
 
-describe('UT:HealthController', () => {
+describe('UT:CoreController', () => {
   const enum should {
     createInstance = 'should create instance Properly.',
   }
-  const mockHealthService: Record<keyof HealthService, any> = {
+  const mockHealthService: Record<keyof CoreService, any> = {
     getHealth: () => this,
   };
-  let controller: HealthController = null;
+  let controller: CoreController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [HealthController],
+      controllers: [CoreController],
       providers: [
-        { provide: HealthService, useValue: mockHealthService },
+        { provide: CoreService, useValue: mockHealthService },
         MockLoggerProvider,
       ],
     }).compile();
 
-    controller = module.get(HealthController);
+    controller = module.get(CoreController);
   });
 
   it(should.createInstance, () => {
     expect(controller).not.toBeNull();
-    expect(controller).toBeInstanceOf(HealthController);
+    expect(controller).toBeInstanceOf(CoreController);
   });
 });
