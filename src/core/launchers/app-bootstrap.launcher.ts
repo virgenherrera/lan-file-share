@@ -21,7 +21,7 @@ export async function appBootstrap() {
   app.use(compression());
 
   if (openApi.buildFlag) {
-    const { swaggerSetup } = await import('./swagger-setup');
+    const { swaggerSetup } = await import('./swagger-setup.launcher');
 
     await swaggerSetup(app);
   }
