@@ -10,28 +10,24 @@ export class AppConfigService {
   }
 
   private ensureEnvironment() {
-    const NODE_ENV = this.configService.get<Environment>(
-      'NODE_ENV',
-      Environment.development,
-    );
+    const NODE_ENV = this.configService.get<Environment>('NODE_ENV');
+    const valueKey = NODE_ENV || Environment.development;
 
-    this.environment = Environment[NODE_ENV];
+    this.environment = Environment[valueKey];
   }
 
   get port() {
-    const APP_PORT = this.configService.get<string>('APP_PORT', '0');
+    const APP_PORT = this.get<string>('APP_PORT', '0');
 
     return Number(APP_PORT);
   }
 
   get openApi() {
-    const APP_OPEN_API = this.configService.get<string>('APP_OPEN_API');
-    const APP_OPEN_API_ATTACH = this.configService.get<string>(
-      'APP_OPEN_API_ATTACH',
-    );
+    const APP_OPEN_API = this.get<string>('APP_OPEN_API');
+    const APP_OPEN_API_ATTACH = this.get<string>('APP_OPEN_API_ATTACH');
     const buildFlag = this.valueIsTrue(APP_OPEN_API);
     const attachFlag = this.valueIsTrue(APP_OPEN_API_ATTACH);
-    const path = this.configService.get<string>('APP_OPEN_API_PATH', 'docs/');
+    const path = this.get<string>('APP_OPEN_API_PATH', 'docs/');
 
     return { buildFlag, attachFlag, path };
   }
