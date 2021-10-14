@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   mockAppConfigService,
@@ -11,6 +12,8 @@ describe('UT:CoreService', () => {
   const enum should {
     createInstance = 'should create instance Properly.',
     getHealth = 'should get SystemHealth.',
+    validateAppCredentials = `Should validateAppCredentials() with good credentials.`,
+    validateBadAppCredentials = `Should validateAppCredentials() with bad credentials.`,
   }
   let service: CoreService = null;
 
@@ -32,14 +35,40 @@ describe('UT:CoreService', () => {
   });
 
   it(should.getHealth, () => {
-    const maxLoad = Math.floor(Math.random() * (50 - 3) + 3);
     let systemHealth: SystemHealth = null;
-
-    mockAppConfigService.get = jest.fn().mockReturnValue(maxLoad);
 
     expect(() => (systemHealth = service.getHealth())).not.toThrow();
     expect(systemHealth).not.toBeNull();
     expect(systemHealth).toBeInstanceOf(SystemHealth);
-    expect(systemHealth.maxLoad).toEqual(maxLoad);
+  });
+
+  it(should.validateAppCredentials, () => {
+    const mockEnv = {
+      APP_USER: 'fake-user',
+      APP_PASS: 'fake-password',
+    };
+
+    mockAppConfigService.get = jest
+      .fn()
+      .mockImplementation((key: keyof typeof mockEnv) => mockEnv[key]);
+
+    expect(() =>
+      service.validateAppCredentials('fake-user', 'fake-password'),
+    ).not.toThrow();
+  });
+
+  it(should.validateBadAppCredentials, () => {
+    const mockEnv = {
+      APP_USER: 'fake-user',
+      APP_PASS: 'fake-password',
+    };
+
+    mockAppConfigService.get = jest
+      .fn()
+      .mockImplementation((key: keyof typeof mockEnv) => mockEnv[key]);
+
+    expect(() =>
+      service.validateAppCredentials('fake-other-user', 'fake-other-password'),
+    ).toThrowError(UnauthorizedException);
   });
 });

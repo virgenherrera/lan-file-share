@@ -2,7 +2,7 @@ import { Provider } from '@nestjs/common';
 import { Environment } from '../../core/enums';
 import { AppConfigService } from '../../core/services';
 
-export const mockAppConfigService: Record<keyof AppConfigService, any> = {
+export const mockAppConfigService = {
   port: 0,
   environment: Environment.test,
   openApi: {
@@ -10,8 +10,8 @@ export const mockAppConfigService: Record<keyof AppConfigService, any> = {
     attachFlag: true,
     path: 'docs/',
   },
-  get: () => this,
-};
+  get: jest.fn(),
+} as unknown as AppConfigService;
 
 export const MockAppConfigServiceProvider: Provider = {
   provide: AppConfigService,

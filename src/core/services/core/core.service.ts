@@ -6,6 +6,7 @@ import {
   bindNodeCallback,
   filter,
   firstValueFrom,
+  from,
   map,
   Observable,
   of,
@@ -32,10 +33,7 @@ export class CoreService {
   getHealth() {
     this.logger.log(`getHealth|getting service Health`, CoreService.name);
 
-    const APP_MAX_LOAD = this.appConfigService.get('APP_MAX_LOAD');
-    const maxLoad = parseInt(APP_MAX_LOAD);
-
-    return new SystemHealth(maxLoad);
+    return new SystemHealth();
   }
 
   async getLogFile(logFiltersDto: LogFiltersDto) {
@@ -43,8 +41,8 @@ export class CoreService {
 
     this.validateAppCredentials(logFiltersDto.username, logFiltersDto.password);
 
-    const LogFile$ = this.observeLogFile(logFiltersDto);
-    const logEntries = await firstValueFrom(LogFile$);
+    const logFile$ = this.observeLogFile(logFiltersDto);
+    const logEntries = await firstValueFrom(logFile$);
     const matchedEntries = logEntries.length;
 
     return new LogResponse({ logEntries, matchedEntries });
@@ -83,8 +81,6 @@ export class CoreService {
     if (errorDetails.details.length) {
       throw new UnauthorizedException(errorDetails);
     }
-
-    return true;
   }
 
   private observeLogFile(logFiltersDto: LogFiltersDto): Observable<LogEntry[]> {
@@ -107,10 +103,11 @@ export class CoreService {
     return readDirObservable(this.logsPath, {
       encoding: 'utf8',
       withFileTypes: true,
-    })
-      .pipe(switchMap(dirEntities => of(...dirEntities)))
-      .pipe(pluck('name'))
-      .pipe(filter(filename => /\.log$/.test(filename)));
+    }).pipe(
+      switchMap(dirEntities => from(dirEntities)),
+      pluck('name'),
+      filter(filename => /\.log$/.test(filename)),
+    );
   }
 
   private observeLogFileFilters(logFile: string, logFiltersDto: LogFiltersDto) {
@@ -146,8 +143,8 @@ export class CoreService {
       terminal: false,
     });
 
-    readFileInterface.on('error', error => reader$.error(error));
     readFileInterface.on('close', () => reader$.complete());
+    readFileInterface.on('error', error => reader$.error(error));
     readFileInterface.on('line', line => reader$.next(line));
 
     return reader$;

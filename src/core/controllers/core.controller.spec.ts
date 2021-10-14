@@ -36,7 +36,7 @@ describe('UT:CoreController', () => {
   });
 
   it(should.getHealth, () => {
-    const mockHealth = new SystemHealth(3);
+    const mockHealth = new SystemHealth();
     let res: SystemHealth = null;
 
     mockHealthService.getHealth = jest.fn().mockReturnValue(mockHealth);
