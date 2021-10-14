@@ -24,7 +24,7 @@ export class CoreController {
   @Get(AppRoute.coreLogs)
   @GetLogsDocs()
   async getLogs(
-    @Query(DtoValidationPipe.build)
+    @Query(DtoValidationPipe.pipe)
     logFiltersDto: LogFiltersDto,
   ) {
     this.logger.log(`getLogs|GET ${AppRoute.coreLogs}`, CoreController.name);

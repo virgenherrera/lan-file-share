@@ -10,7 +10,7 @@ import { validate, ValidationError, ValidatorOptions } from 'class-validator';
 
 @Injectable()
 export class DtoValidationPipe implements PipeTransform {
-  static get build() {
+  static get pipe() {
     return new DtoValidationPipe();
   }
 
@@ -51,7 +51,7 @@ export class DtoValidationPipe implements PipeTransform {
     return instance;
   }
 
-  parseErrors(validationErrors: ValidationError[], parent?: string) {
+  private parseErrors(validationErrors: ValidationError[], parent?: string) {
     const initialValue: string[] = [];
 
     return validationErrors.reduce((accConstraints, validationError) => {
