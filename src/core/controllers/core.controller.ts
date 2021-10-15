@@ -12,13 +12,13 @@ export class CoreController {
 
   @Get(AppRoute.coreHealth)
   @GetHealthDocs()
-  getHealth() {
+  async getHealth() {
     this.logger.log(
       `getHealth|GET ${AppRoute.coreHealth}`,
       CoreController.name,
     );
 
-    return this.coreService.getHealth();
+    return await this.coreService.getHealth();
   }
 
   @Get(AppRoute.coreLogs)

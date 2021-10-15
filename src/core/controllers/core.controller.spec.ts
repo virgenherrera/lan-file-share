@@ -8,8 +8,8 @@ import { CoreController } from './core.controller';
 describe('UT:CoreController', () => {
   const enum should {
     createInstance = 'should create instance Properly.',
-    getHealth = `Should getHealth().`,
-    getLogs = `Should getLogs().`,
+    getHealth = `Should getHealth.`,
+    getLogs = `Should getLogs.`,
   }
 
   const mockHealthService = {
@@ -35,14 +35,17 @@ describe('UT:CoreController', () => {
     expect(controller).toBeInstanceOf(CoreController);
   });
 
-  it(should.getHealth, () => {
-    const mockHealth = new SystemHealth();
-    let res: SystemHealth = null;
+  it(should.getHealth, async () => {
+    const mockHealth = new SystemHealth({
+      cpuUsage: 'fake-cpuUsage',
+      memoryUsage: 'fake-memoryUsage',
+      uptime: 'fake-uptime',
+      uptimeSince: 'fake-uptimeSince',
+    });
 
-    mockHealthService.getHealth = jest.fn().mockReturnValue(mockHealth);
+    mockHealthService.getHealth = jest.fn().mockResolvedValue(mockHealth);
 
-    expect(() => (res = controller.getHealth())).not.toThrow();
-    expect(res).toBe(mockHealth);
+    await expect(controller.getHealth()).resolves.toBe(mockHealth);
   });
 
   it(should.getLogs, async () => {

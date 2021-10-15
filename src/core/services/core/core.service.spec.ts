@@ -34,12 +34,8 @@ describe('UT:CoreService', () => {
     expect(service).toBeInstanceOf(CoreService);
   });
 
-  it(should.getHealth, () => {
-    let systemHealth: SystemHealth = null;
-
-    expect(() => (systemHealth = service.getHealth())).not.toThrow();
-    expect(systemHealth).not.toBeNull();
-    expect(systemHealth).toBeInstanceOf(SystemHealth);
+  it(should.getHealth, async () => {
+    await expect(service.getHealth()).resolves.toBeInstanceOf(SystemHealth);
   });
 
   it(should.validateAppCredentials, () => {
