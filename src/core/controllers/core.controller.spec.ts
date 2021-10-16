@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockLoggerProvider } from '../../utils/testing';
 import { LogFiltersDto } from '../dtos';
 import { LogResponse, SystemHealth } from '../models';
-import { CoreService } from '../services';
+import { HealthService, LogFileService } from '../services';
 import { CoreController } from './core.controller';
 
 describe('UT:CoreController', () => {
@@ -14,15 +14,18 @@ describe('UT:CoreController', () => {
 
   const mockHealthService = {
     getHealth: jest.fn().mockReturnThis(),
+  } as unknown as HealthService;
+  const mockLogFileService = {
     getLogFile: jest.fn().mockReturnThis(),
-  } as unknown as CoreService;
+  } as unknown as LogFileService;
   let controller: CoreController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CoreController],
       providers: [
-        { provide: CoreService, useValue: mockHealthService },
+        { provide: HealthService, useValue: mockHealthService },
+        { provide: LogFileService, useValue: mockLogFileService },
         MockLoggerProvider,
       ],
     }).compile();
@@ -62,7 +65,9 @@ describe('UT:CoreController', () => {
       matchedEntries: 0,
     });
 
-    mockHealthService.getLogFile = jest.fn().mockResolvedValue(mockLogResponse);
+    mockLogFileService.getLogFile = jest
+      .fn()
+      .mockResolvedValue(mockLogResponse);
 
     await expect(controller.getLogs(filters)).resolves.toBe(mockLogResponse);
   });

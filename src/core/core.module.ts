@@ -1,13 +1,12 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CoreController } from './controllers/core.controller';
-import { AppConfigService } from './services';
-import { CoreService } from './services/core/core.service';
+import { AppConfigService, HealthService, LogFileService } from './services';
 
 @Module({
-  imports: [ConfigModule],
-  providers: [Logger, AppConfigService, CoreService],
-  exports: [AppConfigService],
   controllers: [CoreController],
+  exports: [AppConfigService],
+  imports: [ConfigModule],
+  providers: [Logger, AppConfigService, HealthService, LogFileService],
 })
 export class CoreModule {}

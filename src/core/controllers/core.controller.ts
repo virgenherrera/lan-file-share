@@ -4,11 +4,15 @@ import { GetLogsDocs } from '../api-docs/get-logs.docs';
 import { LogFiltersDto } from '../dtos';
 import { AppRoute } from '../enums';
 import { DtoValidationPipe } from '../pipes';
-import { CoreService } from '../services';
+import { HealthService, LogFileService } from '../services';
 
 @Controller()
 export class CoreController {
-  constructor(private coreService: CoreService, private logger: Logger) {}
+  constructor(
+    private healthService: HealthService,
+    private logFileService: LogFileService,
+    private logger: Logger,
+  ) {}
 
   @Get(AppRoute.coreHealth)
   @GetHealthDocs()
@@ -18,7 +22,7 @@ export class CoreController {
       CoreController.name,
     );
 
-    return await this.coreService.getHealth();
+    return await this.healthService.getHealth();
   }
 
   @Get(AppRoute.coreLogs)
@@ -29,6 +33,6 @@ export class CoreController {
   ) {
     this.logger.log(`getLogs|GET ${AppRoute.coreLogs}`, CoreController.name);
 
-    return await this.coreService.getLogFile(logFiltersDto);
+    return await this.logFileService.getLogFile(logFiltersDto);
   }
 }
