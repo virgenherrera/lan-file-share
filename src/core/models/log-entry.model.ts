@@ -15,12 +15,3 @@ export class LogEntry {
     Object.assign(this, logRecord);
   }
 }
-
-export class LogResponse {
-  @ApiProperty() logEntries: LogEntry[];
-  @ApiProperty() matchedEntries: number;
-
-  constructor(logResponse: Partial<LogResponse>) {
-    Object.assign(this, logResponse);
-  }
-}

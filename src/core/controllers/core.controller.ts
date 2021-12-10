@@ -1,7 +1,8 @@
-import { Controller, Get, Logger, Query } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { GetHealthDocs } from '../api-docs/get-health.docs';
-import { GetLogsDocs } from '../api-docs/get-logs.docs';
-import { LogFiltersDto } from '../dtos';
+import { PostLogsDocs } from '../api-docs/post-logs.docs';
+import { LogFileDto } from '../dtos';
 import { AppRoute } from '../enums';
 import { DtoValidationPipe } from '../pipes';
 import { HealthService, LogFileService } from '../services';
@@ -25,14 +26,23 @@ export class CoreController {
     return await this.healthService.getHealth();
   }
 
-  @Get(AppRoute.coreLogs)
-  @GetLogsDocs()
-  async getLogs(
-    @Query(DtoValidationPipe.pipe)
-    logFiltersDto: LogFiltersDto,
+  @Post(AppRoute.coreLogs)
+  @PostLogsDocs()
+  async postLogs(
+    @Body(DtoValidationPipe.pipe) logFileDto: LogFileDto,
+    @Res() res: Response,
   ) {
-    this.logger.log(`getLogs|GET ${AppRoute.coreLogs}`, CoreController.name);
+    this.logger.log(`getLogs|POST ${AppRoute.coreLogs}`, CoreController.name);
 
-    return await this.logFileService.getLogFile(logFiltersDto);
+    const fileStream = await this.logFileService.getStream(logFileDto);
+
+    res.status(200);
+    res.setHeader('Content-Type', 'text/plain');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=${logFileDto.logFile}.log`,
+    );
+
+    return fileStream.pipe(res);
   }
 }

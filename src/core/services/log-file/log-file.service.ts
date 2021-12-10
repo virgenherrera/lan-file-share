@@ -1,24 +1,12 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { createReadStream, readdir } from 'fs';
-import { join } from 'path';
-import { createInterface } from 'readline';
 import {
-  bindNodeCallback,
-  filter,
-  firstValueFrom,
-  from,
-  map,
-  Observable,
-  of,
-  pluck,
-  skip,
-  Subject,
-  switchMap,
-  take,
-  toArray,
-} from 'rxjs';
-import { LogFiltersDto } from '../../dtos';
-import { LogEntry, LogResponse } from '../../models';
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { createReadStream, readdirSync } from 'fs';
+import { join } from 'path';
+import { LogFileDto } from '../../dtos';
 import { AppConfigService } from '../app-config/app-config.service';
 
 @Injectable()
@@ -30,19 +18,21 @@ export class LogFileService {
     private logger: Logger,
   ) {}
 
-  async getLogFile(logFiltersDto: LogFiltersDto) {
-    this.logger.log(`getLogFile|getting log file`, LogFileService.name);
+  async getStream(logFileDto: LogFileDto) {
+    this.logger.log(`getStreamFile|getting log file`, LogFileService.name);
 
-    this.validateAppCredentials(logFiltersDto);
+    this.validateAppCredentials(logFileDto);
 
-    const logFile$ = this.observeLogFile(logFiltersDto);
-    const logEntries = await firstValueFrom(logFile$);
-    const matchedEntries = logEntries.length;
+    const logFile = this.findLogFile(logFileDto.logFile);
+    const logFilePath = join(this.logsPath, logFile);
+    const streamFileReader = createReadStream(logFilePath, {
+      encoding: 'utf-8',
+    });
 
-    return new LogResponse({ logEntries, matchedEntries });
+    return streamFileReader;
   }
 
-  private validateAppCredentials({ username, password }: LogFiltersDto) {
+  private validateAppCredentials({ username, password }: LogFileDto) {
     this.logger.log(
       `validateAppCredentials|getting log file`,
       LogFileService.name,
@@ -77,70 +67,25 @@ export class LogFileService {
     }
   }
 
-  private observeLogFile(logFiltersDto: LogFiltersDto): Observable<LogEntry[]> {
-    const regExp = new RegExp(`${logFiltersDto.logFile}.log$`);
+  private findLogFile(logFile: string) {
+    const regExp = new RegExp(`${logFile}.log$`);
+    const defaultValue: string = null;
 
-    return this.observeLogsDirectory()
-      .pipe(filter(filename => regExp.test(filename)))
-      .pipe(
-        switchMap(logFile =>
-          !logFile
-            ? of([])
-            : this.observeLogFileFilters(logFile, logFiltersDto),
-        ),
-      );
-  }
-
-  private observeLogsDirectory() {
-    const readDirObservable = bindNodeCallback(readdir);
-
-    return readDirObservable(this.logsPath, {
+    const res = readdirSync(this.logsPath, {
       encoding: 'utf8',
       withFileTypes: true,
-    }).pipe(
-      switchMap(dirEntities => from(dirEntities)),
-      pluck('name'),
-      filter(filename => /\.log$/.test(filename)),
-    );
-  }
+    }).reduce((acc, dirEnt) => {
+      if (regExp.test(dirEnt.name)) {
+        acc = dirEnt.name;
+      }
 
-  private observeLogFileFilters(logFile: string, logFiltersDto: LogFiltersDto) {
-    return this.getLogFileReader(logFile)
-      .pipe(
-        filter(
-          logLine =>
-            !logFiltersDto.context || logLine.includes(logFiltersDto?.context),
-        ),
-        filter(
-          logLine =>
-            !logFiltersDto.level || logLine.includes(logFiltersDto?.level),
-        ),
-        filter(
-          logLine =>
-            !logFiltersDto.message || logLine.includes(logFiltersDto?.message),
-        ),
-      )
-      .pipe(skip(logFiltersDto.skip))
-      .pipe(take(logFiltersDto.limit))
-      .pipe(map(LogEntry.mapFromLogLine))
-      .pipe(toArray());
-  }
+      return acc;
+    }, defaultValue);
 
-  private getLogFileReader(logFile: string) {
-    const reader$ = new Subject<string>();
-    const logFilePath = join(this.logsPath, logFile);
-    const streamFileReader = createReadStream(logFilePath, {
-      encoding: 'utf-8',
-    });
-    const readFileInterface = createInterface({
-      input: streamFileReader,
-      terminal: false,
-    });
+    if (!res) {
+      throw new NotFoundException(`logFile: '${logFile}' not found.`);
+    }
 
-    readFileInterface.on('close', () => reader$.complete());
-    readFileInterface.on('error', error => reader$.error(error));
-    readFileInterface.on('line', line => reader$.next(line));
-
-    return reader$;
+    return res;
   }
 }

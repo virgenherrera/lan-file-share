@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockLoggerProvider } from '../../utils/testing';
-import { LogFiltersDto } from '../dtos';
-import { LogResponse, SystemHealth } from '../models';
+import { SystemHealth } from '../models';
 import { HealthService, LogFileService } from '../services';
 import { CoreController } from './core.controller';
 
@@ -9,7 +8,6 @@ describe('UT:CoreController', () => {
   const enum should {
     createInstance = 'should create instance Properly.',
     getHealth = `Should getHealth.`,
-    getLogs = `Should getLogs.`,
   }
 
   const mockHealthService = {
@@ -49,26 +47,5 @@ describe('UT:CoreController', () => {
     mockHealthService.getHealth = jest.fn().mockResolvedValue(mockHealth);
 
     await expect(controller.getHealth()).resolves.toBe(mockHealth);
-  });
-
-  it(should.getLogs, async () => {
-    const filters: LogFiltersDto = {
-      username: 'fake-username',
-      password: 'fake-password',
-      logFile: 'fake-log-file',
-      skip: 0,
-      limit: 50,
-      context: 'fake-context',
-    };
-    const mockLogResponse = new LogResponse({
-      logEntries: [],
-      matchedEntries: 0,
-    });
-
-    mockLogFileService.getLogFile = jest
-      .fn()
-      .mockResolvedValue(mockLogResponse);
-
-    await expect(controller.getLogs(filters)).resolves.toBe(mockLogResponse);
   });
 });

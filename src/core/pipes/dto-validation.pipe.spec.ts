@@ -1,5 +1,5 @@
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { LogFiltersDto } from '../dtos';
+import { LogFileDto } from '../dtos';
 import { DtoValidationPipe } from './dto-validation.pipe';
 
 describe('DtoValidationPipe', () => {
@@ -27,12 +27,12 @@ describe('DtoValidationPipe', () => {
     };
     const mockMetadata: ArgumentMetadata = {
       type: 'body',
-      metatype: LogFiltersDto,
+      metatype: LogFileDto,
       data: '',
     };
 
     await expect(pipe.transform(value, mockMetadata)).resolves.toBeInstanceOf(
-      LogFiltersDto,
+      LogFileDto,
     );
   });
 
@@ -42,7 +42,7 @@ describe('DtoValidationPipe', () => {
     };
     const mockMetadata: ArgumentMetadata = {
       type: 'body',
-      metatype: LogFiltersDto,
+      metatype: LogFileDto,
       data: '',
     };
 
