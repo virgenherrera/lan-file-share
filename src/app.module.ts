@@ -1,6 +1,6 @@
+import { CoreModule } from '@core/core.module';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
@@ -10,7 +10,6 @@ import { CoreModule } from './core/core.module';
     }),
     CoreModule,
   ],
-  controllers: [],
   providers: [Logger],
 })
 export class AppModule {}

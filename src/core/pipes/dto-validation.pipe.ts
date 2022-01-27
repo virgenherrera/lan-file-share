@@ -10,7 +10,6 @@ import { validate, ValidationError, ValidatorOptions } from 'class-validator';
 
 @Injectable()
 export class DtoValidation implements PipeTransform {
-
   static defaultValidatorOptions: ValidatorOptions = {
     whitelist: true,
     forbidNonWhitelisted: true,
