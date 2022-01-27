@@ -9,10 +9,7 @@ import { ClassTransformOptions, plainToClass } from 'class-transformer';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
 
 @Injectable()
-export class DtoValidationPipe implements PipeTransform {
-  static get pipe() {
-    return new DtoValidationPipe();
-  }
+export class DtoValidation implements PipeTransform {
 
   static defaultValidatorOptions: ValidatorOptions = {
     whitelist: true,
@@ -24,11 +21,15 @@ export class DtoValidationPipe implements PipeTransform {
     excludeExtraneousValues: false,
   };
 
+  static get pipe() {
+    return new DtoValidation();
+  }
+
   private skipTypes: Type[] = [Array, Boolean, Number, Object, String];
 
   constructor(
-    private validatorOptions = DtoValidationPipe.defaultValidatorOptions,
-    private classTransformOptions = DtoValidationPipe.defaultClassTransformOptions,
+    private validatorOptions = DtoValidation.defaultValidatorOptions,
+    private classTransformOptions = DtoValidation.defaultClassTransformOptions,
   ) {}
 
   async transform(value: any, { metatype }: ArgumentMetadata) {

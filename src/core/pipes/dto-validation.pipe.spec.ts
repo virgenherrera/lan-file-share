@@ -1,6 +1,6 @@
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { LogFileDto } from '../dtos';
-import { DtoValidationPipe } from './dto-validation.pipe';
+import { IsDefined, IsString } from 'class-validator';
+import { DtoValidation } from './dto-validation.pipe';
 
 describe('DtoValidationPipe', () => {
   const enum should {
@@ -8,31 +8,39 @@ describe('DtoValidationPipe', () => {
     transformAndValidate = `Should transform and validate plain object and create instance of given DTO.`,
     throwBadRequest = `Should BadRequestException containing a list of validation errors.`,
   }
-  let pipe: DtoValidationPipe = null;
+  class MockDto {
+    @IsDefined()
+    @IsString()
+    username: string;
 
-  beforeEach(() => {
-    pipe = new DtoValidationPipe();
+    @IsDefined()
+    @IsString()
+    password: string;
+  }
+  let pipe: DtoValidation = null;
+
+  beforeAll(() => {
+    pipe = new DtoValidation();
   });
 
   it(should.createInstance, () => {
-    expect(pipe).toBeInstanceOf(DtoValidationPipe);
+    expect(pipe).not.toBeNull();
+    expect(pipe).toBeInstanceOf(DtoValidation);
   });
 
   it(should.transformAndValidate, async () => {
     const value = {
       username: 'fake-username',
       password: 'fake-password',
-      logFile: '2021-09-24',
-      level: 'error',
     };
     const mockMetadata: ArgumentMetadata = {
       type: 'body',
-      metatype: LogFileDto,
+      metatype: MockDto,
       data: '',
     };
 
     await expect(pipe.transform(value, mockMetadata)).resolves.toBeInstanceOf(
-      LogFileDto,
+      MockDto,
     );
   });
 
@@ -42,7 +50,7 @@ describe('DtoValidationPipe', () => {
     };
     const mockMetadata: ArgumentMetadata = {
       type: 'body',
-      metatype: LogFileDto,
+      metatype: MockDto,
       data: '',
     };
 

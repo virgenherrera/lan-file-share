@@ -8,17 +8,18 @@ describe('UT:CoreController', () => {
   const enum should {
     createInstance = 'should create instance Properly.',
     getHealth = `Should getHealth.`,
+    postHealth = 'Should postHealth.',
   }
 
   const mockHealthService = {
-    getHealth: jest.fn().mockReturnThis(),
+    getHealth: jest.fn(),
   } as unknown as HealthService;
   const mockLogFileService = {
-    getLogFile: jest.fn().mockReturnThis(),
+    getLogFile: jest.fn(),
   } as unknown as LogFileService;
   let controller: CoreController;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CoreController],
       providers: [

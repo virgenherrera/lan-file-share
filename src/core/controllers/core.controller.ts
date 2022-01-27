@@ -4,7 +4,7 @@ import { GetHealthDocs } from '../api-docs/get-health.docs';
 import { PostLogsDocs } from '../api-docs/post-logs.docs';
 import { LogFileDto } from '../dtos';
 import { AppRoute } from '../enums';
-import { DtoValidationPipe } from '../pipes';
+import { DtoValidation } from '../pipes';
 import { HealthService, LogFileService } from '../services';
 
 @Controller()
@@ -29,7 +29,7 @@ export class CoreController {
   @Post(AppRoute.coreLogs)
   @PostLogsDocs()
   async postLogs(
-    @Body(DtoValidationPipe.pipe) logFileDto: LogFileDto,
+    @Body(DtoValidation.pipe) logFileDto: LogFileDto,
     @Res() res: Response,
   ) {
     this.logger.log(`getLogs|POST ${AppRoute.coreLogs}`, CoreController.name);
