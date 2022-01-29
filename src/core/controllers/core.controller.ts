@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Logger, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { GetHealthDocs } from '../api-docs/get-health.docs';
-import { PostLogsDocs } from '../api-docs/post-logs.docs';
+import { GetHealthDocs } from '../docs/get-health.docs';
+import { PostLogsDocs } from '../docs/post-logs.docs';
 import { LogFileDto } from '../dtos';
 import { AppRoute } from '../enums';
 import { DtoValidation } from '../pipes';

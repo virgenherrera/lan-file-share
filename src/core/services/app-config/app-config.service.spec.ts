@@ -46,23 +46,13 @@ describe('UT:AppConfigService', () => {
 
   it(should.getOpenApi, () => {
     const mockEnv = {
-      APP_OPEN_API: 'true',
-      APP_OPEN_API_ATTACH: 'true',
       APP_OPEN_API_PATH: 'fake-path/',
     };
-    let openApiRes: any = null;
 
     MockConfigModule.get = jest
       .fn()
       .mockImplementation((key: keyof typeof mockEnv) => mockEnv[key]);
 
-    expect(() => (openApiRes = service.openApi)).not.toThrow();
-    expect(openApiRes).not.toBeNull();
-    expect(openApiRes).toHaveProperty('buildFlag');
-    expect(openApiRes).toHaveProperty('attachFlag');
-    expect(openApiRes).toHaveProperty('path');
-    expect(openApiRes.buildFlag).toBe(true);
-    expect(openApiRes.attachFlag).toBe(true);
-    expect(openApiRes.path).toBe(mockEnv.APP_OPEN_API_PATH);
+    expect(service.openApiPath).toBe(mockEnv.APP_OPEN_API_PATH);
   });
 });

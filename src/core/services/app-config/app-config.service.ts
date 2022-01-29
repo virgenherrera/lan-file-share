@@ -22,21 +22,11 @@ export class AppConfigService {
     return Number(APP_PORT);
   }
 
-  get openApi() {
-    const APP_OPEN_API = this.get<string>('APP_OPEN_API');
-    const APP_OPEN_API_ATTACH = this.get<string>('APP_OPEN_API_ATTACH');
-    const buildFlag = this.valueIsTrue(APP_OPEN_API);
-    const attachFlag = this.valueIsTrue(APP_OPEN_API_ATTACH);
-    const path = this.get<string>('APP_OPEN_API_PATH', 'docs/');
-
-    return { buildFlag, attachFlag, path };
+  get openApiPath() {
+    return this.get<string>('APP_OPEN_API_PATH', 'dist/openApi-docs/');
   }
 
   get<T = any>(propertyPath: string, defaultValue?: NoInferType<T>) {
     return this.configService.get<T>(propertyPath, defaultValue);
-  }
-
-  private valueIsTrue(value: string) {
-    return ['true', '1', 'yes'].includes(value);
   }
 }

@@ -25,7 +25,7 @@ export default {
   collectCoverageFrom: [
     '**/*.ts',
     '!**/(index|main).ts',
-    '!**/*.(constants|dto|enum|interface|launcher|model|mock|module).ts',
+    '!**/*.(builder|constants|dto|enum|interface|model|mock|module).ts',
     '!**/*.(model|schema).ts',
     '!**/*.int.spec.ts',
   ],

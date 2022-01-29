@@ -42,6 +42,7 @@
     "paren",
     "postgres",
     "prebuild",
+    "redoc",
     "signin",
     "signup",
     "typeorm"

@@ -12,14 +12,14 @@ export function getPackageMetadata() {
   const name: string = packageJson.name;
   const version: string = packageJson.version;
   const description: string = packageJson.description;
-  const author: string = packageJson.author;
   const license: string = packageJson.license;
+  const keywords: string[] = packageJson.keywords;
 
   return {
     name,
     version,
     description,
-    author,
     license,
+    keywords,
   };
 }

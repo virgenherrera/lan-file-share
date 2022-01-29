@@ -1,3 +1,3 @@
-import { appBootstrap } from '@core/launchers/app-bootstrap.launcher';
+import { AppBuilder } from '@core/builders/app-bootstrap.builder';
 
-appBootstrap();
+AppBuilder.bootstrap();
