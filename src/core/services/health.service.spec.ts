@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MockLoggerProvider } from '../../../utils/testing';
-import { SystemHealth } from '../../models';
+import { MockLoggerProvider } from '../../utils/testing';
+import { SystemHealth } from '../models';
 import { HealthService } from './health.service';
 
 describe('UT:HealthService', () => {

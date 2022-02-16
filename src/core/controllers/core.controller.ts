@@ -1,47 +1,40 @@
-import { Body, Controller, Get, Logger, Post, Res } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { GetHealthDocs } from '../docs/get-health.docs';
-import { PostLogsDocs } from '../docs/post-logs.docs';
-import { LogFileDto } from '../dtos';
-import { AppRoute } from '../enums';
-import { DtoValidation } from '../pipes';
+import { GetLogsDocs } from '../docs/get-logs.docs';
+import { CoreRoute } from '../enums';
+import { AppAuthGuard } from '../guards';
+import { SystemHealth } from '../models';
 import { HealthService, LogFileService } from '../services';
 
 @Controller()
 export class CoreController {
+  private logger = new Logger(this.constructor.name);
+
   constructor(
     private healthService: HealthService,
     private logFileService: LogFileService,
-    private logger: Logger,
   ) {}
 
-  @Get(AppRoute.coreHealth)
+  @Get(CoreRoute.health)
   @GetHealthDocs()
-  async getHealth() {
-    this.logger.log(
-      `getHealth|GET ${AppRoute.coreHealth}`,
-      CoreController.name,
-    );
+  async getHealth(): Promise<SystemHealth> {
+    this.logger.log(`Getting service Health.`);
 
     return await this.healthService.getHealth();
   }
 
-  @Post(AppRoute.coreLogs)
-  @PostLogsDocs()
-  async postLogs(
-    @Body(DtoValidation.pipe) logFileDto: LogFileDto,
-    @Res() res: Response,
-  ) {
-    this.logger.log(`getLogs|POST ${AppRoute.coreLogs}`, CoreController.name);
+  @Get(CoreRoute.logs)
+  @UseGuards(AppAuthGuard)
+  @UseGuards(AppAuthGuard)
+  @GetLogsDocs()
+  async getLogFile(@Param('logFile') logFile: string, @Res() res: Response) {
+    this.logger.log(`Fetching logFile: ${logFile}.`);
 
-    const fileStream = await this.logFileService.getStream(logFileDto);
+    const fileStream = await this.logFileService.getStream(logFile);
 
-    res.status(200);
     res.setHeader('Content-Type', 'text/plain');
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=${logFileDto.logFile}.log`,
-    );
+    res.setHeader('Content-Disposition', `attachment; filename=${logFile}.log`);
 
     return fileStream.pipe(res);
   }

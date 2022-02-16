@@ -1,3 +1,3 @@
-export * from './app-config/app-config.service';
-export * from './health/health.service';
-export * from './log-file/log-file.service';
+export * from './app-config.service';
+export * from './health.service';
+export * from './log-file.service';

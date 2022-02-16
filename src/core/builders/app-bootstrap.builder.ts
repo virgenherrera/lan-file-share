@@ -18,13 +18,12 @@ export class AppBuilder {
 
   private app: NestExpressApplication;
   private prefix = 'api/v1';
-  private logger: Logger;
+  private logger = new Logger(this.constructor.name);
 
   async bootstrap(buildDocs: boolean) {
     this.app = await NestFactory.create<NestExpressApplication>(AppModule, {
       logger: !buildDocs ? CreateWinstonLogger() : undefined,
     });
-    this.logger = this.app.get(Logger);
 
     this.logger.log(`setting app prefix: ${this.prefix}`, AppBuilder.name);
     this.app.setGlobalPrefix(this.prefix);

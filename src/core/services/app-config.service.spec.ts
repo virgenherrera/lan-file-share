@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Environment } from '../../enums';
+import { Environment } from '../enums';
 import { AppConfigService } from './app-config.service';
 
 describe('UT:AppConfigService', () => {

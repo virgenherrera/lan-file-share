@@ -2,14 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { format, formatDistanceToNowStrict, subSeconds } from 'date-fns';
 import { cpus as getCpuInfo } from 'os';
 import { promisify } from 'util';
-import { SystemHealth } from '../../models';
+import { SystemHealth } from '../models';
 
 @Injectable()
 export class HealthService {
-  constructor(private logger: Logger) {}
+  private logger = new Logger(this.constructor.name);
 
   async getHealth() {
-    this.logger.log(`getHealth|getting service Health`, HealthService.name);
+    this.logger.log(`getting service Health`);
 
     const { uptime, uptimeSince } = this.getUptimes();
     const memoryUsage = this.getMemoryUsage();

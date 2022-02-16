@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService, NoInferType } from '@nestjs/config';
-import { Environment } from '../../enums/environment.enum';
+import { Environment } from '../enums/environment.enum';
 
 @Injectable()
 export class AppConfigService {
@@ -23,7 +23,10 @@ export class AppConfigService {
   }
 
   get openApiPath() {
-    return this.get<string>('APP_OPEN_API_PATH', 'dist/openApi-docs/');
+    const defaultValue = 'dist/openApi-docs/';
+    const value = this.get<string>('APP_OPEN_API_PATH');
+
+    return !value ? defaultValue : value;
   }
 
   get<T = any>(propertyPath: string, defaultValue?: NoInferType<T>) {

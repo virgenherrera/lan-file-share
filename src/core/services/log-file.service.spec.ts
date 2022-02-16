@@ -1,8 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  MockAppConfigServiceProvider,
-  MockLoggerProvider,
-} from '../../../utils/testing';
 import { LogFileService } from './log-file.service';
 
 describe('UT:LogFileService', () => {
@@ -14,15 +10,8 @@ describe('UT:LogFileService', () => {
   let service: LogFileService;
 
   beforeEach(async () => {
-    // auto-mock fs
-    jest.mock('fs');
-
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        LogFileService,
-        MockLoggerProvider,
-        MockAppConfigServiceProvider,
-      ],
+      providers: [LogFileService],
     }).compile();
 
     service = module.get(LogFileService);

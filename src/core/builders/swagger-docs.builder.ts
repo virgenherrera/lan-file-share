@@ -17,7 +17,7 @@ class OpenApiBuilder {
   private app: NestExpressApplication;
   private swaggerConfig: Omit<OpenAPIObject, 'paths'>;
   private appConfigService: AppConfigService;
-  private logger: Logger;
+  private logger = new Logger(this.constructor.name);
   private rootPath: string;
   private openApiPath: string;
   private openApiFilePath: string;
@@ -34,11 +34,10 @@ class OpenApiBuilder {
 
   private setServices() {
     this.appConfigService = this.app.get(AppConfigService);
-    this.logger = this.app.get(Logger);
   }
 
   private setFilePaths() {
-    this.logger.log(`Setting file paths`, OpenApiBuilder.name);
+    this.logger.log(`Setting file paths`);
 
     this.rootPath = resolve(process.cwd());
     const { openApiPath } = this.appConfigService;
@@ -53,7 +52,7 @@ class OpenApiBuilder {
   }
 
   private async buildSwaggerJson() {
-    this.logger.log(`building Swagger.json file`, OpenApiBuilder.name);
+    this.logger.log(`building Swagger.json file`);
 
     const packageJson = getPackageMetadata();
     this.swaggerConfig = new DocumentBuilder()
@@ -76,7 +75,7 @@ class OpenApiBuilder {
       encoding: 'utf8',
     });
 
-    this.logger.log(`closing NestJs application`, OpenApiBuilder.name);
+    this.logger.log(`closing NestJs application`);
     this.app.close();
   }
 
@@ -86,9 +85,9 @@ class OpenApiBuilder {
     const { stdout, stderr } = await execAsync(command);
 
     if (stderr) {
-      this.logger.error(stderr, OpenApiBuilder.name);
+      this.logger.error(stderr);
     } else {
-      this.logger.log(stdout, OpenApiBuilder.name);
+      this.logger.log(stdout);
     }
   }
 }

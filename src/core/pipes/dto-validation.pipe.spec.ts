@@ -2,7 +2,7 @@ import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import { IsDefined, IsString } from 'class-validator';
 import { DtoValidation } from './dto-validation.pipe';
 
-describe('DtoValidationPipe', () => {
+describe('UT:DtoValidationPipe', () => {
   const enum should {
     createInstance = 'Should create instance Properly.',
     transformAndValidate = `Should transform and validate plain object and create instance of given DTO.`,
