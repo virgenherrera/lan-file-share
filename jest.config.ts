@@ -1,25 +1,23 @@
 /*
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/en/configuration.html
- */
 
-const testType = {
-  path: 'unit-test',
-  name: 'Unit Test',
-};
-const reporters = [
-  'default',
-  [
+*/
+
+const reporters: any[] = ['default'];
+
+if (process.argv.includes('--coverage')) {
+  reporters.push([
     'jest-stare',
     {
-      resultDir: `reports/${testType.path}`,
-      resultJson: `${testType.path}.json`,
-      reportTitle: `${testType.name} Report`,
-      reportHeadline: `${testType.name} Report`,
-      coverageLink: `../../coverage/${testType.path}/index.html`,
+      resultDir: `reports/html/test-execution`,
+      resultJson: `test-execution.json`,
+      reportTitle: `Tests Report`,
+      reportHeadline: `Unit/Integration Test Report`,
+      coverageLink: `../test-coverage/index.html`,
     },
-  ],
-];
+  ]);
+}
 
 export default {
   collectCoverageFrom: [
@@ -27,9 +25,8 @@ export default {
     '!**/(index|main).ts',
     '!**/*.(builder|constants|dto|enum|interface|model|mock|module).ts',
     '!**/*.(model|schema).ts',
-    '!**/*.int.spec.ts',
   ],
-  coverageDirectory: `../coverage/${testType.path}`,
+  coverageDirectory: `../reports/html/test-coverage`,
   coverageProvider: 'v8',
   coverageReporters: ['html-spa', 'text'],
   coverageThreshold: {
@@ -40,10 +37,10 @@ export default {
       statements: 80,
     },
   },
-  maxWorkers: '50%',
+  maxWorkers: '95%',
   reporters,
   rootDir: 'src',
   testEnvironment: 'node',
-  testMatch: ['**/*.spec.ts', '!**/*.int.spec.ts'],
+  testMatch: ['**/*spec.ts'],
   transform: { '^.+\\.(t)s$': 'ts-jest' },
 };

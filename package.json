@@ -16,7 +16,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "test": "jest",
-    "test:ut:develop": "jest --coverage --watch --maxWorkers=1",
+    "test:ut:develop": "jest --coverage --watch --maxWorkers=1 --verbose false",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "build": "nest build",
@@ -27,7 +27,7 @@
     "prettier:fix": "prettier --write \"src/**/*.ts\"",
     "eslint:check": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "eslint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "cleanup": "rimraf dist/ coverage/ reports/",
+    "cleanup": "rimraf dist/ reports/",
     "prebuild": "npm run cleanup",
     "prestart:prod": "npm run build"
   },
