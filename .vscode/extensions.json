@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "DavidAnson.vscode-markdownlint",
+    "dbaeumer.vscode-eslint",
+    "EditorConfig.EditorConfig",
+    "esbenp.prettier-vscode",
+    "kisstkondoros.vscode-codemetrics",
+    "redhat.vscode-yaml",
+    "streetsidesoftware.code-spell-checker",
+    "techer.open-in-browser",
+    "usernamehw.errorlens"
+  ]
+}

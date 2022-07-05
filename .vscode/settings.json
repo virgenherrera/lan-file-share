@@ -1,0 +1,51 @@
+{
+  "codemetrics.basics.CodeLensHiddenUnder": 7,
+  "codemetrics.basics.EnabledForHTML": false,
+  "codemetrics.basics.MetricsForClassDeclarationsToggled": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.fixAll.eslint": true
+  },
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "emmet.triggerExpansionOnTab": true,
+  "errorLens.delay": 3000,
+  "errorLens.messageTemplate": "$severity: $message",
+  "eslint.format.enable": true,
+  "eslint.options": {
+    "overrideConfigFile": ".eslintrc.yml"
+  },
+  "eslint.validate": [
+    "json",
+    "javascript",
+    "typescript"
+  ],
+  "git.autofetch": true,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "cSpell.words": [
+    "dtos",
+    "linebreak",
+    "metatype",
+    "nestjs",
+    "paren",
+    "postgres",
+    "prebuild",
+    "redoc",
+    "signin",
+    "signup",
+    "typeorm"
+  ]
+}
