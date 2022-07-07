@@ -1,3 +1,4 @@
 export enum MultimediaRoute {
-  upload = 'multimedia/upload',
+  file = 'multimedia/file',
+  files = 'multimedia/files',
 }

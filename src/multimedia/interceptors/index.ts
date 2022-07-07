@@ -1,1 +1,1 @@
-export * from './media.interceptor';
+export * from './uploaded-file.interceptor';

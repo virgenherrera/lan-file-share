@@ -10,6 +10,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { UploadManyResponse } from '../models';
 
 @Injectable()
 export class UploadService {
@@ -19,10 +20,19 @@ export class UploadService {
     return await lastValueFrom(this.singleFileObservable(file));
   }
 
-  async multipleFiles(...files: Express.Multer.File[]) {
-    const filesToUpload = files.map(file => this.singleFile(file));
+  async multipleFiles(files: Express.Multer.File[]) {
+    const filePromises = files.map(file => this.singleFile(file));
+    const promiseResponses = await Promise.allSettled(filePromises);
 
-    return Promise.all(filesToUpload);
+    return promiseResponses.reduce((acc, curr, idx) => {
+      if (curr.status === 'fulfilled') {
+        acc.successes[idx] = curr.value;
+      } else {
+        acc.errors[idx] = curr.reason;
+      }
+
+      return acc;
+    }, new UploadManyResponse());
   }
 
   singleFileObservable(file: Express.Multer.File) {
@@ -36,6 +46,7 @@ export class UploadService {
       ),
     );
   }
+
   private nonExistingFile(file: Express.Multer.File, destinyPath: string) {
     return this.renameFile(file.path, destinyPath).pipe(
       tap(() =>
