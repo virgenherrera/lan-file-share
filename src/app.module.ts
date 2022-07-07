@@ -2,7 +2,7 @@ import { CoreModule } from '@core/core.module';
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LogRequestMiddleware } from './core/middleware';
-import { FileUploadModule } from './file-upload/file-upload.module';
+import { MultimediaModule } from './multimedia/multimedia.module';
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
       isGlobal: true,
     }),
     CoreModule,
-    FileUploadModule,
+    MultimediaModule,
   ],
   providers: [Logger],
 })

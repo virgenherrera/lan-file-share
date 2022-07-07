@@ -10,11 +10,11 @@ import { homedir } from 'os';
 import { join } from 'path';
 
 @Injectable()
-export class MulterConfigService implements MulterOptionsFactory {
+export class MulterConfigModule implements MulterOptionsFactory {
   static registerAsync() {
     return MulterModule.registerAsync({
       imports: [CoreModule],
-      useClass: MulterConfigService,
+      useClass: MulterConfigModule,
     });
   }
 
