@@ -1,98 +1,57 @@
-import { BadRequest, ServiceUnavailable } from '@core/exceptions';
 import { Injectable, Logger } from '@nestjs/common';
-import { existsSync, rename, unlink } from 'fs';
+import { existsSync } from 'fs';
+import { rename, unlink } from 'fs/promises';
 import { join } from 'path';
-import {
-  bindNodeCallback,
-  catchError,
-  lastValueFrom,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
-import { UploadManyResponse } from '../models';
+import { BadRequest } from '../../core/exceptions';
+import { UploadManyResponse, UploadResponse } from '../models';
 
 @Injectable()
 export class UploadService {
   private logger = new Logger(this.constructor.name);
 
   async singleFile(file: Express.Multer.File) {
-    return await lastValueFrom(this.singleFileObservable(file));
-  }
+    const destinyFile = join(file.destination, file.originalname);
 
+    if (existsSync(destinyFile)) {
+      const errorMessage = `File: '${file.originalname}' already exists.`;
+
+      this.logger.log(errorMessage);
+
+      await this.deleteFile(file.path);
+
+      throw new BadRequest([errorMessage]);
+    }
+
+    await this.renameFile(file.path, destinyFile);
+
+    this.logger.log(`successfully uploaded file: ${file.originalname}`);
+
+    return new UploadResponse(`uploaded: '${file.originalname}'`);
+  }
   async multipleFiles(files: Express.Multer.File[]) {
     const filePromises = files.map(file => this.singleFile(file));
     const promiseResponses = await Promise.allSettled(filePromises);
 
     return promiseResponses.reduce((acc, curr, idx) => {
       if (curr.status === 'fulfilled') {
-        acc.successes[idx] = curr.value;
+        acc.successes[idx] = curr.value.data;
       } else {
-        acc.errors[idx] = curr.reason;
+        acc.errors[idx] = curr.reason.response.details[0];
       }
 
       return acc;
     }, new UploadManyResponse());
   }
 
-  singleFileObservable(file: Express.Multer.File) {
-    const destinyFile = join(file.destination, file.originalname);
+  private async renameFile(oldPath: string, newPath: string) {
+    await rename(oldPath, newPath);
 
-    return of(existsSync(destinyFile)).pipe(
-      switchMap(fileExists =>
-        fileExists
-          ? this.alreadyExistent(file)
-          : this.nonExistingFile(file, destinyFile),
-      ),
-    );
+    this.logger.verbose(`file: ${oldPath} renamed to: ${newPath}`);
   }
 
-  private nonExistingFile(file: Express.Multer.File, destinyPath: string) {
-    return this.renameFile(file.path, destinyPath).pipe(
-      tap(() =>
-        this.logger.log(`successfully uploaded file: ${file.originalname}`),
-      ),
-      switchMap(() => of(destinyPath)),
-    );
-  }
+  private async deleteFile(filePath: string) {
+    await unlink(filePath);
 
-  private alreadyExistent(file: Express.Multer.File) {
-    const errorMessage = `File: '${file.originalname}' already exists.`;
-
-    return this.deleteFile(file.path).pipe(
-      switchMap(() => {
-        this.logger.log(errorMessage);
-
-        throw new BadRequest([errorMessage]);
-      }),
-    );
-  }
-
-  private renameFile(oldPath: string, newPath: string) {
-    const renameObservable = bindNodeCallback(rename);
-
-    return renameObservable(oldPath, newPath).pipe(
-      catchError(() => {
-        const errorMessage = `file: ${oldPath} renamed to: ${newPath}`;
-
-        this.logger.verbose(errorMessage);
-
-        throw new ServiceUnavailable(errorMessage);
-      }),
-    );
-  }
-
-  private deleteFile(filePath: string) {
-    const unlinkObservable = bindNodeCallback(unlink);
-
-    return unlinkObservable(filePath).pipe(
-      catchError(() => {
-        const errorMessage = `file: ${filePath} deleted`;
-
-        this.logger.verbose(errorMessage);
-
-        throw new ServiceUnavailable(errorMessage);
-      }),
-    );
+    this.logger.verbose(`file: ${filePath} deleted`);
   }
 }

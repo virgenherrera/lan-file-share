@@ -1,13 +1,12 @@
-import { BadRequest } from '@core/exceptions';
 import {
   Controller,
-  HttpCode,
   Logger,
   Post,
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
+import { BadRequest } from '../../core/exceptions';
 import { MediaMimeTypes } from '../constants';
 import { uploadManyDocs, UploadOneDocs } from '../docs';
 import { MultimediaRoute } from '../enums';
@@ -15,7 +14,7 @@ import {
   UploadedFileInterceptor,
   UploadedFilesInterceptor,
 } from '../interceptors';
-import { UploadManyResponse } from '../models';
+import { UploadManyResponse, UploadResponse } from '../models';
 import { UploadService } from '../services';
 
 @Controller()
@@ -26,9 +25,10 @@ export class UploadController {
 
   @Post(MultimediaRoute.file)
   @UploadOneDocs()
-  @HttpCode(204)
   @UseInterceptors(UploadedFileInterceptor(MediaMimeTypes))
-  async uploadOne(@UploadedFile('file') file?: Express.Multer.File) {
+  async uploadOne(
+    @UploadedFile('file') file?: Express.Multer.File,
+  ): Promise<UploadResponse> {
     if (!file) throw new BadRequest(['No file uploaded.']);
 
     this.logger.log(`processing uploaded File`);

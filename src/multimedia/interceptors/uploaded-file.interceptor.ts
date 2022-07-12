@@ -1,9 +1,8 @@
-import { BadRequest } from '@core/exceptions';
-
 type CallbackArgs = [Error | null, boolean];
 type Callback = (...args: CallbackArgs) => void;
 
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { BadRequest } from '../../core/exceptions';
 
 function fileFilterFactory(mimeTypes: string[]) {
   return (_req: any, file: Express.Multer.File, callback: Callback) => {
