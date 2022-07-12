@@ -3,6 +3,7 @@ import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LogRequestMiddleware } from './core/middleware';
 import { MultimediaModule } from './multimedia/multimedia.module';
+import { QrStdoutModule } from './qr-stdout/qr-stdout.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { MultimediaModule } from './multimedia/multimedia.module';
     }),
     CoreModule,
     MultimediaModule,
+    QrStdoutModule,
   ],
   providers: [Logger],
 })
