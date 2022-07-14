@@ -29,7 +29,7 @@ export class UploadController {
   async uploadOne(
     @UploadedFile('file') file?: Express.Multer.File,
   ): Promise<UploadResponse> {
-    if (!file) throw new BadRequest(['No file uploaded.']);
+    if (!file) throw new BadRequest('No file uploaded.');
 
     this.logger.log(`processing uploaded File`);
 
@@ -42,7 +42,7 @@ export class UploadController {
   async uploadMany(
     @UploadedFiles() files: Express.Multer.File[],
   ): Promise<UploadManyResponse> {
-    if (!files.length) throw new BadRequest(['No files uploaded.']);
+    if (!files.length) throw new BadRequest('No files uploaded.');
 
     this.logger.log(`processing uploaded Files`);
 

@@ -9,9 +9,9 @@ function fileFilterFactory(mimeTypes: string[]) {
     const argsMap: Record<string, CallbackArgs> = {
       ok: [null, true],
       error: [
-        new BadRequest([
+        new BadRequest(
           `file: '${file.originalname}' is not an allowed media file.`,
-        ]),
+        ),
         false,
       ],
     };
