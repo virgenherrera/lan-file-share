@@ -1,6 +1,6 @@
-import { CoreModule } from '@core/core.module';
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { CoreModule } from './core/core.module';
 import { LogRequestMiddleware } from './core/middleware';
 import { MultimediaModule } from './multimedia/multimedia.module';
 import { QrStdoutModule } from './qr-stdout/qr-stdout.module';

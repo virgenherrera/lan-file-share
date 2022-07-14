@@ -19,7 +19,7 @@ export class UploadService {
 
       await this.deleteFile(file.path);
 
-      throw new BadRequest([errorMessage]);
+      throw new BadRequest(errorMessage);
     }
 
     await this.renameFile(file.path, destinyFile);
