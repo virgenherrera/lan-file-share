@@ -1,13 +1,13 @@
-import { CoreModule } from '@core/core.module';
-import { EnvConfigService } from '@core/services';
 import { Injectable, Logger } from '@nestjs/common';
 import { MulterModule, MulterOptionsFactory } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-import { getPackageMetadata } from '@utils';
 import { mkdirSync } from 'fs';
 import { mkdir } from 'fs/promises';
 import { homedir } from 'os';
 import { join } from 'path';
+import { CoreModule } from '../../core/core.module';
+import { EnvConfigService } from '../../core/services';
+import { getPackageMetadata } from '../../utils';
 
 @Injectable()
 export class MulterConfigModule implements MulterOptionsFactory {
