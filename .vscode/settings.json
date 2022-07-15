@@ -26,6 +26,9 @@
   "typescript.referencesCodeLens.enabled": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
@@ -48,5 +51,5 @@
     "signin",
     "signup",
     "typeorm"
-  ]
+  ],
 }
