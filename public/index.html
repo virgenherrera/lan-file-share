@@ -105,9 +105,10 @@
               >
                 <li>
                   <a
+                    id="upload-file-button"
                     class="dropdown-item"
                     data-bs-toggle="modal"
-                    data-bs-target="#singleUpload"
+                    data-bs-target="#upload-file-modal"
                     href="#"
                     >A file</a
                   >
@@ -292,9 +293,10 @@
     <!-- Single upload Modal -->
     <div
       class="modal fade"
-      id="singleUpload"
+      id="upload-file-modal"
       tabindex="-1"
       aria-labelledby="singleUploadLabel"
+      data-bs-backdrop="static"
       aria-hidden="true"
     >
       <div class="modal-dialog">
@@ -308,7 +310,32 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">...</div>
+          <div class="modal-body">
+            <div id="upload-progress" class="progress d-none">
+              <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                role="progressbar"
+                aria-valuenow="100"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                style="width: 100%"
+              ></div>
+            </div>
+            <div id="input-file-form" class="mb-3">
+              <label for="input-file" class="form-label"
+                >Default file input example</label
+              >
+              <input
+                id="input-file"
+                class="form-control"
+                aria-describedby="input-file-validation"
+                type="file"
+              />
+              <div id="input-file-validation" class="invalid-feedback">
+                Please provide a valid city.
+              </div>
+            </div>
+          </div>
           <div class="modal-footer">
             <button
               type="button"
@@ -317,49 +344,18 @@
             >
               Discard
             </button>
-            <button type="button" class="btn btn-primary">Upload</button>
+            <button
+              id="file-upload-button"
+              type="button"
+              class="btn btn-primary disabled"
+            >
+              Upload
+            </button>
           </div>
         </div>
       </div>
     </div>
     <!-- Single upload Modal -->
-
-    <!-- Multi upload Modal -->
-    <div
-      class="modal fade"
-      id="multiUpload"
-      tabindex="-1"
-      aria-labelledby="multiUploadLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="multiUploadLabel">
-              Multiple file Upload
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">...</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Discard
-            </button>
-            <button type="button" class="btn btn-primary">Upload</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Multi upload Modal -->
 
     <script src="/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script async src="/assets/vendors/masonry/masonry.pkgd.min.js"></script>
