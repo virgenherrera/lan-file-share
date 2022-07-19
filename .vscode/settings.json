@@ -50,6 +50,7 @@
     "redoc",
     "signin",
     "signup",
+    "Streamable",
     "typeorm"
   ]
 }
