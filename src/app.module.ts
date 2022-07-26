@@ -27,6 +27,7 @@ import { QrStdoutModule } from './qr-stdout/qr-stdout.module';
     CoreModule,
     MultimediaModule,
     QrStdoutModule,
+    CoreModule,
   ],
   providers: [Logger],
 })

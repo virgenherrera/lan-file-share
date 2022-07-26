@@ -47,7 +47,6 @@
     "postgres",
     "prebuild",
     "qrcode",
-    "redoc",
     "signin",
     "signup",
     "Streamable",
