@@ -1,6 +1,7 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { networkInterfaces as getNetworkInterfaces } from 'os';
 import * as qrCodeTerminal from 'qrcode-terminal';
+import { EnvConfigService } from '../../core/services';
 
 @Injectable()
 export class AfterApplicationBootstrapService
@@ -9,6 +10,8 @@ export class AfterApplicationBootstrapService
   private url: URL;
   private networkAddresses: string[];
   private messages: string[] = ['\n'];
+
+  constructor(private envConfigService: EnvConfigService) {}
 
   onApplicationBootstrap() {
     this.waitToStdoutAddresses();
@@ -28,7 +31,9 @@ export class AfterApplicationBootstrapService
   }
 
   private setUrl() {
-    this.url = new URL('http://localhost:3000');
+    const { port } = this.envConfigService;
+
+    this.url = new URL(`http://localhost:${port}`);
   }
 
   private setNetworkAddresses() {
