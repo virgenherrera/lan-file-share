@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { createReadStream, existsSync, readdir, stat, Stats } from 'fs';
-import { basename, extname, join, parse, resolve } from 'path';
+import { basename, extname, join, parse, ParsedPath, resolve } from 'path';
 import { BadRequest } from '../../core/exceptions';
 import { MediaMimeTypeSource, SHARED_FOLDER_PATH } from '../constants';
+import { MultimediaRoute } from '../enums';
 import { FileInfo, FolderInfo } from '../models';
 import { DownloadableFile } from '../models/downloadable-file.model';
 
@@ -40,13 +41,33 @@ export class FileSystemService {
 
         res.folders.push(childPath);
       } else {
-        const fileInfo = new FileInfo(elementStats, parsedPath);
+        const fileInfo = this.getFileInfo(path, parsedPath, elementStats);
 
         res.files.push(fileInfo);
       }
     }
 
     return res;
+  }
+
+  private getFileInfo(
+    path: string,
+    parsedPath: ParsedPath,
+    elementStats: Stats,
+  ) {
+    const osPath = join(
+      '/api/v1',
+      MultimediaRoute.fileStream.replace('*', ''),
+      path,
+      parsedPath.base,
+    );
+    const href = osPath.replace(/\\/g, '/');
+
+    return new FileInfo({
+      href,
+      ...elementStats,
+      ...parsedPath,
+    });
   }
 
   private getFullPath(path: string): string | never {
