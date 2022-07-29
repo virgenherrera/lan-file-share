@@ -1,22 +1,26 @@
-import { Injectable, Logger, StreamableFile } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { createReadStream, existsSync, readdir, stat, Stats } from 'fs';
-import { join, parse, resolve } from 'path';
+import { basename, extname, join, parse, resolve } from 'path';
 import { BadRequest } from '../../core/exceptions';
-import { SHARED_FOLDER_PATH } from '../constants';
+import { MediaMimeTypeSource, SHARED_FOLDER_PATH } from '../constants';
 import { FileInfo, FolderInfo } from '../models';
+import { DownloadableFile } from '../models/downloadable-file.model';
 
 @Injectable()
 export class FileSystemService {
   private logger = new Logger(this.constructor.name);
   private readonly destiny = SHARED_FOLDER_PATH;
 
-  async getStreamableFile(path: string): Promise<StreamableFile> {
+  async getDownloadableFile(path: string): Promise<DownloadableFile> {
     this.logger.log(`Getting file ${path}`);
 
     const filePath = this.getFullPath(path);
     const fileSteam = createReadStream(filePath);
+    const fileName = basename(filePath);
+    const fileExt = extname(filePath);
+    const [, , mimeType] = MediaMimeTypeSource.find(row => row[0] === fileExt);
 
-    return new StreamableFile(fileSteam);
+    return new DownloadableFile(fileName, mimeType, fileSteam);
   }
 
   async getPathInfo(path = ''): Promise<FolderInfo> {
