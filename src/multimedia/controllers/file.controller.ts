@@ -1,4 +1,12 @@
-import { Controller, Get, Logger, Param, StreamableFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Response as ResponseDecorator,
+  StreamableFile,
+} from '@nestjs/common';
+import { Response } from 'express';
 import { GetFileDocs, GetSharedFolderDocs } from '../docs';
 import { MultimediaRoute } from '../enums';
 import { FolderInfo } from '../models';
@@ -12,10 +20,19 @@ export class FileController {
 
   @Get(MultimediaRoute.fileStream)
   @GetFileDocs()
-  async getFile(@Param('0') filePath: string): Promise<StreamableFile> {
+  async getFile(
+    @Param('0') filePath: string,
+    @ResponseDecorator({ passthrough: true }) response: Response,
+  ): Promise<StreamableFile> {
     this.logger.verbose(`Getting file ${filePath}`);
 
-    return this.fileSystemService.getStreamableFile(filePath);
+    const downloadableFile = await this.fileSystemService.getDownloadableFile(
+      filePath,
+    );
+
+    response.set(downloadableFile.headers);
+
+    return downloadableFile.streamableFile;
   }
 
   @Get(MultimediaRoute.sharedFolder)
