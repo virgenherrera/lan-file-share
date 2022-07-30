@@ -37,7 +37,8 @@ export class FileSystemService {
       const parsedPath = parse(elementPath);
 
       if (elementStats.isDirectory()) {
-        const childPath = join(path, parsedPath.name);
+        const osPath = join(path, parsedPath.name);
+        const childPath = this.pathNormalize(osPath);
 
         res.folders.push(childPath);
       } else {
@@ -61,13 +62,17 @@ export class FileSystemService {
       path,
       parsedPath.base,
     );
-    const href = osPath.replace(/\\/g, '/');
+    const href = this.pathNormalize(osPath);
 
     return new FileInfo({
       href,
       ...elementStats,
       ...parsedPath,
     });
+  }
+
+  private pathNormalize(path: string) {
+    return path.replace(/\\/g, '/');
   }
 
   private getFullPath(path: string): string | never {
