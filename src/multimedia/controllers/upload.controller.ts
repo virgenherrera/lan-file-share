@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Logger,
   Post,
@@ -7,8 +8,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { BadRequest } from '../../core/exceptions';
+import { DtoValidation } from '../../core/pipes';
 import { MediaMimeTypes } from '../constants';
 import { uploadManyDocs, UploadOneDocs } from '../docs';
+import { UploadPathDto } from '../dto';
 import { MultimediaRoute } from '../enums';
 import {
   UploadedFileInterceptor,
@@ -27,25 +30,27 @@ export class UploadController {
   @UploadOneDocs()
   @UseInterceptors(UploadedFileInterceptor(MediaMimeTypes))
   async uploadOne(
+    @Body(DtoValidation.pipe) body: UploadPathDto,
     @UploadedFile('file') file?: Express.Multer.File,
   ): Promise<UploadResponse> {
     if (!file) throw new BadRequest('No file uploaded.');
 
     this.logger.log(`processing uploaded File`);
 
-    return await this.uploadService.singleFile(file);
+    return await this.uploadService.singleFile(file, body.path);
   }
 
   @Post(MultimediaRoute.files)
   @uploadManyDocs()
   @UseInterceptors(UploadedFilesInterceptor(MediaMimeTypes))
   async uploadMany(
+    @Body(DtoValidation.pipe) body: UploadPathDto,
     @UploadedFiles() files: Express.Multer.File[],
   ): Promise<UploadManyResponse> {
     if (!files.length) throw new BadRequest('No files uploaded.');
 
     this.logger.log(`processing uploaded Files`);
 
-    return await this.uploadService.multipleFiles(files);
+    return await this.uploadService.multipleFiles(files, body.path);
   }
 }
