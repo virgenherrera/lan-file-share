@@ -11,14 +11,14 @@
     "npm": "^8.3.1"
   },
   "scripts": {
-    "start": "nest start",
+    "start": "node dist/main",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
     "test:develop": "jest --coverage --watch --maxWorkers=1 --verbose false",
     "local:ci": "run-s -l cleanup check:format test:cov build build:api-docs",
     "build:api-docs": "ts-node -r tsconfig-paths/register src/core/builders/open-api.builder.ts",
     "build": "nest build",
+    "build:prod": "nest build --webpack",
     "cleanup": "rimraf dist/ reports/",
     "check:format": "run-s check:prettier check:eslint",
     "check:eslint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
@@ -29,7 +29,8 @@
     "prestart:prod": "npm run build",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "run-s cleanup build:prod"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.8",
