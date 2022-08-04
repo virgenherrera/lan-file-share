@@ -28,7 +28,7 @@ export const UploadedFileInterceptor = (mimeTypes: string[]) =>
   });
 
 export const UploadedFilesInterceptor = (mimeTypes: string[]) =>
-  FilesInterceptor('files[]', 50, {
+  FilesInterceptor('file[]', 50, {
     preservePath: true,
     fileFilter: fileFilterFactory(mimeTypes),
   });
