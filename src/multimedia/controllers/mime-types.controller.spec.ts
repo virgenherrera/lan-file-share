@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MediaMimeTypes } from '../constants';
 import { MimeTypesController } from './mime-types.controller';
 
 describe(`UT:${MimeTypesController.name}`, () => {
@@ -24,8 +23,6 @@ describe(`UT:${MimeTypesController.name}`, () => {
   });
 
   it(should.getMediaMimeTypes, async () => {
-    const data = { data: MediaMimeTypes };
-
-    await expect(controller.getMimeTypes()).resolves.toBe(data);
+    expect(() => controller.getMimeTypes()).not.toThrow();
   });
 });
