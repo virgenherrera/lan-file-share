@@ -1,121 +1,76 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { createReadStream, existsSync, readdir, stat, Stats } from 'fs';
-import { mkdir, rename, unlink } from 'fs/promises';
-import { basename, extname, join, parse, ParsedPath, resolve } from 'path';
-import { BadRequest } from '../../core/exceptions';
-import { MediaMimeTypeSource, SHARED_FOLDER_PATH } from '../constants';
-import { MultimediaRoute } from '../enums';
-import { FileInfo, FolderInfo } from '../models';
-import { DownloadableFile } from '../models/downloadable-file.model';
+import { createReadStream, existsSync, PathLike } from 'fs';
+import { mkdir, readdir, rename, stat, unlink } from 'fs/promises';
+import { basename, extname, join, parse, resolve } from 'path';
+import { SHARED_FOLDER_PATH } from '../constants';
 
 @Injectable()
 export class FileSystemService {
   private logger = new Logger(this.constructor.name);
-  private readonly destiny = SHARED_FOLDER_PATH;
 
-  async getDownloadableFile(path: string): Promise<DownloadableFile> {
-    this.logger.log(`Getting file ${path}`);
-
-    const filePath = this.getFullPath(path);
-    const fileSteam = createReadStream(filePath);
-    const fileName = basename(filePath);
-    const fileExt = extname(filePath);
-    const [, , mimeType] = MediaMimeTypeSource.find(row => row[0] === fileExt);
-
-    return new DownloadableFile(fileName, mimeType, fileSteam);
+  toUrlPath(...paths: string[]) {
+    return this.join(...paths).replace(/\\/g, '/');
   }
 
-  async getPathInfo(path = ''): Promise<FolderInfo> {
-    this.logger.log(`Getting shared folder ${path}`);
-
-    const fullPath = this.getFullPath(path);
-    const res = new FolderInfo();
-    const pathContentList = await this.readDirPromise(fullPath);
-
-    for await (const pathElement of pathContentList) {
-      const elementPath = join(fullPath, pathElement);
-      const elementStats = await this.statPromise(elementPath);
-      const parsedPath = parse(elementPath);
-
-      if (elementStats.isDirectory()) {
-        const childPath = this.toUnixPath(path, parsedPath.name);
-
-        res.folders.push(childPath);
-      } else {
-        const fileInfo = this.getFileInfo(path, parsedPath, elementStats);
-
-        res.files.push(fileInfo);
-      }
-    }
-
-    return res;
+  createReadStream(path: PathLike) {
+    return createReadStream(path);
   }
 
-  toUnixPath(...paths: string[]) {
-    return join(...paths).replace(/\\/g, '/');
+  existsSync(path: string) {
+    return existsSync(path);
   }
 
-  makeSubPath(subPath: string) {
-    const path = join(SHARED_FOLDER_PATH, subPath);
+  async mkdir(subPath: string) {
+    const path = this.join(SHARED_FOLDER_PATH, subPath);
 
     return mkdir(path, { recursive: true });
   }
 
-  async renameFile(oldPath: string, newPath: string) {
+  async readdir(path: PathLike) {
+    const res = await readdir(path);
+
+    this.logger.verbose(`getting directory content of: ${path}`);
+
+    return res;
+  }
+
+  async rename(oldPath: PathLike, newPath: PathLike) {
     await rename(oldPath, newPath);
 
     this.logger.verbose(`file: ${oldPath} renamed to: ${newPath}`);
   }
 
-  async deleteFile(filePath: string) {
+  async stat(path: PathLike) {
+    const res = await stat(path);
+
+    this.logger.verbose(`getting file stats for: ${path}`);
+
+    return res;
+  }
+
+  async unlink(filePath: PathLike) {
     await unlink(filePath);
 
     this.logger.verbose(`file: ${filePath} deleted`);
   }
 
-  private getFileInfo(
-    path: string,
-    parsedPath: ParsedPath,
-    elementStats: Stats,
-  ) {
-    const href = this.toUnixPath(
-      '/api/v1',
-      MultimediaRoute.fileStream.replace('*', ''),
-      path,
-      parsedPath.base,
-    );
-
-    return new FileInfo({
-      href,
-      ...elementStats,
-      ...parsedPath,
-    });
-  }
-  private getFullPath(path: string): string | never {
-    const fullPath = resolve(join(this.destiny, path));
-
-    if (!existsSync(fullPath)) {
-      const errMsg = `Path ${path} does not exist`;
-
-      this.logger.error(errMsg);
-
-      throw new BadRequest(errMsg);
-    }
-
-    return fullPath;
+  basename(path: string) {
+    return basename(path);
   }
 
-  private readDirPromise(path: string): Promise<string[]> {
-    return new Promise((Resolve, Reject) =>
-      readdir(path, (error, files) =>
-        !error ? Resolve(files) : Reject(error),
-      ),
-    );
+  extname(path: string) {
+    return extname(path);
   }
 
-  private statPromise(path: string): Promise<Stats> {
-    return new Promise((Resolve, Reject) =>
-      stat(path, (error, stats) => (!error ? Resolve(stats) : Reject(error))),
-    );
+  join(...paths: string[]) {
+    return join(...paths);
+  }
+
+  resolve(...paths: string[]) {
+    return resolve(...paths);
+  }
+
+  parse(path: string) {
+    return parse(path);
   }
 }

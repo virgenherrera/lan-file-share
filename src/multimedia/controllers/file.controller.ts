@@ -10,13 +10,13 @@ import { Response } from 'express';
 import { GetFileDocs, GetSharedFolderDocs } from '../docs';
 import { MultimediaRoute } from '../enums';
 import { FolderInfo } from '../models';
-import { FileSystemService } from '../services';
+import { SharedFolderService } from '../services/shared-folder.service';
 
 @Controller()
 export class FileController {
   private logger = new Logger(this.constructor.name);
 
-  constructor(private fileSystemService: FileSystemService) {}
+  constructor(private sharedFolderService: SharedFolderService) {}
 
   @Get(MultimediaRoute.fileStream)
   @GetFileDocs()
@@ -26,7 +26,7 @@ export class FileController {
   ): Promise<StreamableFile> {
     this.logger.verbose(`Getting file ${filePath}`);
 
-    const downloadableFile = await this.fileSystemService.getDownloadableFile(
+    const downloadableFile = await this.sharedFolderService.getDownloadableFile(
       filePath,
     );
 
@@ -40,6 +40,6 @@ export class FileController {
   async getSharedFolder(@Param('0') path: string): Promise<FolderInfo> {
     this.logger.verbose(`Getting shared folder ${path}`);
 
-    return this.fileSystemService.getPathInfo(path);
+    return this.sharedFolderService.getPathInfo(path);
   }
 }

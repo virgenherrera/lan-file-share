@@ -1,6 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { existsSync } from 'fs';
-import { join } from 'path';
 import { BadRequest } from '../../core/exceptions';
 import { UploadManyResponse, UploadResponse } from '../models';
 import { FileSystemService } from './file-system.service';
@@ -9,27 +7,28 @@ import { FileSystemService } from './file-system.service';
 export class UploadService {
   private logger = new Logger(this.constructor.name);
 
-  constructor(private fileSystemService: FileSystemService) {}
+  constructor(private fs: FileSystemService) {}
 
   async singleFile(file: Express.Multer.File, subPath = '') {
-    const destinyFile = join(file.destination, subPath, file.originalname);
-    const unixPath = this.fileSystemService.toUnixPath(
+    const destinyFile = this.fs.join(
+      file.destination,
       subPath,
       file.originalname,
     );
+    const unixPath = this.fs.toUrlPath(subPath, file.originalname);
 
-    if (existsSync(destinyFile)) {
+    if (this.fs.existsSync(destinyFile)) {
       const errorMessage = `File: '${unixPath}' already exists.`;
 
       this.logger.log(errorMessage);
 
-      await this.fileSystemService.deleteFile(file.path);
+      await this.fs.unlink(file.path);
 
       throw new BadRequest(errorMessage);
     }
 
-    await this.fileSystemService.makeSubPath(subPath);
-    await this.fileSystemService.renameFile(file.path, destinyFile);
+    await this.fs.mkdir(subPath);
+    await this.fs.rename(file.path, destinyFile);
 
     const msg = `successfully uploaded file: '${unixPath}'`;
 
@@ -40,9 +39,15 @@ export class UploadService {
 
   async multipleFiles(files: Express.Multer.File[], path: string) {
     const filePromises = files.map(file => this.singleFile(file, path));
-    const promiseResponses = await Promise.allSettled(filePromises);
+    const settledPromises = await Promise.allSettled(filePromises);
 
-    return promiseResponses.reduce((acc, curr, idx) => {
+    return this.mapSettledToResponse(settledPromises);
+  }
+
+  private mapSettledToResponse(
+    promises: PromiseSettledResult<UploadResponse>[],
+  ): UploadManyResponse {
+    return promises.reduce((acc, curr, idx) => {
       if (curr.status === 'fulfilled') {
         acc.successes[idx] = curr.value.data;
       } else {
