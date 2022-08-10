@@ -10,6 +10,7 @@ export default {
     '!**/(index|main).ts',
     '!**/*.(builder|dto|enum|exception|interface|mock|module).ts',
     '!**/*.(model|schema).ts',
+    '!**/*uploaded-file.interceptor.ts',
     '!**/__mocks__.ts',
   ],
   coverageDirectory: `../reports/test-coverage`,

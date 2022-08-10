@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { MockEnvConfigProvider } from '../../core/services/__mocks__';
 import { AfterApplicationBootstrapService } from './after-application-bootstrap.service';
 
 describe(`UT:${AfterApplicationBootstrapService.name}`, () => {
@@ -9,12 +10,16 @@ describe(`UT:${AfterApplicationBootstrapService.name}`, () => {
 
   let service: AfterApplicationBootstrapService = null;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AfterApplicationBootstrapService],
+      providers: [MockEnvConfigProvider, AfterApplicationBootstrapService],
     }).compile();
 
     service = module.get(AfterApplicationBootstrapService);
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
   });
 
   it(should.createInstance, () => {
