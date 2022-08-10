@@ -2,11 +2,17 @@ import { Injectable, Logger } from '@nestjs/common';
 import { createReadStream, existsSync, PathLike } from 'fs';
 import { mkdir, readdir, rename, stat, unlink } from 'fs/promises';
 import { basename, extname, join, parse, resolve } from 'path';
-import { SHARED_FOLDER_PATH } from '../constants';
+import { MulterConfig } from '../modules';
 
 @Injectable()
 export class FileSystemService {
   private logger = new Logger(this.constructor.name);
+
+  get sharedFolderPath() {
+    return this.multerConfig.sharedFolderPath;
+  }
+
+  constructor(private multerConfig: MulterConfig) {}
 
   toUrlPath(...paths: string[]) {
     return this.join(...paths).replace(/\\/g, '/');
@@ -21,7 +27,7 @@ export class FileSystemService {
   }
 
   async mkdir(subPath: string) {
-    const path = this.join(SHARED_FOLDER_PATH, subPath);
+    const path = this.join(this.sharedFolderPath, subPath);
 
     return mkdir(path, { recursive: true });
   }

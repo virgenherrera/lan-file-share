@@ -2,27 +2,35 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MulterModule, MulterOptionsFactory } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { mkdir } from 'fs/promises';
-import { SHARED_FOLDER_PATH } from '../constants';
+import { homedir } from 'os';
+import { join } from 'path';
+import { getPackageMetadata } from '../../utils';
 
 @Injectable()
-export class MulterConfigModule implements MulterOptionsFactory {
+export class MulterConfig implements MulterOptionsFactory {
   static registerAsync() {
     return MulterModule.registerAsync({
-      useClass: MulterConfigModule,
+      useClass: MulterConfig,
     });
   }
 
   private logger = new Logger(this.constructor.name);
 
+  readonly sharedFolderPath = join(
+    homedir(),
+    'Downloads',
+    getPackageMetadata().name,
+  );
+
   async createMulterOptions(): Promise<MulterOptions> {
     this.logger.log(`Creating multer options...`);
 
-    const dest = SHARED_FOLDER_PATH;
+    const { sharedFolderPath } = this;
 
-    await mkdir(dest, { recursive: true });
+    await mkdir(sharedFolderPath, { recursive: true });
 
-    this.logger.log(`Storing files in: ${dest}`);
+    this.logger.log(`Storing files in: ${sharedFolderPath}`);
 
-    return { dest };
+    return { dest: sharedFolderPath };
   }
 }

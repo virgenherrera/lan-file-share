@@ -17,6 +17,7 @@ export const mockFileSystemService: Record<keyof FileSystemService, any> = {
   join: jest.fn(),
   resolve: jest.fn(),
   parse: jest.fn(),
+  sharedFolderPath: 'fake/path',
 };
 
 export const FileSystemServiceProvider: Provider = {

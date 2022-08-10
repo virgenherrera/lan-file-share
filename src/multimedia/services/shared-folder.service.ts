@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Stats } from 'fs';
 import { ParsedPath } from 'path';
 import { BadRequest } from '../../core/exceptions';
-import { MediaMimeTypeSource, SHARED_FOLDER_PATH } from '../constants';
+import { MediaMimeTypeSource } from '../constants';
 import { MultimediaRoute } from '../enums';
 import { DownloadableFile, FileInfo, FolderInfo } from '../models';
 import { FileSystemService } from './file-system.service';
@@ -10,7 +10,6 @@ import { FileSystemService } from './file-system.service';
 @Injectable()
 export class SharedFolderService {
   private logger = new Logger(this.constructor.name);
-  private readonly sharedFolderPath = SHARED_FOLDER_PATH;
 
   constructor(private fs: FileSystemService) {}
 
@@ -72,7 +71,7 @@ export class SharedFolderService {
   }
 
   private getFullPath(path: string): string {
-    const fullPath = this.fs.resolve(this.sharedFolderPath, path);
+    const fullPath = this.fs.resolve(this.fs.sharedFolderPath, path);
 
     if (!this.fs.existsSync(fullPath)) {
       const errMsg = `Path ${path} does not exist`;
