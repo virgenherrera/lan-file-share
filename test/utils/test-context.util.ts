@@ -4,20 +4,23 @@ import * as supertest from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { MockEnvConfigProvider } from '../../src/core/services/__mocks__';
 
-export type TestApp = INestApplication;
-export type SuperRequest = supertest.SuperTest<supertest.Test>;
-
 export class TestContext {
-  app: TestApp = null;
-  request: SuperRequest = null;
+  private static instance: TestContext = null;
 
-  static async build() {
+  app: INestApplication = null;
+  request: supertest.SuperTest<supertest.Test> = null;
+
+  static async getInstance() {
+    if (TestContext.instance) return TestContext.instance;
+
     const instance = new TestContext();
 
-    return await instance.build();
+    TestContext.instance = await instance.initContext();
+
+    return TestContext.instance;
   }
 
-  async build() {
+  private async initContext() {
     const testingModule = await Test.createTestingModule({
       imports: [AppModule],
     })

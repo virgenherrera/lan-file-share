@@ -17,8 +17,8 @@ export class TestConfig implements Config.InitialOptions {
   coverageDirectory = `../coverage/unit`;
   coverageProvider = 'v8' as Config.InitialOptions['coverageProvider'];
   coverageReporters = [
-    'html-spa',
     'text',
+    'html-spa',
   ] as Config.InitialOptions['coverageReporters'];
   coverageThreshold = {
     // global: { branches: 85, functions: 85, lines: 85, statements: 85 },

@@ -1,6 +1,7 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { networkInterfaces as getNetworkInterfaces } from 'os';
 import * as qrCodeTerminal from 'qrcode-terminal';
+import { Environment } from '../../core/enums';
 import { EnvConfigService } from '../../core/services';
 
 @Injectable()
@@ -27,7 +28,8 @@ export class AfterApplicationBootstrapService
 
     const stdoutMessage = this.messages.join('\n');
 
-    process.stdout.write(stdoutMessage);
+    if (this.envConfigService.environment !== Environment.test)
+      process.stdout.write(stdoutMessage);
   }
 
   private setUrl() {

@@ -11,7 +11,7 @@ const enum should {
 describe(`e2e: (GET)${CoreRoute.health}`, () => {
   let testCtx: TestContext = null;
 
-  beforeAll(async () => (testCtx = await TestContext.build()));
+  beforeAll(async () => (testCtx = await TestContext.getInstance()));
 
   it(should.initModule, async () => {
     expect(testCtx.app).not.toBeNull();
