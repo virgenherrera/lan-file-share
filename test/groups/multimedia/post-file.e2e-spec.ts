@@ -6,7 +6,7 @@ import { FileSystemService } from '../../../src/multimedia/services';
 import { TestContext } from '../../utils';
 
 const enum should {
-  initModule = 'Should init Context Properly.',
+  initTestContext = 'Should test Context be properly initialized.',
   throwPostFile = `Should respond with 400 when calling the endpoint without a file.`,
   throwAlreadyExists = `Should respond with 400 when file already exists.`,
   postFile = `Should POST a file properly.`,
@@ -30,7 +30,7 @@ describe(`e2e: (POST)${MultimediaRoute.file}`, () => {
 
   afterEach(deleteMockFile);
 
-  it(should.initModule, async () => {
+  it(should.initTestContext, async () => {
     expect(testCtx.app).not.toBeNull();
     expect(testCtx.request).not.toBeNull();
     expect(testCtx.app).toBeInstanceOf(NestApplication);

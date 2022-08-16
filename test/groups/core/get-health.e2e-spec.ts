@@ -4,7 +4,7 @@ import { GetHealthMatcher } from '../../matchers/core/get-health.matcher';
 import { TestContext } from '../../utils';
 
 const enum should {
-  initModule = 'Should init Module Properly.',
+  initTestContext = 'Should test Context be properly initialized.',
   getHealth = `Should GET appHealth get data related process.`,
 }
 
@@ -13,7 +13,7 @@ describe(`e2e: (GET)${CoreRoute.health}`, () => {
 
   beforeAll(async () => (testCtx = await TestContext.getInstance()));
 
-  it(should.initModule, async () => {
+  it(should.initTestContext, async () => {
     expect(testCtx.app).not.toBeNull();
     expect(testCtx.request).not.toBeNull();
     expect(testCtx.app).toBeInstanceOf(NestApplication);

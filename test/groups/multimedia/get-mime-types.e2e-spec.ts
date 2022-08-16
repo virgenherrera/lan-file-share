@@ -4,7 +4,7 @@ import { GetMimeTypesMatcher } from '../../matchers';
 import { TestContext } from '../../utils';
 
 const enum should {
-  initModule = 'Should init Context Properly.',
+  initTestContext = 'Should test Context be properly initialized.',
   getMimeTypes = `Should GET allowed mime-types.`,
 }
 
@@ -13,7 +13,7 @@ describe(`e2e: (GET)${MultimediaRoute.mimeTypes}`, () => {
 
   beforeAll(async () => (testCtx = await TestContext.getInstance()));
 
-  it(should.initModule, async () => {
+  it(should.initTestContext, async () => {
     expect(testCtx.app).not.toBeNull();
     expect(testCtx.request).not.toBeNull();
     expect(testCtx.app).toBeInstanceOf(NestApplication);
