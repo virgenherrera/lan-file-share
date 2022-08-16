@@ -11,7 +11,7 @@
     "npm": "^8.3.x"
   },
   "scripts": {
-    "test": "npm run local:ci",
+    "test": "run-s -l test:*",
     "start": "node dist/main",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
