@@ -47,7 +47,7 @@ export class UploadController {
     @Body(DtoValidation.pipe) body: UploadPathDto,
     @UploadedFiles() files: Express.Multer.File[],
   ): Promise<UploadManyResponse> {
-    if (!files.length) throw new BadRequest('No files uploaded.');
+    if (!files?.length) throw new BadRequest('No files uploaded.');
 
     this.logger.log(`processing uploaded Files`);
 

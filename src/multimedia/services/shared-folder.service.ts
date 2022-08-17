@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Stats } from 'fs';
 import { ParsedPath } from 'path';
-import { BadRequest } from '../../core/exceptions';
+import { NotFound } from '../../core/exceptions';
 import { MediaMimeTypeSource } from '../constants';
 import { MultimediaRoute } from '../enums';
 import { DownloadableFile, FileInfo, FolderInfo } from '../models';
@@ -74,11 +74,11 @@ export class SharedFolderService {
     const fullPath = this.fs.resolve(this.fs.sharedFolderPath, path);
 
     if (!this.fs.existsSync(fullPath)) {
-      const errMsg = `Path ${path} does not exist`;
+      const errMsg = `Path '${path}' does not exist`;
 
       this.logger.error(errMsg);
 
-      throw new BadRequest(errMsg);
+      throw new NotFound(errMsg);
     }
 
     return fullPath;

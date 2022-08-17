@@ -1,14 +1,14 @@
 import { NestApplication } from '@nestjs/core';
-import { CoreRoute } from '../../../src/core/enums';
-import { GetHealthMatcher } from '../../matchers/core/get-health.matcher';
+import { MultimediaRoute } from '../../../src/multimedia/enums';
+import { FolderInfoMatcher } from '../../matchers/multimedia/folder-info.matcher';
 import { TestContext } from '../../utils';
 
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
-  getHealth = `Should GET appHealth get data related process.`,
+  getFolderInfo = 'Should GET folder info properly.',
 }
 
-describe(`e2e:(GET)${CoreRoute.health}`, () => {
+describe(`e2e:(GET)${MultimediaRoute.sharedFolder}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => (testCtx = await TestContext.getInstance()));
@@ -19,11 +19,12 @@ describe(`e2e:(GET)${CoreRoute.health}`, () => {
     expect(testCtx.app).toBeInstanceOf(NestApplication);
   });
 
-  it(should.getHealth, async () => {
-    const matcher = new GetHealthMatcher();
-    const { status, body } = await testCtx.request.get(CoreRoute.health);
+  it(should.getFolderInfo, async () => {
+    const { status, body } = await testCtx.request.get(
+      MultimediaRoute.sharedFolder.replace('*', ''),
+    );
 
     expect(status).toBe(200);
-    expect(body).toMatchObject(matcher);
+    expect(body).toMatchObject(FolderInfoMatcher);
   });
 });
