@@ -8,7 +8,7 @@ const enum should {
   getMimeTypes = `Should GET allowed mime-types.`,
 }
 
-describe(`e2e: (GET)${MultimediaRoute.mimeTypes}`, () => {
+describe(`e2e:(GET)${MultimediaRoute.mimeTypes}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => (testCtx = await TestContext.getInstance()));

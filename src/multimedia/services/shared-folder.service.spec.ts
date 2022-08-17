@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequest } from '../../core/exceptions';
+import { NotFound } from '../../core/exceptions';
 import { DownloadableFile, FolderInfo } from '../models';
 import { SharedFolderService } from './shared-folder.service';
 import { FileSystemServiceProvider, mockFileSystemService } from './__mocks__';
@@ -44,7 +44,7 @@ describe(`UT:${SharedFolderService.name}`, () => {
     const existsSyncSpy = jest.spyOn(mockFileSystemService, 'existsSync');
 
     await expect(service.getDownloadableFile(mockPath)).rejects.toBeInstanceOf(
-      BadRequest,
+      NotFound,
     );
     expect(existsSyncSpy).toHaveBeenCalledWith(mockPath);
   });

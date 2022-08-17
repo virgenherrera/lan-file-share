@@ -21,8 +21,7 @@ export class TestConfig implements Config.InitialOptions {
     'html-spa',
   ] as Config.InitialOptions['coverageReporters'];
   coverageThreshold = {
-    // global: { branches: 85, functions: 85, lines: 85, statements: 85 },
-    global: { branches: 25, functions: 25, lines: 25, statements: 25 },
+    global: { branches: 85, functions: 85, lines: 85, statements: 85 },
   };
   maxWorkers = '50%';
   rootDir = 'src';

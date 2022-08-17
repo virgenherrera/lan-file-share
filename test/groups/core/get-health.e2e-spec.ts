@@ -8,7 +8,7 @@ const enum should {
   getHealth = `Should GET appHealth get data related process.`,
 }
 
-describe(`e2e: (GET)${CoreRoute.health}`, () => {
+describe(`e2e:(GET)${CoreRoute.health}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => (testCtx = await TestContext.getInstance()));

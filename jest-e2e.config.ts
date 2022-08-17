@@ -6,6 +6,7 @@ class E2EConfig extends TestConfig implements Config.InitialOptions {
     ...this.collectCoverageFrom,
     '!**/*.(config|spec).ts',
     '!(dist|test)/**',
+    '!src/utils/**',
   ];
   coverageDirectory = `coverage/e2e`;
   reporters = ['default', 'summary', 'github-actions'];

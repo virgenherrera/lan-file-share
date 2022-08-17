@@ -7,12 +7,11 @@ import { TestContext } from '../../utils';
 
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
-  throwPostFile = `Should respond with 400 when calling the endpoint without a file.`,
-  throwAlreadyExists = `Should respond with 400 when file already exists.`,
-  postFile = `Should POST a file properly.`,
+  throw404 = 'Should GET 404 on non existent file.',
+  getFile = 'Should GET existent file properly.',
 }
 
-describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
+describe(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
   const mockFilename = 'fake_file_name.txt';
   const mockBuffer = Buffer.from('some data');
   const deleteMockFile = async () => {
@@ -36,18 +35,20 @@ describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
     expect(testCtx.app).toBeInstanceOf(NestApplication);
   });
 
-  it(should.throwPostFile, async () => {
-    const { status, body } = await testCtx.request.post(MultimediaRoute.file);
+  it(should.throw404, async () => {
+    const path = 'path/to/non/existent/file.ext';
+    const url = MultimediaRoute.fileStream.replace('*', path);
+    const { status, body } = await testCtx.request.get(url);
 
-    expect(status).toBe(400);
+    expect(status).toBe(404);
     expect(body).toMatchObject({
-      code: 'bad-request-error',
-      message: 'Bad Request',
-      details: ['No file uploaded.'],
+      code: 'not-found-error',
+      message: 'Not Found',
+      details: [`Path '${path}' does not exist`],
     });
   });
 
-  it(should.throwAlreadyExists, async () => {
+  it(should.getFile, async () => {
     const req1 = await testCtx.request
       .post(MultimediaRoute.file)
       .attach('file', mockBuffer, mockFilename);
@@ -57,26 +58,11 @@ describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
       data: `successfully uploaded file: '${mockFilename}'`,
     });
 
-    const req2 = await testCtx.request
-      .post(MultimediaRoute.file)
-      .attach('file', mockBuffer, mockFilename);
+    const url = MultimediaRoute.fileStream.replace('*', mockFilename);
+    const req2 = await testCtx.request.get(url);
 
-    expect(req2.status).toBe(400);
-    expect(req2.body).toMatchObject({
-      code: 'bad-request-error',
-      message: 'Bad Request',
-      details: [`File: '${mockFilename}' already exists.`],
-    });
-  });
-
-  it(should.postFile, async () => {
-    const { status, body } = await testCtx.request
-      .post(MultimediaRoute.file)
-      .attach('file', mockBuffer, mockFilename);
-
-    expect(status).toBe(201);
-    expect(body).toMatchObject({
-      data: `successfully uploaded file: '${mockFilename}'`,
-    });
+    expect(req2.status).toBe(200);
+    expect(req2.headers).toHaveProperty('content-disposition');
+    expect(req2.headers['content-disposition']).toContain(mockFilename);
   });
 });
