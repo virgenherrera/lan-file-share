@@ -57,11 +57,11 @@ describe(`UT:${SharedFolderService.name}`, () => {
     };
     mockFileSystemService.resolve = jest.fn().mockReturnValue(mockPath);
     mockFileSystemService.existsSync = jest.fn().mockReturnValue(true);
+    mockFileSystemService.stat = jest.fn().mockResolvedValue({ size: 0 });
+    mockFileSystemService.parse = jest.fn().mockReturnValue(parsed);
     mockFileSystemService.createReadStream = jest
       .fn()
       .mockReturnValue(mockReadStream);
-    mockFileSystemService.basename = jest.fn().mockReturnValue(parsed.base);
-    mockFileSystemService.extname = jest.fn().mockReturnValue(parsed.ext);
 
     const existsSyncSpy = jest.spyOn(mockFileSystemService, 'existsSync');
 

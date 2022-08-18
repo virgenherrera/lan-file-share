@@ -17,12 +17,12 @@ export class SharedFolderService {
     this.logger.log(`Getting file ${path}`);
 
     const filePath = this.getFullPath(path);
+    const { size } = await this.fs.stat(filePath);
+    const { base, ext } = this.fs.parse(filePath);
+    const [, , mimeType] = MediaMimeTypeSource.find(row => row[0] === ext);
     const fileSteam = this.fs.createReadStream(filePath);
-    const fileName = this.fs.basename(filePath);
-    const fileExt = this.fs.extname(filePath);
-    const [, , mimeType] = MediaMimeTypeSource.find(row => row[0] === fileExt);
 
-    return new DownloadableFile(fileName, mimeType, fileSteam);
+    return new DownloadableFile(base, mimeType, fileSteam, size);
   }
 
   async getPathInfo(path = ''): Promise<FolderInfo> {
