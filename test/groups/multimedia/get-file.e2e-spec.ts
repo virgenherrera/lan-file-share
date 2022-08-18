@@ -3,6 +3,7 @@ import { join } from 'path';
 import { MultimediaRoute } from '../../../src/multimedia/enums';
 import { MulterConfig } from '../../../src/multimedia/modules';
 import { FileSystemService } from '../../../src/multimedia/services';
+import { getFileHeaders } from '../../matchers';
 import { TestContext } from '../../utils';
 
 const enum should {
@@ -60,9 +61,9 @@ describe(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
 
     const url = MultimediaRoute.fileStream.replace('*', mockFilename);
     const req2 = await testCtx.request.get(url);
+    const fileHeadersMatcher = getFileHeaders(mockFilename);
 
     expect(req2.status).toBe(200);
-    expect(req2.headers).toHaveProperty('content-disposition');
-    expect(req2.headers['content-disposition']).toContain(mockFilename);
+    expect(req2.headers).toMatchObject(fileHeadersMatcher);
   });
 });
