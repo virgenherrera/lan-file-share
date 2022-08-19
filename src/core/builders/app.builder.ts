@@ -53,7 +53,7 @@ export class AppBuilder {
   }
 
   private async setAppMiddleware() {
-    if (this.buildDocs) return this;
+    if (this.buildDocs) return;
 
     const { default: helmet } = await import('helmet');
     const compression = await import('compression');
@@ -63,7 +63,7 @@ export class AppBuilder {
   }
 
   private async setAppPort() {
-    if (this.buildDocs) return this;
+    if (this.buildDocs) return;
 
     const { port, environment } = this.app.get(EnvConfigService);
 

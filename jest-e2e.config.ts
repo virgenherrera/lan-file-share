@@ -4,6 +4,7 @@ import { TestConfig } from './jest.config';
 class E2EConfig extends TestConfig implements Config.InitialOptions {
   collectCoverageFrom = [
     ...this.collectCoverageFrom,
+    '!**/env-config.service.ts',
     '!**/*.(config|spec).ts',
     '!(dist|test)/**',
     '!src/utils/**',
