@@ -7,9 +7,6 @@ import { MockEnvConfigProvider } from '../../src/core/services/__mocks__';
 export class TestContext {
   private static instance: TestContext = null;
 
-  app: INestApplication = null;
-  request: supertest.SuperTest<supertest.Test> = null;
-
   static async getInstance() {
     if (TestContext.instance) return TestContext.instance;
 
@@ -19,6 +16,9 @@ export class TestContext {
 
     return TestContext.instance;
   }
+
+  app: INestApplication = null;
+  request: supertest.SuperTest<supertest.Test> = null;
 
   private async initContext() {
     const testingModule = await Test.createTestingModule({

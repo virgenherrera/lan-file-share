@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { parseFileSize } from '../../utils';
+import { byteLengthHumanize } from '../../utils';
 import { FileInfoArgs } from '../interfaces';
 
 export class FileInfo {
@@ -9,11 +9,13 @@ export class FileInfo {
   @ApiProperty() createdAt: Date;
   @ApiProperty() updatedAt: Date;
 
-  constructor(args: FileInfoArgs) {
-    this.fileName = args.base;
-    this.href = args.href;
-    this.size = parseFileSize(args.size);
-    this.createdAt = args.birthtime;
-    this.updatedAt = args.mtime;
+  constructor({ base, href, size, birthtime, mtime }: FileInfoArgs) {
+    Object.assign(this, {
+      base,
+      href,
+      size: byteLengthHumanize(size),
+      birthtime,
+      mtime,
+    });
   }
 }
