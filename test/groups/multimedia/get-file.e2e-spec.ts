@@ -8,7 +8,7 @@ import { TestContext } from '../../utils';
 
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
-  throw404 = 'Should GET 404 on non existent file.',
+  throw404 = 'Should GET 404 on non-existent file.',
   getFile = 'Should GET existent file properly.',
 }
 
@@ -31,7 +31,7 @@ describe(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
   afterEach(deleteMockFile);
 
   it(should.initTestContext, async () => {
-    expect(testCtx.app).not.toBeNull();
+    expect(testCtx).not.toBeNull();
     expect(testCtx.request).not.toBeNull();
     expect(testCtx.app).toBeInstanceOf(NestApplication);
   });

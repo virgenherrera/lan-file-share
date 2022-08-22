@@ -14,7 +14,7 @@ describe(`e2e:(GET)${MultimediaRoute.sharedFolder}`, () => {
   beforeAll(async () => (testCtx = await TestContext.getInstance()));
 
   it(should.initTestContext, async () => {
-    expect(testCtx.app).not.toBeNull();
+    expect(testCtx).not.toBeNull();
     expect(testCtx.request).not.toBeNull();
     expect(testCtx.app).toBeInstanceOf(NestApplication);
   });

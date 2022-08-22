@@ -31,7 +31,7 @@ describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
   afterEach(deleteMockFile);
 
   it(should.initTestContext, async () => {
-    expect(testCtx.app).not.toBeNull();
+    expect(testCtx).not.toBeNull();
     expect(testCtx.request).not.toBeNull();
     expect(testCtx.app).toBeInstanceOf(NestApplication);
   });
