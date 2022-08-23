@@ -1,9 +1,11 @@
 import { NestApplication } from '@nestjs/core';
-import { join } from 'path';
 import { MultimediaRoute } from '../../../src/multimedia/enums';
-import { MulterConfig } from '../../../src/multimedia/modules';
-import { FileSystemService } from '../../../src/multimedia/services';
-import { TestContext } from '../../utils';
+import {
+  dropSharedFiles,
+  initSharedFiles,
+  mockSharedFiles,
+  TestContext,
+} from '../../utils';
 
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
@@ -13,22 +15,17 @@ const enum should {
 }
 
 describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
-  const mockFilename = 'fake_file_name.txt';
-  const mockBuffer = Buffer.from('some data');
-  const deleteMockFile = async () => {
-    const { sharedFolderPath } = testCtx.app.get(MulterConfig);
-    const fs = testCtx.app.get(FileSystemService);
-    const filePath = join(sharedFolderPath, mockFilename);
-
-    if (fs.existsSync(filePath)) await fs.unlink(filePath);
-  };
   let testCtx: TestContext = null;
 
-  beforeAll(async () => (testCtx = await TestContext.getInstance()));
+  beforeAll(async () => {
+    testCtx = await TestContext.getInstance();
 
-  beforeEach(deleteMockFile);
+    await initSharedFiles(testCtx);
+  });
 
-  afterEach(deleteMockFile);
+  afterAll(async () => {
+    await dropSharedFiles(testCtx);
+  });
 
   it(should.initTestContext, async () => {
     expect(testCtx).not.toBeNull();
@@ -48,28 +45,23 @@ describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
   });
 
   it(should.throwAlreadyExists, async () => {
-    const req1 = await testCtx.request
+    const [file] = mockSharedFiles;
+    const mockBuffer = Buffer.from(file.content);
+    const { status, body } = await testCtx.request
       .post(MultimediaRoute.file)
-      .attach('file', mockBuffer, mockFilename);
+      .attach('file', mockBuffer, file.filename);
 
-    expect(req1.status).toBe(201);
-    expect(req1.body).toMatchObject({
-      data: `successfully uploaded file: '${mockFilename}'`,
-    });
-
-    const req2 = await testCtx.request
-      .post(MultimediaRoute.file)
-      .attach('file', mockBuffer, mockFilename);
-
-    expect(req2.status).toBe(400);
-    expect(req2.body).toMatchObject({
+    expect(status).toBe(400);
+    expect(body).toMatchObject({
       code: 'bad-request-error',
       message: 'Bad Request',
-      details: [`File: '${mockFilename}' already exists.`],
+      details: [`File: '${file.filename}' already exists.`],
     });
   });
 
   it(should.postFile, async () => {
+    const mockFilename = 'test-file';
+    const mockBuffer = Buffer.from('another file content');
     const { status, body } = await testCtx.request
       .post(MultimediaRoute.file)
       .attach('file', mockBuffer, mockFilename);

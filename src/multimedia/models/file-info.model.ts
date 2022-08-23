@@ -11,11 +11,11 @@ export class FileInfo {
 
   constructor({ base, href, size, birthtime, mtime }: FileInfoArgs) {
     Object.assign(this, {
-      base,
+      fileName: base,
       href,
       size: byteLengthHumanize(size),
-      birthtime,
-      mtime,
+      createdAt: birthtime,
+      updatedAt: mtime,
     });
   }
 }

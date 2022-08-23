@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService, NoInferType } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { Environment } from '../enums/environment.enum';
 
 @Injectable()
 export class EnvConfigService {
+  get = this.configService.get.bind(this.configService);
   environment: Environment;
   port = 3000;
 
@@ -23,7 +24,7 @@ export class EnvConfigService {
   }
 
   private ensurePort() {
-    const APP_PORT = this.get<string>('APP_PORT');
+    const APP_PORT = this.configService.get<string>('APP_PORT');
 
     if (APP_PORT) {
       this.port = Number(APP_PORT);
@@ -32,12 +33,8 @@ export class EnvConfigService {
 
   get openApiPath() {
     const defaultValue = 'dist/openApi-docs/';
-    const value = this.get<string>('APP_OPEN_API_PATH');
+    const value = this.configService.get<string>('APP_OPEN_API_PATH');
 
     return !value ? defaultValue : value;
-  }
-
-  get<T = any>(propertyPath: string, defaultValue?: NoInferType<T>) {
-    return this.configService.get<T>(propertyPath, defaultValue);
   }
 }

@@ -1,10 +1,12 @@
 import { NestApplication } from '@nestjs/core';
-import { join } from 'path';
 import { MultimediaRoute } from '../../../src/multimedia/enums';
-import { MulterConfig } from '../../../src/multimedia/modules';
-import { FileSystemService } from '../../../src/multimedia/services';
 import { getFileHeaders } from '../../matchers';
-import { TestContext } from '../../utils';
+import {
+  dropSharedFiles,
+  initSharedFiles,
+  mockSharedFiles,
+  TestContext,
+} from '../../utils';
 
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
@@ -13,22 +15,17 @@ const enum should {
 }
 
 describe(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
-  const mockFilename = 'fake_file_name.txt';
-  const mockBuffer = Buffer.from('some data');
-  const deleteMockFile = async () => {
-    const { sharedFolderPath } = testCtx.app.get(MulterConfig);
-    const fs = testCtx.app.get(FileSystemService);
-    const filePath = join(sharedFolderPath, mockFilename);
-
-    if (fs.existsSync(filePath)) await fs.unlink(filePath);
-  };
   let testCtx: TestContext = null;
 
-  beforeAll(async () => (testCtx = await TestContext.getInstance()));
+  beforeAll(async () => {
+    testCtx = await TestContext.getInstance();
 
-  beforeEach(deleteMockFile);
+    await initSharedFiles(testCtx);
+  });
 
-  afterEach(deleteMockFile);
+  afterAll(async () => {
+    await dropSharedFiles(testCtx);
+  });
 
   it(should.initTestContext, async () => {
     expect(testCtx).not.toBeNull();
@@ -50,20 +47,14 @@ describe(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
   });
 
   it(should.getFile, async () => {
-    const req1 = await testCtx.request
-      .post(MultimediaRoute.file)
-      .attach('file', mockBuffer, mockFilename);
+    const [firstFile] = mockSharedFiles;
+    const { filename } = firstFile;
 
-    expect(req1.status).toBe(201);
-    expect(req1.body).toMatchObject({
-      data: `successfully uploaded file: '${mockFilename}'`,
-    });
+    const url = MultimediaRoute.fileStream.replace('*', filename);
+    const { status, headers } = await testCtx.request.get(url);
+    const fileHeadersMatcher = getFileHeaders(filename);
 
-    const url = MultimediaRoute.fileStream.replace('*', mockFilename);
-    const req2 = await testCtx.request.get(url);
-    const fileHeadersMatcher = getFileHeaders(mockFilename);
-
-    expect(req2.status).toBe(200);
-    expect(req2.headers).toMatchObject(fileHeadersMatcher);
+    expect(status).toBe(200);
+    expect(headers).toMatchObject(fileHeadersMatcher);
   });
 });

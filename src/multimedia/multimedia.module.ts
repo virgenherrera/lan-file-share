@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CoreModule } from '../core/core.module';
 import { FileController } from './controllers/file.controller';
 import { MimeTypesController } from './controllers/mime-types.controller';
 import { UploadController } from './controllers/upload.controller';
@@ -10,7 +11,7 @@ import {
 } from './services';
 
 @Module({
-  imports: [MulterConfig.registerAsync()],
+  imports: [CoreModule, MulterConfig.registerAsync()],
   controllers: [UploadController, MimeTypesController, FileController],
   providers: [
     MulterConfig,
