@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '../core/core.module';
-import { FileController } from './controllers/file.controller';
-import { MimeTypesController } from './controllers/mime-types.controller';
-import { UploadController } from './controllers/upload.controller';
+import {
+  FileController,
+  MimeTypesController,
+  UploadController,
+} from './controllers';
 import { MulterConfig } from './modules';
 import {
   FileSystemService,

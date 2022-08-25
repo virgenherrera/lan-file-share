@@ -28,6 +28,7 @@ export const FileSystemServiceProvider: Provider = {
 export const mockSharedFolderService: Record<keyof SharedFolderService, any> = {
   getDownloadableFile: jest.fn(),
   getPathInfo: jest.fn(),
+  getZippedFile: jest.fn(),
 };
 
 export const SharedFolderServiceProvider: Provider = {

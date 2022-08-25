@@ -1,10 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
+import * as Zip from 'adm-zip';
+import { format } from 'date-fns';
 import { Stats } from 'fs';
 import { ParsedPath } from 'path';
-import { NotFound } from '../../core/exceptions';
+import { BadRequest, NotFound } from '../../core/exceptions';
 import { MediaMimeTypeSource } from '../constants';
+import { ZipFilesDto } from '../dto';
 import { MultimediaRoute } from '../enums';
-import { DownloadableFile, FileInfo, FolderInfo } from '../models';
+import {
+  DownloadableFile,
+  DownloadableZipFile,
+  FileInfo,
+  FolderInfo,
+} from '../models';
 import { FileSystemService } from './file-system.service';
 
 @Injectable()
@@ -12,6 +20,18 @@ export class SharedFolderService {
   private logger = new Logger(this.constructor.name);
 
   constructor(private fs: FileSystemService) {}
+
+  async getZippedFile({ filePaths }: ZipFilesDto): Promise<DownloadableFile> {
+    this.logger.verbose(`Compressing zip files...`);
+
+    try {
+      return await this.getMemoryCompressedFiles(filePaths);
+    } catch (error) {
+      throw error instanceof NotFound
+        ? new BadRequest(...error.details)
+        : error;
+    }
+  }
 
   async getDownloadableFile(path: string): Promise<DownloadableFile> {
     this.logger.log(`Getting file ${path}`);
@@ -82,5 +102,19 @@ export class SharedFolderService {
     }
 
     return fullPath;
+  }
+
+  private async getMemoryCompressedFiles(filePaths: string[]) {
+    const timestamp = format(Date.now(), 'yyyy-MM-dd KK:mm:ss');
+    const filename = `compressed-files_${timestamp}.zip`;
+    const memoryZipFile = filePaths
+      .map(filePath => this.getFullPath(filePath))
+      .reduce((acc, filePath) => {
+        acc.addLocalFile(filePath);
+
+        return acc;
+      }, new Zip());
+
+    return new DownloadableZipFile(filename, memoryZipFile);
   }
 }

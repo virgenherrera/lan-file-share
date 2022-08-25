@@ -1,6 +1,11 @@
 import { NestApplication } from '@nestjs/core';
 import { MultimediaRoute } from '../../../src/multimedia/enums';
-import { TestContext } from '../../utils';
+import {
+  dropSharedFiles,
+  initSharedFiles,
+  mockSharedFiles,
+  TestContext,
+} from '../../utils';
 
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
@@ -11,6 +16,16 @@ const enum should {
 
 describe(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
   let testCtx: TestContext = null;
+
+  beforeAll(async () => {
+    testCtx = await TestContext.getInstance();
+
+    await initSharedFiles(testCtx);
+  });
+
+  afterAll(async () => {
+    await dropSharedFiles(testCtx);
+  });
 
   beforeAll(async () => (testCtx = await TestContext.getInstance()));
 
@@ -60,6 +75,7 @@ describe(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
   it(should.obtainFile, async () => {
     const reqBody = {
       path: '',
+      files: mockSharedFiles.map(({ filename }) => filename),
     };
     const { status, headers } = await testCtx.request
       .post(MultimediaRoute.zipFile)
@@ -68,7 +84,9 @@ describe(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
     expect(status).toBe(200);
     expect(headers).toMatchObject({
       'content-type': 'application/zip',
-      'content-disposition': `attachment; filename="${'filename'}"`,
+      'content-disposition': expect.stringMatching(
+        /^attachment;\sfilename="compressed-files_.+"$/,
+      ),
       'content-length': expect.stringMatching(/^\d+$/),
     });
   });
