@@ -11,6 +11,7 @@ export const e2eConfig: Config.InitialOptions = {
     '!src/utils/**',
   ],
   coverageDirectory: 'coverage/e2e',
+  maxWorkers: 1,
   rootDir: './',
   testPathIgnorePatterns: [
     '/coverage/',

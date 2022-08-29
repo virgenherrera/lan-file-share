@@ -10,7 +10,7 @@ import {
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
   throw404Files = 'Should throw 404 when any of the files does not exists.',
-  obtainFile = 'Should respond with  Zipped file properly.',
+  getZipFile = 'Should respond with Zipped file properly.',
 }
 
 describe(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
@@ -26,8 +26,6 @@ describe(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
     await dropSharedFiles(testCtx);
   });
 
-  beforeAll(async () => (testCtx = await TestContext.getInstance()));
-
   it(should.initTestContext, async () => {
     expect(testCtx).not.toBeNull();
     expect(testCtx.request).not.toBeNull();
@@ -36,11 +34,7 @@ describe(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
 
   it(should.throw404Files, async () => {
     const reqBody = {
-      filePaths: [
-        'non-existent-file-01',
-        'non-existent-file-02',
-        'non-existent-file-03',
-      ],
+      filePaths: ['non-existent-file-01.txt'],
     };
     const { status, body } = await testCtx.request
       .post(MultimediaRoute.zipFile)
@@ -50,11 +44,11 @@ describe(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
     expect(body).toMatchObject({
       code: 'not-found-error',
       message: 'Not Found',
-      details: reqBody.filePaths.map(file => `file '${file}' does not exist`),
+      details: reqBody.filePaths.map(file => `Path '${file}' does not exist`),
     });
   });
 
-  it(should.obtainFile, async () => {
+  it(should.getZipFile, async () => {
     const reqBody = {
       filePaths: mockSharedFiles.map(({ filename }) => filename),
     };

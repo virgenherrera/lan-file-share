@@ -3,7 +3,7 @@ import * as Zip from 'adm-zip';
 import { format } from 'date-fns';
 import { Stats } from 'fs';
 import { ParsedPath } from 'path';
-import { BadRequest, NotFound } from '../../core/exceptions';
+import { NotFound } from '../../core/exceptions';
 import { MediaMimeTypeSource } from '../constants';
 import { ZipFilesDto } from '../dto';
 import { MultimediaRoute } from '../enums';
@@ -24,13 +24,7 @@ export class SharedFolderService {
   async getZippedFile({ filePaths }: ZipFilesDto): Promise<DownloadableFile> {
     this.logger.verbose(`Compressing zip files...`);
 
-    try {
-      return await this.getMemoryCompressedFiles(filePaths);
-    } catch (error) {
-      throw error instanceof NotFound
-        ? new BadRequest(...error.details)
-        : error;
-    }
+    return await this.getMemoryCompressedFiles(filePaths);
   }
 
   async getDownloadableFile(path: string): Promise<DownloadableFile> {
