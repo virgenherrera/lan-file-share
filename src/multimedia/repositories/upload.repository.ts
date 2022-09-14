@@ -59,7 +59,7 @@ export class UploadRepository
       if (curr.status === 'fulfilled') {
         acc.successes[idx] = curr.value.data;
       } else {
-        acc.errors[idx] = curr.reason.response.details[0];
+        acc.errors[idx] = curr.reason.response?.details[0];
       }
 
       return acc;

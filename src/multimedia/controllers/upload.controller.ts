@@ -5,7 +5,7 @@ import {
   Post,
   UploadedFile,
   UploadedFiles,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { BadRequest } from '../../core/exceptions';
 import { SoftBatchCreated } from '../../core/interfaces';
@@ -16,7 +16,7 @@ import { UploadPathDto } from '../dto';
 import { MultimediaRoute } from '../enums';
 import {
   UploadedFileInterceptor,
-  UploadedFilesInterceptor,
+  UploadedFilesInterceptor
 } from '../interceptors';
 import { FileWithDestinationPath, MulterFile } from '../interfaces';
 import { UploadResponse } from '../models';
