@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequest } from '../../core/exceptions';
 import { MockLoggerProvider } from '../../core/services/__mocks__';
-import { UploadManyResponse, UploadResponse } from '../models';
-import { UploadService } from './upload.service';
-import { FileSystemServiceProvider, mockFileSystemService } from './__mocks__';
+import { UploadManyResponse, UploadResponse } from '../../multimedia/models';
+import {
+  FileSystemServiceProvider,
+  mockFileSystemService,
+} from '../../multimedia/services/__mocks__';
+import { FileWithDestinationPath } from '../interfaces';
+import { UploadRepository } from './upload.repository';
 
-describe(`UT:${UploadService.name}`, () => {
+describe(`UT:${UploadRepository.name}`, () => {
   const enum should {
     createInstance = 'should create instance Properly.',
     throwBadRequestOnAlreadyExistingFile = 'should throw BadRequest on already existing file.',
@@ -13,19 +17,23 @@ describe(`UT:${UploadService.name}`, () => {
     createManyFiles = 'should upload a bunch of files properly.',
   }
 
-  let service: UploadService = null;
+  let service: UploadRepository = null;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MockLoggerProvider, FileSystemServiceProvider, UploadService],
+      providers: [
+        MockLoggerProvider,
+        FileSystemServiceProvider,
+        UploadRepository,
+      ],
     }).compile();
 
-    service = module.get(UploadService);
+    service = module.get(UploadRepository);
   });
 
   it(should.createInstance, () => {
     expect(service).not.toBeNull();
-    expect(service).toBeInstanceOf(UploadService);
+    expect(service).toBeInstanceOf(UploadRepository);
   });
 
   it(should.throwBadRequestOnAlreadyExistingFile, async () => {
@@ -33,7 +41,7 @@ describe(`UT:${UploadService.name}`, () => {
       destination: 'fake/destination/path',
       originalname: 'fake-file.ext',
       path: 'fake/shared/folder/uploaded-file.ext',
-    } as Express.Multer.File;
+    } as FileWithDestinationPath;
 
     mockFileSystemService.join = jest
       .fn()
@@ -41,7 +49,7 @@ describe(`UT:${UploadService.name}`, () => {
     mockFileSystemService.existsSync = jest.fn().mockReturnValue(true);
     mockFileSystemService.unlink = jest.fn().mockResolvedValue(undefined);
 
-    await expect(service.singleFile(file)).rejects.toBeInstanceOf(BadRequest);
+    await expect(service.create(file)).rejects.toBeInstanceOf(BadRequest);
   });
 
   it(should.createFile, async () => {
@@ -49,7 +57,7 @@ describe(`UT:${UploadService.name}`, () => {
       destination: 'fake/destination/path',
       originalname: 'fake-file.ext',
       path: 'fake/shared/folder/uploaded-file.ext',
-    } as Express.Multer.File;
+    } as FileWithDestinationPath;
 
     mockFileSystemService.join = jest
       .fn()
@@ -59,9 +67,7 @@ describe(`UT:${UploadService.name}`, () => {
     mockFileSystemService.mkdir = jest.fn();
     mockFileSystemService.rename = jest.fn();
 
-    await expect(service.singleFile(file)).resolves.toBeInstanceOf(
-      UploadResponse,
-    );
+    await expect(service.create(file)).resolves.toBeInstanceOf(UploadResponse);
   });
 
   it(should.createFile, async () => {
@@ -69,8 +75,9 @@ describe(`UT:${UploadService.name}`, () => {
       destination: 'fake/destination/path',
       originalname: 'fake-file.ext',
       path: 'fake/shared/folder/uploaded-file.ext',
-    } as Express.Multer.File;
-    const files = [file, file];
+      destinationPath: '',
+    } as FileWithDestinationPath;
+    const payload = [file, file];
 
     mockFileSystemService.join = jest
       .fn()
@@ -83,7 +90,7 @@ describe(`UT:${UploadService.name}`, () => {
     mockFileSystemService.mkdir = jest.fn();
     mockFileSystemService.rename = jest.fn();
 
-    await expect(service.multipleFiles(files, '')).resolves.toBeInstanceOf(
+    await expect(service.batchCreate(payload)).resolves.toBeInstanceOf(
       UploadManyResponse,
     );
   });

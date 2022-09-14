@@ -1,7 +1,6 @@
 import { Provider } from '@nestjs/common';
 import { FileSystemService } from './file-system.service';
 import { SharedFolderService } from './shared-folder.service';
-import { UploadService } from './upload.service';
 
 export const mockFileSystemService: Record<keyof FileSystemService, any> = {
   toUrlPath: jest.fn(),
@@ -34,14 +33,4 @@ export const mockSharedFolderService: Record<keyof SharedFolderService, any> = {
 export const SharedFolderServiceProvider: Provider = {
   provide: SharedFolderService,
   useValue: mockSharedFolderService,
-};
-
-export const mockUploadService: Record<keyof UploadService, any> = {
-  singleFile: jest.fn(),
-  multipleFiles: jest.fn(),
-};
-
-export const UploadServiceProvider: Provider = {
-  provide: UploadService,
-  useValue: mockUploadService,
 };

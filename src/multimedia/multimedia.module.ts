@@ -6,11 +6,8 @@ import {
   UploadController,
 } from './controllers';
 import { MulterConfig } from './modules';
-import {
-  FileSystemService,
-  SharedFolderService,
-  UploadService,
-} from './services';
+import { UploadRepository } from './repositories';
+import { FileSystemService, SharedFolderService } from './services';
 
 @Module({
   imports: [CoreModule, MulterConfig.registerAsync()],
@@ -18,9 +15,9 @@ import {
   providers: [
     MulterConfig,
     FileSystemService,
-    UploadService,
+    UploadRepository,
     SharedFolderService,
   ],
-  exports: [UploadService, SharedFolderService],
+  exports: [UploadRepository, SharedFolderService],
 })
 export class MultimediaModule {}

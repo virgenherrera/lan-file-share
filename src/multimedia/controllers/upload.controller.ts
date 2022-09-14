@@ -8,6 +8,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { BadRequest } from '../../core/exceptions';
+import { SoftBatchCreated } from '../../core/interfaces';
 import { DtoValidation } from '../../core/pipes';
 import { MediaMimeTypes } from '../constants';
 import { uploadManyDocs, UploadOneDocs } from '../docs';
@@ -17,27 +18,32 @@ import {
   UploadedFileInterceptor,
   UploadedFilesInterceptor,
 } from '../interceptors';
-import { UploadManyResponse, UploadResponse } from '../models';
-import { UploadService } from '../services';
+import { FileWithDestinationPath, MulterFile } from '../interfaces';
+import { UploadResponse } from '../models';
+import { UploadRepository } from '../repositories';
 
 @Controller()
 export class UploadController {
   private logger = new Logger(this.constructor.name);
 
-  constructor(private uploadService: UploadService) {}
+  constructor(private uploadRepository: UploadRepository) {}
 
   @Post(MultimediaRoute.file)
   @UploadOneDocs()
   @UseInterceptors(UploadedFileInterceptor(MediaMimeTypes))
   async uploadOne(
     @Body(DtoValidation.pipe) body: UploadPathDto,
-    @UploadedFile('file') file?: Express.Multer.File,
+    @UploadedFile('file') dto?: MulterFile,
   ): Promise<UploadResponse> {
-    if (!file) throw new BadRequest('No file uploaded.');
+    if (!dto) throw new BadRequest('No file uploaded.');
 
     this.logger.log(`processing uploaded File`);
+    const fileWithDestinationPath: FileWithDestinationPath = {
+      ...dto,
+      destinationPath: body.path,
+    };
 
-    return await this.uploadService.singleFile(file, body.path);
+    return await this.uploadRepository.create(fileWithDestinationPath);
   }
 
   @Post(MultimediaRoute.files)
@@ -45,12 +51,16 @@ export class UploadController {
   @UseInterceptors(UploadedFilesInterceptor(MediaMimeTypes))
   async uploadMany(
     @Body(DtoValidation.pipe) body: UploadPathDto,
-    @UploadedFiles() files: Express.Multer.File[],
-  ): Promise<UploadManyResponse> {
-    if (!files?.length) throw new BadRequest('No files uploaded.');
+    @UploadedFiles() dtos: MulterFile[],
+  ): Promise<SoftBatchCreated> {
+    if (!dtos?.length) throw new BadRequest('No files uploaded.');
 
     this.logger.log(`processing uploaded Files`);
 
-    return await this.uploadService.multipleFiles(files, body.path);
+    const filesWithDestinationPath: FileWithDestinationPath[] = dtos.map(
+      dto => ({ ...dto, destinationPath: body.path }),
+    );
+
+    return await this.uploadRepository.batchCreate(filesWithDestinationPath);
   }
 }

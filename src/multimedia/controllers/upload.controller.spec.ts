@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequest } from '../../core/exceptions';
 import {
-  mockUploadService,
-  UploadServiceProvider,
-} from '../services/__mocks__';
+  mockUploadRepository,
+  UploadRepositoryProvider,
+} from '../repositories/__mocks__';
 import { UploadController } from './upload.controller';
 
 describe('UploadController', () => {
@@ -20,7 +20,7 @@ describe('UploadController', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UploadController],
-      providers: [UploadServiceProvider],
+      providers: [UploadRepositoryProvider],
     }).compile();
 
     controller = module.get(UploadController);
@@ -34,7 +34,7 @@ describe('UploadController', () => {
   it(should.throwMissingFile, async () => {
     const mockBody = { path: 'fake/path' };
     const mockFile: any = undefined;
-    const serviceSpy = jest.spyOn(mockUploadService, 'singleFile');
+    const serviceSpy = jest.spyOn(mockUploadRepository, 'create');
 
     await expect(
       controller.uploadOne(mockBody, mockFile),
@@ -47,20 +47,20 @@ describe('UploadController', () => {
     const mockFile: any = {};
     const mockData = { foo: 'bar' };
 
-    mockUploadService.singleFile = jest.fn().mockResolvedValue(mockData);
+    mockUploadRepository.create = jest.fn().mockResolvedValue(mockData);
 
-    const serviceSpy = jest.spyOn(mockUploadService, 'singleFile');
+    const serviceSpy = jest.spyOn(mockUploadRepository, 'create');
 
     await expect(controller.uploadOne(mockBody, mockFile)).resolves.toBe(
       mockData,
     );
-    expect(serviceSpy).toHaveBeenCalledWith(mockFile, mockBody.path);
+    expect(serviceSpy).toHaveBeenCalled();
   });
 
   it(should.throwMissingFiles, async () => {
     const mockBody = { path: 'fake/path' };
     const mockFiles: any[] = [];
-    const serviceSpy = jest.spyOn(mockUploadService, 'multipleFiles');
+    const serviceSpy = jest.spyOn(mockUploadRepository, 'batchCreate');
 
     await expect(
       controller.uploadMany(mockBody, mockFiles),
@@ -73,13 +73,13 @@ describe('UploadController', () => {
     const mockFiles: any[] = [{}, {}];
     const mockData = { foo: 'bar' };
 
-    mockUploadService.multipleFiles = jest.fn().mockResolvedValue(mockData);
+    mockUploadRepository.batchCreate = jest.fn().mockResolvedValue(mockData);
 
-    const serviceSpy = jest.spyOn(mockUploadService, 'multipleFiles');
+    const serviceSpy = jest.spyOn(mockUploadRepository, 'batchCreate');
 
     await expect(controller.uploadMany(mockBody, mockFiles)).resolves.toBe(
       mockData,
     );
-    expect(serviceSpy).toHaveBeenCalledWith(mockFiles, mockBody.path);
+    expect(serviceSpy).toHaveBeenCalled();
   });
 });

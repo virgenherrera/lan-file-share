@@ -1,16 +1,33 @@
-import { BatchCreated } from './batch-created.interface';
-import { Criteria } from './criteria.interface';
-import { IDto, IDtos } from './dto.interface';
-import { FindAndCountDto } from './find-and-count.interface';
 import { FoundAndCounted } from './found-and-counted.interface';
 
-export interface IRepository<T, U = any> {
-  batchCreate?(dtos: IDtos<T, U>): Promise<BatchCreated<T>>;
-  create?(dto: IDto<T, U>): Promise<T>;
-  delete?(id: string): Promise<T | void>;
-  find?(dto: Criteria<T>): Promise<T[]>;
-  findAndCount?(dto: FindAndCountDto<T>): Promise<FoundAndCounted<T>>;
-  findById?(id: string): Promise<T>;
-  findOne?(dto: Criteria<T>): Promise<T>;
-  update?(id: string, dto: IDto<T, U>): Promise<T>;
+export interface IBatchCreate<T, U> {
+  batchCreate(dtos: T[]): Promise<U>;
+}
+
+export interface ICreate<T, U> {
+  create(dtos: T): Promise<U>;
+}
+
+export interface IDelete<T> {
+  delete(id: string): Promise<T>;
+}
+
+export interface IFind<T, U> {
+  find(dto: T): Promise<U[]>;
+}
+
+export interface IFindAndCount<T, U> {
+  findAndCount(dto: T): Promise<FoundAndCounted<U>>;
+}
+
+export interface IFindById<T> {
+  findById(id: string): Promise<T>;
+}
+
+export interface IFindOne<T, U> {
+  findOne(dto: T): Promise<U>;
+}
+
+export interface IUpdate<T, U> {
+  update(id: string, dto: T): Promise<U>;
 }
