@@ -6,9 +6,10 @@
     "EditorConfig.EditorConfig",
     "esbenp.prettier-vscode",
     "kisstkondoros.vscode-codemetrics",
+    "PKief.material-icon-theme",
     "redhat.vscode-yaml",
     "streetsidesoftware.code-spell-checker",
     "techer.open-in-browser",
-    "usernamehw.errorlens"
+    "usernamehw.errorlens",
   ]
 }
