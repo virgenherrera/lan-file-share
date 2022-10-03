@@ -1,6 +1,6 @@
 import { NestApplication } from '@nestjs/core';
-import { MultimediaRoute } from '../../../src/multimedia/enums';
 import { UploadManyResponse } from '../../../src/multimedia/models';
+import { UploadRoute } from '../../../src/upload/enums';
 import {
   dropSharedFiles,
   initSharedFiles,
@@ -14,7 +14,7 @@ const enum should {
   postFiles = `Should POST many files and get proper info about success and failures preserving post order.`,
 }
 
-describe(`e2e: POST${MultimediaRoute.files}`, () => {
+describe(`e2e: POST${UploadRoute.files}`, () => {
   const nonExistentFiles = [
     { filename: 'fake_file_1.txt', content: 'mock file content' },
     { filename: 'fake_file_2.txt', content: 'mock file content' },
@@ -39,7 +39,7 @@ describe(`e2e: POST${MultimediaRoute.files}`, () => {
   });
 
   it(should.throwPostFile, async () => {
-    const { status, body } = await testCtx.request.post(MultimediaRoute.files);
+    const { status, body } = await testCtx.request.post(UploadRoute.files);
 
     expect(status).toBe(400);
     expect(body).toMatchObject({
@@ -61,7 +61,7 @@ describe(`e2e: POST${MultimediaRoute.files}`, () => {
       },
     };
     const { status, body } = await testCtx.request
-      .post(MultimediaRoute.files)
+      .post(UploadRoute.files)
       .attach(
         'file[]',
         Buffer.from(nonExistentFiles[0].content),

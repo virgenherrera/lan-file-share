@@ -1,5 +1,5 @@
 import { NestApplication } from '@nestjs/core';
-import { MultimediaRoute } from '../../../src/multimedia/enums';
+import { UploadRoute } from '../../../src/upload/enums';
 import {
   dropSharedFiles,
   initSharedFiles,
@@ -14,7 +14,7 @@ const enum should {
   postFile = `Should POST a file properly.`,
 }
 
-describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
+describe(`e2e:(POST)${UploadRoute.file}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => {
@@ -34,7 +34,7 @@ describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
   });
 
   it(should.throwPostFile, async () => {
-    const { status, body } = await testCtx.request.post(MultimediaRoute.file);
+    const { status, body } = await testCtx.request.post(UploadRoute.file);
 
     expect(status).toBe(400);
     expect(body).toMatchObject({
@@ -48,7 +48,7 @@ describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
     const [file] = mockSharedFiles;
     const mockBuffer = Buffer.from(file.content);
     const { status, body } = await testCtx.request
-      .post(MultimediaRoute.file)
+      .post(UploadRoute.file)
       .attach('file', mockBuffer, file.filename);
 
     expect(status).toBe(400);
@@ -63,7 +63,7 @@ describe(`e2e:(POST)${MultimediaRoute.file}`, () => {
     const mockFilename = 'test-file';
     const mockBuffer = Buffer.from('another file content');
     const { status, body } = await testCtx.request
-      .post(MultimediaRoute.file)
+      .post(UploadRoute.file)
       .attach('file', mockBuffer, mockFilename);
 
     expect(status).toBe(201);

@@ -13,7 +13,7 @@ const enum should {
   getZipFile = 'Should respond with Zipped file properly.',
 }
 
-describe(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
+describe.skip(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => {

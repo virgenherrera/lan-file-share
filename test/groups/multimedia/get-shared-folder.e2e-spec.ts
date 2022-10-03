@@ -8,7 +8,7 @@ const enum should {
   getFolderInfo = 'Should GET folder info properly.',
 }
 
-describe(`e2e:(GET)${MultimediaRoute.sharedFolder}`, () => {
+describe.skip(`e2e:(GET)${MultimediaRoute.sharedFolder}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => {

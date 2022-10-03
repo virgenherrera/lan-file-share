@@ -14,7 +14,7 @@ const enum should {
   getFile = 'Should GET existent file properly.',
 }
 
-describe(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
+describe.skip(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => {
