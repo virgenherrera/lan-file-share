@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { NotFound } from '../../core/exceptions';
 import { IFindOne } from '../../core/interfaces';
 import { FileSystemService } from '../../upload/services';
-import { SharedFolderRoute } from '../enums';
 import { FileInfo, FolderInfo } from '../models';
 
 @Injectable()
@@ -28,12 +27,7 @@ export class FolderInfoService implements IFindOne<string, FolderInfo> {
 
         folderInfo.folders.push(childPath);
       } else {
-        const pathToFile = this.fs.toUrlPath(
-          '/api/v1',
-          SharedFolderRoute.fileStream,
-          path,
-          parsedPath.base,
-        );
+        const pathToFile = this.fs.toUrlPath(path, parsedPath.base);
         const fileInfo = new FileInfo({
           path: pathToFile,
           ...elementStats,
@@ -47,7 +41,7 @@ export class FolderInfoService implements IFindOne<string, FolderInfo> {
     return folderInfo;
   }
 
-  private getFullPath(path: string): string {
+  getFullPath(path: string): string {
     const fullPath = this.fs.resolve(this.fs.sharedFolderPath, path);
 
     if (!this.fs.existsSync(fullPath)) {

@@ -4,12 +4,17 @@ import { MulterConfig } from '../upload/imports';
 import { FileSystemService } from '../upload/services/file-system.service';
 import { UploadModule } from '../upload/upload.module';
 import { SharedFolderController } from './controllers';
-import { FolderInfoService } from './services';
+import { FolderInfoService, StreamableFileService } from './services';
 
 @Module({
   imports: [CoreModule, UploadModule],
   controllers: [SharedFolderController],
-  providers: [MulterConfig, FileSystemService, FolderInfoService],
+  providers: [
+    MulterConfig,
+    FileSystemService,
+    FolderInfoService,
+    StreamableFileService,
+  ],
   exports: [FolderInfoService],
 })
 export class SharedFolderModule {}

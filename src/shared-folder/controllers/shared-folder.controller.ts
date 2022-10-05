@@ -15,13 +15,16 @@ import { GetFileDocs, GetSharedFolderDocs, GetZipFileDocs } from '../docs';
 import { PathParamDto, ZipFilesDto } from '../dto';
 import { SharedFolderRoute } from '../enums';
 import { FolderInfo } from '../models';
-import { FolderInfoService } from '../services';
+import { FolderInfoService, StreamableFileService } from '../services';
 
 @Controller()
 export class SharedFolderController {
   private logger = new Logger(this.constructor.name);
 
-  constructor(private folderInfoService: FolderInfoService) {}
+  constructor(
+    private folderInfoService: FolderInfoService,
+    private streamableFileService: StreamableFileService,
+  ) {}
 
   @Get(SharedFolderRoute.sharedFolder)
   @GetSharedFolderDocs()
@@ -41,9 +44,13 @@ export class SharedFolderController {
   ): Promise<StreamableFile> {
     this.logger.verbose(`Getting file ${query.path}`);
 
-    console.log(response);
+    const downloadableFile = await this.streamableFileService.findOne(
+      query.path,
+    );
 
-    return query as any;
+    response.set(downloadableFile.headers);
+
+    return downloadableFile.streamableFile;
   }
 
   @Post(SharedFolderRoute.zipFile)
