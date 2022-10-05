@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFound } from '../../core/exceptions';
 import {
   FileSystemServiceProvider,
   mockFileSystemService,
@@ -10,6 +11,7 @@ describe(`UT:${FolderInfoService.name}`, () => {
   const enum should {
     createInstance = 'should create instance Properly.',
     getPathInfo = 'Should get path contents.',
+    throwInexistentPath = 'Should throw 404 when trying to locate an Inexistent file.',
   }
 
   let service: FolderInfoService = null;
@@ -48,12 +50,21 @@ describe(`UT:${FolderInfoService.name}`, () => {
       .mockImplementation((...args) => args.join('/'));
     mockFileSystemService.stat = jest
       .fn()
-      .mockResolvedValue(mockStat[0])
-      .mockResolvedValue(mockStat[1])
-      .mockResolvedValue(mockStat[2]);
+      .mockReturnValue(mockStat[0])
+      .mockReturnValue(mockStat[1])
+      .mockReturnValue(mockStat[2]);
     mockFileSystemService.parse = jest.fn().mockReturnValue(mockParsedPath);
     mockFileSystemService.toUrlPath = jest.fn().mockReturnValue('mock-path');
 
     await expect(service.findOne(mockPath)).resolves.toBeInstanceOf(FolderInfo);
+  });
+
+  it(should.throwInexistentPath, async () => {
+    const mockPath = '';
+
+    mockFileSystemService.resolve = jest.fn().mockReturnValue(mockPath);
+    mockFileSystemService.existsSync = jest.fn().mockReturnValue(false);
+
+    await expect(service.findOne(mockPath)).rejects.toBeInstanceOf(NotFound);
   });
 });

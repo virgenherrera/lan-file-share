@@ -21,15 +21,13 @@ export class FolderInfoService implements IFindOne<string, FolderInfo> {
       const elementPath = this.fs.join(fullPath, pathElement);
       const elementStats = await this.fs.stat(elementPath);
       const parsedPath = this.fs.parse(elementPath);
+      const urlPath = this.fs.toUrlPath(path, parsedPath.name);
 
       if (elementStats.isDirectory()) {
-        const childPath = this.fs.toUrlPath(path, parsedPath.name);
-
-        folderInfo.folders.push(childPath);
+        folderInfo.folders.push(urlPath);
       } else {
-        const pathToFile = this.fs.toUrlPath(path, parsedPath.base);
         const fileInfo = new FileInfo({
-          path: pathToFile,
+          path: urlPath,
           ...elementStats,
           ...parsedPath,
         });
