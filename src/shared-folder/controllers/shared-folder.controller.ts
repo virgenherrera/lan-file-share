@@ -15,10 +15,13 @@ import { GetFileDocs, GetSharedFolderDocs, GetZipFileDocs } from '../docs';
 import { PathParamDto, ZipFilesDto } from '../dto';
 import { SharedFolderRoute } from '../enums';
 import { FolderInfo } from '../models';
+import { FolderInfoService } from '../services';
 
 @Controller()
 export class SharedFolderController {
   private logger = new Logger(this.constructor.name);
+
+  constructor(private folderInfoService: FolderInfoService) {}
 
   @Get(SharedFolderRoute.sharedFolder)
   @GetSharedFolderDocs()
@@ -27,7 +30,7 @@ export class SharedFolderController {
   ): Promise<FolderInfo> {
     this.logger.verbose(`Getting shared folder ${query.path}`);
 
-    return query as any;
+    return this.folderInfoService.findOne(query.path);
   }
 
   @Get(SharedFolderRoute.fileStream)

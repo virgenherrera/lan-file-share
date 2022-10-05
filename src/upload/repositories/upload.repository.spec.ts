@@ -6,7 +6,7 @@ import { UploadManyResponse, UploadResponse } from '../models';
 import {
   FileSystemServiceProvider,
   mockFileSystemService,
-} from '../services/__mock__';
+} from '../services/__mocks__';
 import { UploadRepository } from './upload.repository';
 
 describe(`UT:${UploadRepository.name}`, () => {
