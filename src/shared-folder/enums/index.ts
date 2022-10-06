@@ -1,1 +1,1 @@
-export * from './shared-folder.routes';
+export * from './shared-folder.route.enum';
