@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IFindOne } from '../../core/interfaces';
-import { DownloadableFile } from '../../multimedia/models';
 import { MediaMimeTypeSource } from '../../upload/constants';
 import { FileSystemService } from '../../upload/services';
+import { DownloadableFile } from '../models';
 import { FolderInfoService } from './folder-info.service';
 
 @Injectable()
