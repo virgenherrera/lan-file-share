@@ -38,7 +38,7 @@ export class SharedFolderController {
   ): Promise<FolderInfo> {
     this.logger.verbose(`Getting shared folder ${query.path}`);
 
-    return this.folderInfoService.findOne(query.path);
+    return await this.folderInfoService.findOne(query.path);
   }
 
   @Get(SharedFolderRoute.fileStream)
