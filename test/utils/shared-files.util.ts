@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import * as rimraf from 'rimraf';
-import { MulterConfig } from '../../src/multimedia/modules';
+import { MulterConfig } from '../../src/upload/imports';
 import { TestContext } from './test-context.util';
 
 export const mockSharedFiles: Record<'filename' | 'content', string>[] = [

@@ -4,8 +4,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CoreModule } from './core/core.module';
 import { LogRequestMiddleware } from './core/middleware';
-import { MultimediaModule } from './multimedia/multimedia.module';
 import { QrStdoutModule } from './qr-stdout/qr-stdout.module';
+import { SharedFolderModule } from './shared-folder/shared-folder.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -25,9 +26,9 @@ import { QrStdoutModule } from './qr-stdout/qr-stdout.module';
       },
     }),
     CoreModule,
-    MultimediaModule,
+    UploadModule,
+    SharedFolderModule,
     QrStdoutModule,
-    CoreModule,
   ],
   providers: [Logger],
 })

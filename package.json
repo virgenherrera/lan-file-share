@@ -23,7 +23,7 @@
     "build:app": "nest build --webpack",
     "check:eslint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "check:prettier": "prettier --check \"src/**/*.ts\"",
-    "cleanup": "rimraf dist/ reports/ coverage/",
+    "cleanup": "rimraf dist/ coverage/",
     "fix:eslint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "fix:prettier": "prettier --write \"src/**/*.ts\"",
     "test:unit": "jest",
