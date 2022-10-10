@@ -1,6 +1,6 @@
 import { NestApplication } from '@nestjs/core';
-import { UploadManyResponse } from '../../../src/multimedia/models';
 import { UploadRoute } from '../../../src/upload/enums';
+import { UploadManyResponse } from '../../../src/upload/models';
 import {
   dropSharedFiles,
   initSharedFiles,
