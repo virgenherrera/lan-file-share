@@ -1,8 +1,8 @@
-import { FileInfo, FolderInfo } from '../../../src/multimedia/models';
+import { FileInfo, FolderInfo } from '../../../src/shared-folder/models';
 
 export const FileInfoMatcher: Record<keyof FileInfo, any> = {
   fileName: expect.any(String),
-  href: expect.any(String),
+  path: expect.any(String),
   size: expect.any(String),
   createdAt: expect.any(String),
   updatedAt: expect.any(String),

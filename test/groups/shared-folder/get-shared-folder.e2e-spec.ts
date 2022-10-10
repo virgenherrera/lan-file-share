@@ -1,6 +1,6 @@
 import { NestApplication } from '@nestjs/core';
-import { MultimediaRoute } from '../../../src/multimedia/enums';
-import { FolderInfoMatcher } from '../../matchers/multimedia/folder-info.matcher';
+import { SharedFolderRoute } from '../../../src/shared-folder/enums';
+import { FolderInfoMatcher } from '../../matchers';
 import { dropSharedFiles, initSharedFiles, TestContext } from '../../utils';
 
 const enum should {
@@ -8,7 +8,7 @@ const enum should {
   getFolderInfo = 'Should GET folder info properly.',
 }
 
-describe.skip(`e2e:(GET)${MultimediaRoute.sharedFolder}`, () => {
+describe(`e2e:(GET)${SharedFolderRoute.sharedFolder}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => {
@@ -29,7 +29,7 @@ describe.skip(`e2e:(GET)${MultimediaRoute.sharedFolder}`, () => {
 
   it(should.getFolderInfo, async () => {
     const { status, body } = await testCtx.request.get(
-      MultimediaRoute.sharedFolder.replace('*', ''),
+      SharedFolderRoute.sharedFolder,
     );
 
     expect(status).toBe(200);
