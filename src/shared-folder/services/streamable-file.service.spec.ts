@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DownloadableFile } from '../../multimedia/models';
 import {
   FileSystemServiceProvider,
   mockFileSystemService,
 } from '../../upload/services/__mocks__';
+import { DownloadableFile } from '../models';
 import { StreamableFileService } from './streamable-file.service';
 import {
   FolderInfoServiceMockProvider,
