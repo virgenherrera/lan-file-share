@@ -1,5 +1,5 @@
 import { NestApplication } from '@nestjs/core';
-import { MultimediaRoute } from '../../../src/multimedia/enums';
+import { SharedFolderRoute } from '../../../src/shared-folder/enums';
 import { getDownloadableFileHeaders } from '../../matchers';
 import {
   dropSharedFiles,
@@ -14,7 +14,7 @@ const enum should {
   getFile = 'Should GET existent file properly.',
 }
 
-describe.skip(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
+describe(`e2e:(GET)${SharedFolderRoute.fileStream}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => {
@@ -35,8 +35,9 @@ describe.skip(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
 
   it(should.throw404, async () => {
     const path = 'path/to/non/existent/file.ext';
-    const url = MultimediaRoute.fileStream.replace('*', path);
-    const { status, body } = await testCtx.request.get(url);
+    const { status, body } = await testCtx.request
+      .get(SharedFolderRoute.fileStream)
+      .query({ path });
 
     expect(status).toBe(404);
     expect(body).toMatchObject({
@@ -50,8 +51,9 @@ describe.skip(`e2e:(GET)${MultimediaRoute.fileStream}`, () => {
     const [firstFile] = mockSharedFiles;
     const { filename } = firstFile;
 
-    const url = MultimediaRoute.fileStream.replace('*', filename);
-    const { status, headers } = await testCtx.request.get(url);
+    const { status, headers } = await testCtx.request
+      .get(SharedFolderRoute.fileStream)
+      .query({ path: filename });
     const fileHeadersMatcher = getDownloadableFileHeaders(filename);
 
     expect(status).toBe(200);
