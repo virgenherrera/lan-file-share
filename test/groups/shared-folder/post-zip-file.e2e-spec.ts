@@ -1,5 +1,5 @@
 import { NestApplication } from '@nestjs/core';
-import { MultimediaRoute } from '../../../src/multimedia/enums';
+import { SharedFolderRoute } from '../../../src/shared-folder/enums';
 import {
   dropSharedFiles,
   initSharedFiles,
@@ -10,10 +10,10 @@ import {
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
   throw404Files = 'Should throw 404 when any of the files does not exists.',
-  getZipFile = 'Should respond with Zipped file properly.',
+  postZipFile = 'Should respond with Zipped file properly.',
 }
 
-describe.skip(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
+describe(`e2e:(POST)${SharedFolderRoute.zipFile}`, () => {
   let testCtx: TestContext = null;
 
   beforeAll(async () => {
@@ -37,7 +37,7 @@ describe.skip(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
       filePaths: ['non-existent-file-01.txt'],
     };
     const { status, body } = await testCtx.request
-      .post(MultimediaRoute.zipFile)
+      .post(SharedFolderRoute.zipFile)
       .send(reqBody);
 
     expect(status).toBe(404);
@@ -48,12 +48,12 @@ describe.skip(`e2e:(POST)${MultimediaRoute.zipFile}`, () => {
     });
   });
 
-  it(should.getZipFile, async () => {
+  it(should.postZipFile, async () => {
     const reqBody = {
       filePaths: mockSharedFiles.map(({ filename }) => filename),
     };
     const { status, headers } = await testCtx.request
-      .post(MultimediaRoute.zipFile)
+      .post(SharedFolderRoute.zipFile)
       .send(reqBody);
 
     expect(status).toBe(200);
