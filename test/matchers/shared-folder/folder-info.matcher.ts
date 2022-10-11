@@ -2,7 +2,7 @@ import { FileInfo, FolderInfo } from '../../../src/shared-folder/models';
 
 export const FileInfoMatcher: Record<keyof FileInfo, any> = {
   fileName: expect.any(String),
-  path: expect.any(String),
+  path: expect.stringMatching(/[^\\]*\.(\w+)$/), // path with extension RexExp.
   size: expect.any(String),
   createdAt: expect.any(String),
   updatedAt: expect.any(String),

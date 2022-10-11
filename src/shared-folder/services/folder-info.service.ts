@@ -21,7 +21,7 @@ export class FolderInfoService implements IFindOne<string, FolderInfo> {
       const elementPath = this.fs.join(fullPath, pathElement);
       const elementStats = await this.fs.stat(elementPath);
       const parsedPath = this.fs.parse(elementPath);
-      const urlPath = this.fs.toUrlPath(path, parsedPath.name);
+      const urlPath = this.fs.toUrlPath(path, parsedPath.base);
 
       if (elementStats.isDirectory()) {
         folderInfo.folders.push(urlPath);
