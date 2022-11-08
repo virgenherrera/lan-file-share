@@ -10,7 +10,7 @@ import {
   StreamableFile,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { DtoValidation } from '../../core/pipes';
+import { DtoValidation } from '../../common/pipes';
 import { GetFileDocs, GetSharedFolderDocs, GetZipFileDocs } from '../docs';
 import { PathParamDto, ZipFilesDto } from '../dto';
 import { SharedFolderRoute } from '../enums';

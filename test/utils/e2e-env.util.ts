@@ -1,4 +1,4 @@
-import { mockEnvConfigService } from '../../src/core/services/__mocks__';
+import { mockEnvConfigService } from '../../src/common/services/__mocks__';
 
 export const e2eMockENV = {
   SHARED_FOLDER_PATH: './dist/MOCK_SHARED_FOLDER',

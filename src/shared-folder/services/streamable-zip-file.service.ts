@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as Zip from 'adm-zip';
 import { format } from 'date-fns';
-import { ICreate } from '../../core/interfaces';
+import { ICreate } from '../../common/interfaces';
 import { ZipFilesDto } from '../dto';
 import { DownloadableZipFile } from '../models';
 import { FolderInfoService } from './folder-info.service';

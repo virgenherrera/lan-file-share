@@ -2,8 +2,8 @@ import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { CoreModule } from './core/core.module';
-import { LogRequestMiddleware } from './core/middleware';
+import { CommonModule } from './common/common.module';
+import { LogRequestMiddleware } from './common/middleware';
 import { QrStdoutModule } from './qr-stdout/qr-stdout.module';
 import { SharedFolderModule } from './shared-folder/shared-folder.module';
 import { UploadModule } from './upload/upload.module';
@@ -25,7 +25,7 @@ import { UploadModule } from './upload/upload.module';
         },
       },
     }),
-    CoreModule,
+    CommonModule,
     UploadModule,
     SharedFolderModule,
     QrStdoutModule,

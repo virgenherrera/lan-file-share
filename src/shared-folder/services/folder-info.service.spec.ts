@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFound } from '../../core/exceptions';
+import { NotFound } from '../../common/exceptions';
 import {
   FileSystemServiceProvider,
   mockFileSystemService,
