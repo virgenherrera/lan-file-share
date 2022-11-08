@@ -1,6 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { BadRequest } from '../../core/exceptions';
-import { IBatchCreate, ICreate, SoftBatchCreated } from '../../core/interfaces';
+import { BadRequest } from '../../common/exceptions';
+import {
+  IBatchCreate,
+  ICreate,
+  SoftBatchCreated,
+} from '../../common/interfaces';
 import { FileWithDestinationPath } from '../interfaces';
 import { UploadManyResponse, UploadResponse } from '../models';
 import { FileSystemService } from '../services';

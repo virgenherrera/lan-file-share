@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequest } from '../../core/exceptions';
+import { BadRequest } from '../../common/exceptions';
 import {
   mockUploadRepository,
   UploadRepositoryProvider,

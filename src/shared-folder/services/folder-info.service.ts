@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { NotFound } from '../../core/exceptions';
-import { IFindOne } from '../../core/interfaces';
+import { NotFound } from '../../common/exceptions';
+import { IFindOne } from '../../common/interfaces';
 import { FileSystemService } from '../../upload/services';
 import { FileInfo, FolderInfo } from '../models';
 

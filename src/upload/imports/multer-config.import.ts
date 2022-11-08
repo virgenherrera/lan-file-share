@@ -4,15 +4,15 @@ import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer
 import { mkdir } from 'fs/promises';
 import { homedir } from 'os';
 import { join, resolve } from 'path';
-import { CoreModule } from '../../core/core.module';
-import { EnvConfigService } from '../../core/services';
+import { CommonModule } from '../../common/common.module';
+import { EnvConfigService } from '../../common/services';
 import { getPackageMetadata } from '../../utils';
 
 @Injectable()
 export class MulterConfig implements MulterOptionsFactory {
   static registerAsync() {
     return MulterModule.registerAsync({
-      imports: [CoreModule],
+      imports: [CommonModule],
       useClass: MulterConfig,
       inject: [EnvConfigService],
     });

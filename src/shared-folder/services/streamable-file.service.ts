@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IFindOne } from '../../core/interfaces';
+import { IFindOne } from '../../common/interfaces';
 import { MediaMimeTypeSource } from '../../upload/constants';
 import { FileSystemService } from '../../upload/services';
 import { DownloadableFile } from '../models';

@@ -8,8 +8,8 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { BadRequest } from '../../core/exceptions';
-import { DtoValidation } from '../../core/pipes';
+import { BadRequest } from '../../common/exceptions';
+import { DtoValidation } from '../../common/pipes';
 import { MediaMimeTypes } from '../constants';
 import { uploadManyDocs, UploadOneDocs } from '../docs';
 import { UploadPathDto } from '../dto';

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequest } from '../../core/exceptions';
-import { MockLoggerProvider } from '../../core/services/__mocks__';
+import { BadRequest } from '../../common/exceptions';
+import { MockLoggerProvider } from '../../common/services/__mocks__';
 import { FileWithDestinationPath } from '../interfaces';
 import { UploadManyResponse, UploadResponse } from '../models';
 import {

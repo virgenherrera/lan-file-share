@@ -1,8 +1,8 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { networkInterfaces as getNetworkInterfaces } from 'os';
 import * as qrCodeTerminal from 'qrcode-terminal';
-import { Environment } from '../../core/enums';
-import { EnvConfigService } from '../../core/services';
+import { Environment } from '../../common/enums';
+import { EnvConfigService } from '../../common/services';
 
 @Injectable()
 export class AfterApplicationBootstrapService

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MockEnvConfigProvider } from '../../core/services/__mocks__';
+import { MockEnvConfigProvider } from '../../common/services/__mocks__';
 import { AfterApplicationBootstrapService } from './after-application-bootstrap.service';
 
 describe(`UT:${AfterApplicationBootstrapService.name}`, () => {

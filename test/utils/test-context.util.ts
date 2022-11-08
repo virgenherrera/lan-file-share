@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as supertest from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { EnvConfigService } from '../../src/core/services';
+import { EnvConfigService } from '../../src/common/services';
 import { mockE2eEnvConfigService } from './e2e-env.util';
 
 export class TestContext {
