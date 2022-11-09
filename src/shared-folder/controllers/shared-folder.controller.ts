@@ -12,7 +12,11 @@ import {
 import { Response } from 'express';
 import { DtoValidation } from '../../common/pipes';
 import { GetFileDocs, GetSharedFolderDocs, GetZipFileDocs } from '../docs';
-import { PathParamDto, ZipFilesDto } from '../dto';
+import {
+  GetFileStreamQueryDto,
+  GetSharedFolderQueryDto,
+  ZipFilesDto,
+} from '../dto';
 import { SharedFolderRoute } from '../enums';
 import { FolderInfo } from '../models';
 import {
@@ -34,7 +38,7 @@ export class SharedFolderController {
   @Get(SharedFolderRoute.sharedFolder)
   @GetSharedFolderDocs()
   async getSharedFolder(
-    @Query(DtoValidation.pipe) query: PathParamDto,
+    @Query(DtoValidation.pipe) query: GetSharedFolderQueryDto,
   ): Promise<FolderInfo> {
     this.logger.verbose(`Getting shared folder ${query.path}`);
 
@@ -44,7 +48,7 @@ export class SharedFolderController {
   @Get(SharedFolderRoute.fileStream)
   @GetFileDocs()
   async getFile(
-    @Query(DtoValidation.pipe) query: PathParamDto,
+    @Query(DtoValidation.pipe) query: GetFileStreamQueryDto,
     @ResponseDecorator({ passthrough: true }) response: Response,
   ): Promise<StreamableFile> {
     this.logger.verbose(`Getting file ${query.path}`);

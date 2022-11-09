@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
-import { PathParamDto, ZipFilesDto } from '../dto';
+import {
+  GetFileStreamQueryDto,
+  GetSharedFolderQueryDto,
+  ZipFilesDto,
+} from '../dto';
 import {
   FolderInfoServiceMockProvider,
   mockFolderInfoService,
@@ -40,7 +44,7 @@ describe(`UT:${SharedFolderController.name}`, () => {
   });
 
   it(should.getSharedFolder, async () => {
-    const payload: PathParamDto = {
+    const payload: GetSharedFolderQueryDto = {
       path: 'fake/path/to/file.ext',
     };
     const mockData = { key: 1, arr: [1, 2.3] };
@@ -54,7 +58,7 @@ describe(`UT:${SharedFolderController.name}`, () => {
   });
 
   it(should.getFileStream, async () => {
-    const payload: PathParamDto = {
+    const payload: GetFileStreamQueryDto = {
       path: 'fake/path/to/file.ext',
     };
     const response = {
