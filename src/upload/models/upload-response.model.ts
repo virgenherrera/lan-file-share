@@ -1,9 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UploadResponse {
-  @ApiProperty() data: string;
+  @ApiProperty({
+    description: 'Path to recently uploaded File.',
+  })
+  path: string;
 
-  constructor(data: string) {
-    this.data = data;
+  @ApiProperty({
+    description: 'Message describing status of Upload.',
+  })
+  message: string;
+
+  constructor(path: string) {
+    this.path = path;
+    this.message = `successfully uploaded file: '${path}'`;
   }
 }

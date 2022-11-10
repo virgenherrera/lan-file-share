@@ -5,9 +5,7 @@ import { Environment } from '../../common/enums';
 import { EnvConfigService } from '../../common/services';
 
 @Injectable()
-export class AfterApplicationBootstrapService
-  implements OnApplicationBootstrap
-{
+export class QrStdoutService implements OnApplicationBootstrap {
   private url: URL;
   private networkAddresses: string[];
   private messages: string[] = ['\n'];
@@ -72,7 +70,7 @@ export class AfterApplicationBootstrapService
     );
   }
 
-  private sleep(ms = 1e3) {
+  private sleep(ms = 5e3) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

@@ -1,10 +1,7 @@
 import {
   Body,
   Controller,
-  Get,
-  HttpCode,
   Logger,
-  Post,
   Query,
   Response as ResponseDecorator,
   StreamableFile,
@@ -12,8 +9,11 @@ import {
 import { Response } from 'express';
 import { DtoValidation } from '../../common/pipes';
 import { GetFileDocs, GetSharedFolderDocs, GetZipFileDocs } from '../docs';
-import { PathParamDto, ZipFilesDto } from '../dto';
-import { SharedFolderRoute } from '../enums';
+import {
+  GetFileStreamQueryDto,
+  GetSharedFolderQueryDto,
+  ZipFilesDto,
+} from '../dto';
 import { FolderInfo } from '../models';
 import {
   FolderInfoService,
@@ -31,20 +31,18 @@ export class SharedFolderController {
     private streamableZipFileService: StreamableZipFileService,
   ) {}
 
-  @Get(SharedFolderRoute.sharedFolder)
   @GetSharedFolderDocs()
   async getSharedFolder(
-    @Query(DtoValidation.pipe) query: PathParamDto,
+    @Query(DtoValidation.pipe) query: GetSharedFolderQueryDto,
   ): Promise<FolderInfo> {
     this.logger.verbose(`Getting shared folder ${query.path}`);
 
     return await this.folderInfoService.findOne(query.path);
   }
 
-  @Get(SharedFolderRoute.fileStream)
   @GetFileDocs()
   async getFile(
-    @Query(DtoValidation.pipe) query: PathParamDto,
+    @Query(DtoValidation.pipe) query: GetFileStreamQueryDto,
     @ResponseDecorator({ passthrough: true }) response: Response,
   ): Promise<StreamableFile> {
     this.logger.verbose(`Getting file ${query.path}`);
@@ -58,8 +56,6 @@ export class SharedFolderController {
     return downloadableFile.streamableFile;
   }
 
-  @Post(SharedFolderRoute.zipFile)
-  @HttpCode(200)
   @GetZipFileDocs()
   async getFilesCompressed(
     @Body(DtoValidation.pipe) body: ZipFilesDto,

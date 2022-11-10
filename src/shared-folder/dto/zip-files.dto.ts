@@ -3,7 +3,7 @@ import { ArrayMinSize, IsArray, IsDefined, IsString } from 'class-validator';
 
 export class ZipFilesDto {
   @ApiProperty({
-    description: 'An array of files to compress and download as Zip.',
+    description: 'An array with PATH files to compress and download as Zip.',
   })
   @IsDefined()
   @IsArray()

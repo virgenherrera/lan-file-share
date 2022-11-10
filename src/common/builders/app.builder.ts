@@ -1,4 +1,4 @@
-import { Logger, NestApplicationOptions } from '@nestjs/common';
+import { Logger, NestApplicationOptions, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { EnvConfigService } from '../services';
@@ -16,7 +16,7 @@ export class AppBuilder {
   private buildDocs: boolean;
   private logger = new Logger(this.constructor.name);
   private options: NestApplicationOptions = { logger: [] };
-  private prefix = 'api/v1';
+  private prefix = 'api';
 
   async bootstrap(buildDocs: boolean) {
     this.buildDocs = buildDocs;
@@ -24,6 +24,7 @@ export class AppBuilder {
     await this.setLogger();
     await this.initApp();
     await this.setGlobalPrefix();
+    await this.setVersioning();
     await this.setAppMiddleware();
     await this.setAppPort();
   }
@@ -48,8 +49,16 @@ export class AppBuilder {
   }
 
   private async setGlobalPrefix() {
-    this.logger.log(`setting app prefix: ${this.prefix}`, AppBuilder.name);
+    this.logger.log(`setting app prefix: ${this.prefix}`);
     this.app.setGlobalPrefix(this.prefix);
+  }
+
+  private async setVersioning() {
+    this.logger.log(`setting app URI version to 1`);
+    this.app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion: '1',
+    });
   }
 
   private async setAppMiddleware() {
@@ -69,9 +78,9 @@ export class AppBuilder {
 
     await this.app.listen(port);
 
-    this.logger.log(`Server is listening on port: ${port}`, AppBuilder.name);
+    this.logger.log(`Server is listening on port: ${port}`);
     this.logger.log(
-      `Server is running in ${environment} environment`,
+      `Server is running in "${environment}" environment`,
       AppBuilder.name,
     );
   }

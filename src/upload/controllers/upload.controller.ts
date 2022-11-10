@@ -3,21 +3,16 @@ import {
   Controller,
   Get,
   Logger,
-  Post,
   UploadedFile,
   UploadedFiles,
-  UseInterceptors,
 } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { BadRequest } from '../../common/exceptions';
 import { DtoValidation } from '../../common/pipes';
 import { MediaMimeTypes } from '../constants';
-import { uploadManyDocs, UploadOneDocs } from '../docs';
-import { UploadPathDto } from '../dto';
+import { PostUploadManyFilesDocs, PostUploadOneFileDocs } from '../docs';
+import { UploadFileDto, UploadFilesDto } from '../dto';
 import { UploadRoute } from '../enums';
-import {
-  UploadedFileInterceptor,
-  UploadedFilesInterceptor,
-} from '../interceptors';
 import { FileWithDestinationPath, MulterFile } from '../interfaces';
 import { UploadManyResponse, UploadResponse } from '../models';
 import { UploadRepository } from '../repositories';
@@ -29,41 +24,47 @@ export class UploadController {
   constructor(private uploadRepository: UploadRepository) {}
 
   @Get(UploadRoute.mimeTypes)
+  @ApiOperation({
+    summary: `GET ${UploadRoute.mimeTypes}`,
+    description: 'an endpoint to get a list of Allowed MIME types to upload.',
+  })
+  @ApiOkResponse({
+    isArray: true,
+    type: String,
+    description:
+      'an Array containing a list of all file types allowed for sharing.',
+  })
   async getMimeTypes() {
-    return { data: MediaMimeTypes };
+    return MediaMimeTypes;
   }
 
-  @Post(UploadRoute.file)
-  @UploadOneDocs()
-  @UseInterceptors(UploadedFileInterceptor(MediaMimeTypes))
-  async uploadOne(
-    @Body(DtoValidation.pipe) body: UploadPathDto,
-    @UploadedFile('file') dto?: MulterFile,
+  @PostUploadOneFileDocs()
+  async uploadOneFile(
+    @Body(DtoValidation.pipe) body: UploadFileDto,
+    @UploadedFile('file') file?: MulterFile,
   ): Promise<UploadResponse> {
-    if (!dto) throw new BadRequest('No file uploaded.');
+    if (!file) throw new BadRequest('No file uploaded.');
 
     this.logger.log(`processing uploaded File`);
     const fileWithDestinationPath: FileWithDestinationPath = {
-      ...dto,
+      ...file,
       destinationPath: body.path,
     };
 
     return await this.uploadRepository.create(fileWithDestinationPath);
   }
 
-  @Post(UploadRoute.files)
-  @uploadManyDocs()
-  @UseInterceptors(UploadedFilesInterceptor(MediaMimeTypes))
-  async uploadMany(
-    @Body(DtoValidation.pipe) body: UploadPathDto,
-    @UploadedFiles() dtos: MulterFile[],
+  @PostUploadManyFilesDocs()
+  async uploadManyFiles(
+    @Body(DtoValidation.pipe) body: UploadFilesDto,
+    @UploadedFiles() files: MulterFile[],
   ): Promise<UploadManyResponse> {
-    if (!dtos?.length) throw new BadRequest('No files uploaded.');
+    if (!files?.length) throw new BadRequest('No files uploaded.');
 
     this.logger.log(`processing uploaded Files`);
 
-    const filesWithDestinationPath: FileWithDestinationPath[] = dtos.map(
-      dto => ({ ...dto, destinationPath: body.path }),
+    const filesWithDestinationPath: FileWithDestinationPath[] = files.map(
+      file => ({ ...file, destinationPath: body.path }),
     );
 
     return await this.uploadRepository.batchCreate(filesWithDestinationPath);
