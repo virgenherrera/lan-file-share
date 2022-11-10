@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, HttpCode, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -10,6 +10,8 @@ import { ZipFilesDto } from '../dto';
 import { SharedFolderRoute } from '../enums';
 export function GetZipFileDocs() {
   return applyDecorators(
+    Post(SharedFolderRoute.zipFile),
+    HttpCode(200),
     ApiOperation({
       summary: `POST ${SharedFolderRoute.zipFile}`,
       description:

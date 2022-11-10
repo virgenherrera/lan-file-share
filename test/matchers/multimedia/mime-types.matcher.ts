@@ -1,3 +1,3 @@
-export const GetMimeTypesMatcher = {
-  data: expect.arrayContaining([expect.stringMatching(/.+\/.+/)]),
-};
+export const GetMimeTypesMatcher = expect.arrayContaining([
+  expect.stringMatching(/.+\/.+/),
+]);

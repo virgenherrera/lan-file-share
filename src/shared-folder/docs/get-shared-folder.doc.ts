@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, Get } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -12,6 +12,7 @@ import { FolderInfo } from '../models';
 
 export function GetSharedFolderDocs() {
   return applyDecorators(
+    Get(SharedFolderRoute.sharedFolder),
     ApiOperation({
       summary: `GET ${SharedFolderRoute.sharedFolder}`,
       description: 'Get folder content defined by path queryParam.',

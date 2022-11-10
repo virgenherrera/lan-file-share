@@ -1,10 +1,7 @@
 import {
   Body,
   Controller,
-  Get,
-  HttpCode,
   Logger,
-  Post,
   Query,
   Response as ResponseDecorator,
   StreamableFile,
@@ -17,7 +14,6 @@ import {
   GetSharedFolderQueryDto,
   ZipFilesDto,
 } from '../dto';
-import { SharedFolderRoute } from '../enums';
 import { FolderInfo } from '../models';
 import {
   FolderInfoService,
@@ -35,7 +31,6 @@ export class SharedFolderController {
     private streamableZipFileService: StreamableZipFileService,
   ) {}
 
-  @Get(SharedFolderRoute.sharedFolder)
   @GetSharedFolderDocs()
   async getSharedFolder(
     @Query(DtoValidation.pipe) query: GetSharedFolderQueryDto,
@@ -45,7 +40,6 @@ export class SharedFolderController {
     return await this.folderInfoService.findOne(query.path);
   }
 
-  @Get(SharedFolderRoute.fileStream)
   @GetFileDocs()
   async getFile(
     @Query(DtoValidation.pipe) query: GetFileStreamQueryDto,
@@ -62,8 +56,6 @@ export class SharedFolderController {
     return downloadableFile.streamableFile;
   }
 
-  @Post(SharedFolderRoute.zipFile)
-  @HttpCode(200)
   @GetZipFileDocs()
   async getFilesCompressed(
     @Body(DtoValidation.pipe) body: ZipFilesDto,

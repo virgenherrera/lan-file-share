@@ -1,4 +1,4 @@
-import { applyDecorators, UseInterceptors } from '@nestjs/common';
+import { applyDecorators, Post, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -15,6 +15,7 @@ import { UploadResponse } from '../models';
 
 export function PostUploadOneFileDocs() {
   return applyDecorators(
+    Post(UploadRoute.file),
     ApiOperation({
       summary: `POST ${UploadRoute.file}`,
       description:

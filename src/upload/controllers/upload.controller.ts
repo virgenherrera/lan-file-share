@@ -3,10 +3,10 @@ import {
   Controller,
   Get,
   Logger,
-  Post,
   UploadedFile,
   UploadedFiles,
 } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { BadRequest } from '../../common/exceptions';
 import { DtoValidation } from '../../common/pipes';
 import { MediaMimeTypes } from '../constants';
@@ -24,11 +24,20 @@ export class UploadController {
   constructor(private uploadRepository: UploadRepository) {}
 
   @Get(UploadRoute.mimeTypes)
+  @ApiOperation({
+    summary: `GET ${UploadRoute.mimeTypes}`,
+    description: 'an endpoint to get a list of Allowed MIME types to upload.',
+  })
+  @ApiOkResponse({
+    isArray: true,
+    type: String,
+    description:
+      'an Array containing a list of all file types allowed for sharing.',
+  })
   async getMimeTypes() {
-    return { data: MediaMimeTypes };
+    return MediaMimeTypes;
   }
 
-  @Post(UploadRoute.file)
   @PostUploadOneFileDocs()
   async uploadOneFile(
     @Body(DtoValidation.pipe) body: UploadFileDto,
@@ -45,7 +54,6 @@ export class UploadController {
     return await this.uploadRepository.create(fileWithDestinationPath);
   }
 
-  @Post(UploadRoute.files)
   @PostUploadManyFilesDocs()
   async uploadManyFiles(
     @Body(DtoValidation.pipe) body: UploadFilesDto,
