@@ -12,7 +12,7 @@ import { FileSystemService } from '../services';
 @Injectable()
 export class UploadRepository
   implements
-    IBatchCreate<FileWithDestinationPath, SoftBatchCreated>,
+    IBatchCreate<FileWithDestinationPath, SoftBatchCreated<UploadResponse>>,
     ICreate<FileWithDestinationPath, UploadResponse>
 {
   private logger = new Logger(this.constructor.name);
@@ -21,7 +21,7 @@ export class UploadRepository
 
   async batchCreate(
     dtos: FileWithDestinationPath[],
-  ): Promise<SoftBatchCreated> {
+  ): Promise<SoftBatchCreated<UploadResponse>> {
     const filePromises = dtos.map(file => this.create(file));
     const settledPromises = await Promise.allSettled(filePromises);
 
@@ -49,11 +49,11 @@ export class UploadRepository
     await this.fs.mkdir(dto.destinationPath);
     await this.fs.rename(dto.path, destinyFile);
 
-    const msg = `successfully uploaded file: '${unixPath}'`;
+    const res = new UploadResponse(unixPath);
 
-    this.logger.verbose(msg);
+    this.logger.verbose(res.message);
 
-    return new UploadResponse(msg);
+    return res;
   }
 
   private mapSettledToResponse(
@@ -61,7 +61,7 @@ export class UploadRepository
   ): UploadManyResponse {
     return promises.reduce((acc, curr, idx) => {
       if (curr.status === 'fulfilled') {
-        acc.successes[idx] = curr.value.data;
+        acc.successes[idx] = curr.value;
       } else {
         acc.errors[idx] = curr.reason.response?.details[0];
       }

@@ -68,7 +68,8 @@ describe(`e2e:(POST)${UploadRoute.file}`, () => {
 
     expect(status).toBe(201);
     expect(body).toMatchObject({
-      data: `successfully uploaded file: '${mockFilename}'`,
+      message: `successfully uploaded file: '${mockFilename}'`,
+      path: mockFilename,
     });
   });
 });

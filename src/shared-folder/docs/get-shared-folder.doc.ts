@@ -1,9 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiQuery,
-  ApiResponse,
 } from '@nestjs/swagger';
 import { NotFound } from '../../common/exceptions';
 import { GetSharedFolderQueryDto } from '../dto';
@@ -22,7 +22,7 @@ export function GetSharedFolderDocs() {
     ApiBadRequestResponse({
       type: NotFound,
     }),
-    ApiResponse({
+    ApiOkResponse({
       type: FolderInfo,
       description: `${FolderInfo.name} object containing data about shared folder files and sub-folders.`,
     }),

@@ -1,4 +1,4 @@
-export interface SoftBatchCreated {
-  successes: Record<number, string>;
+export interface SoftBatchCreated<T> {
+  successes: Record<number, T>;
   errors: Record<number, string>;
 }

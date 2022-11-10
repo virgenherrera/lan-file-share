@@ -52,8 +52,14 @@ describe(`e2e: POST${UploadRoute.files}`, () => {
   it(should.postFiles, async () => {
     const matcher: Record<keyof UploadManyResponse, any> = {
       successes: {
-        0: `successfully uploaded file: '${nonExistentFiles[0].filename}'`,
-        2: `successfully uploaded file: '${nonExistentFiles[1].filename}'`,
+        0: {
+          message: `successfully uploaded file: '${nonExistentFiles[0].filename}'`,
+          path: nonExistentFiles[0].filename,
+        },
+        2: {
+          message: `successfully uploaded file: '${nonExistentFiles[1].filename}'`,
+          path: nonExistentFiles[1].filename,
+        },
       },
       errors: {
         1: `File: '${existentFiles[0].filename}' already exists.`,

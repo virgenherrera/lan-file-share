@@ -37,7 +37,7 @@ describe('UploadController', () => {
     const serviceSpy = jest.spyOn(mockUploadRepository, 'create');
 
     await expect(
-      controller.uploadOne(mockBody, mockFile),
+      controller.uploadOneFile(mockBody, mockFile),
     ).rejects.toBeInstanceOf(BadRequest);
     expect(serviceSpy).not.toHaveBeenCalled();
   });
@@ -51,25 +51,25 @@ describe('UploadController', () => {
 
     const serviceSpy = jest.spyOn(mockUploadRepository, 'create');
 
-    await expect(controller.uploadOne(mockBody, mockFile)).resolves.toBe(
+    await expect(controller.uploadOneFile(mockBody, mockFile)).resolves.toBe(
       mockData,
     );
     expect(serviceSpy).toHaveBeenCalled();
   });
 
   it(should.throwMissingFiles, async () => {
-    const mockBody = { path: 'fake/path' };
+    const mockBody: any = { path: 'fake/path' };
     const mockFiles: any[] = [];
     const serviceSpy = jest.spyOn(mockUploadRepository, 'batchCreate');
 
     await expect(
-      controller.uploadMany(mockBody, mockFiles),
+      controller.uploadManyFiles(mockBody, mockFiles),
     ).rejects.toBeInstanceOf(BadRequest);
     expect(serviceSpy).not.toHaveBeenCalled();
   });
 
   it(should.uploadManyFiles, async () => {
-    const mockBody = { path: 'fake/path' };
+    const mockBody: any = { path: 'fake/path' };
     const mockFiles: any[] = [{}, {}];
     const mockData = { foo: 'bar' };
 
@@ -77,7 +77,7 @@ describe('UploadController', () => {
 
     const serviceSpy = jest.spyOn(mockUploadRepository, 'batchCreate');
 
-    await expect(controller.uploadMany(mockBody, mockFiles)).resolves.toBe(
+    await expect(controller.uploadManyFiles(mockBody, mockFiles)).resolves.toBe(
       mockData,
     );
     expect(serviceSpy).toHaveBeenCalled();
