@@ -7,7 +7,7 @@ import {
   ApiOperation,
 } from '@nestjs/swagger';
 import { BadRequest } from '../../common/exceptions';
-import { MediaMimeTypes } from '../constants';
+import { AllowedMimeTypes } from '../constants';
 import { UploadFileDto } from '../dto';
 import { UploadRoute } from '../enums';
 import { UploadedFileInterceptor } from '../interceptors';
@@ -21,7 +21,7 @@ export function PostUploadOneFileDocs() {
       description:
         'an endpoint to Upload a single file and share it across your LAN.',
     }),
-    UseInterceptors(UploadedFileInterceptor(MediaMimeTypes)),
+    UseInterceptors(UploadedFileInterceptor(AllowedMimeTypes)),
     ApiConsumes('multipart/form-data'),
     ApiBody({
       type: UploadFileDto,

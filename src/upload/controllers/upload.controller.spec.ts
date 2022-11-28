@@ -4,6 +4,7 @@ import {
   mockUploadRepository,
   UploadRepositoryProvider,
 } from '../repositories/__mocks__';
+import { MimeTypesServiceProvider } from '../services/__mocks__';
 import { UploadController } from './upload.controller';
 
 describe('UploadController', () => {
@@ -20,7 +21,7 @@ describe('UploadController', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UploadController],
-      providers: [UploadRepositoryProvider],
+      providers: [MimeTypesServiceProvider, UploadRepositoryProvider],
     }).compile();
 
     controller = module.get(UploadController);

@@ -7,7 +7,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { BadRequest } from '../../common/exceptions';
-import { MediaMimeTypes } from '../constants';
+import { AllowedMimeTypes } from '../constants';
 import { UploadFilesDto } from '../dto';
 import { UploadRoute } from '../enums';
 import { UploadedFilesInterceptor } from '../interceptors';
@@ -21,7 +21,7 @@ export function PostUploadManyFilesDocs() {
       description:
         'an endpoint to gracefully Upload many files and share it across your LAN.',
     }),
-    UseInterceptors(UploadedFilesInterceptor(MediaMimeTypes)),
+    UseInterceptors(UploadedFilesInterceptor(AllowedMimeTypes)),
     ApiConsumes('multipart/form-data'),
     ApiBody({
       type: UploadFilesDto,
