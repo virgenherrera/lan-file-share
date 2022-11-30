@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { BadRequest } from '../../common/exceptions';
 import { IFindOne } from '../../common/interfaces';
-import { MediaMimeTypeSource } from '../../upload/constants';
+import { mimeTypeSource } from '../../upload/constants';
 import { FileSystemService } from '../../upload/services';
 import { DownloadableFile } from '../models';
 import { FolderInfoService } from './folder-info.service';
@@ -22,9 +23,20 @@ export class StreamableFileService
     const filePath = this.folderInfoService.getFullPath(path);
     const { size } = await this.fs.stat(filePath);
     const { base, ext } = this.fs.parse(filePath);
-    const [, , mimeType] = MediaMimeTypeSource.find(row => row[0] === ext);
+    const mimeType = this.getMimeType(ext);
     const fileSteam = this.fs.createReadStream(filePath);
 
     return new DownloadableFile(base, mimeType, fileSteam, size);
+  }
+
+  private getMimeType(ext: string): string {
+    const [, , mimeType] = mimeTypeSource.find(row => row[0] === ext);
+
+    if (!mimeType)
+      throw new BadRequest(
+        `Extension: '${ext}' does not match with any registered mime type.`,
+      );
+
+    return mimeType;
   }
 }

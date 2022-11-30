@@ -7,7 +7,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { NotFound } from '../../common/exceptions';
-import { MediaMimeTypes } from '../../upload/constants';
+import { AllowedMimeTypes } from '../../upload/constants';
 import { GetFileStreamQueryDto } from '../dto';
 import { SharedFolderRoute } from '../enums';
 
@@ -24,7 +24,7 @@ export function GetFileDocs() {
     ApiBadRequestResponse({
       type: NotFound,
     }),
-    ApiProduces(...MediaMimeTypes),
+    ApiProduces(...AllowedMimeTypes),
     ApiOkResponse({
       description: `Raw File to download.`,
       headers: {

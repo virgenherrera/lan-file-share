@@ -9,19 +9,23 @@ import {
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { BadRequest } from '../../common/exceptions';
 import { DtoValidation } from '../../common/pipes';
-import { MediaMimeTypes } from '../constants';
 import { PostUploadManyFilesDocs, PostUploadOneFileDocs } from '../docs';
 import { UploadFileDto, UploadFilesDto } from '../dto';
 import { UploadRoute } from '../enums';
 import { FileWithDestinationPath, MulterFile } from '../interfaces';
 import { UploadManyResponse, UploadResponse } from '../models';
+import { MimeTypesResponse } from '../models/mime-types-response.model';
 import { UploadRepository } from '../repositories';
+import { MimeTypesService } from '../services';
 
 @Controller()
 export class UploadController {
   private logger = new Logger(this.constructor.name);
 
-  constructor(private uploadRepository: UploadRepository) {}
+  constructor(
+    private mimeTypesService: MimeTypesService,
+    private uploadRepository: UploadRepository,
+  ) {}
 
   @Get(UploadRoute.mimeTypes)
   @ApiOperation({
@@ -30,12 +34,12 @@ export class UploadController {
   })
   @ApiOkResponse({
     isArray: true,
-    type: String,
+    type: MimeTypesResponse,
     description:
-      'an Array containing a list of all file types allowed for sharing.',
+      'an Object containing lists of all file types allowed for sharing.',
   })
-  async getMimeTypes() {
-    return MediaMimeTypes;
+  async getMimeTypes(): Promise<MimeTypesResponse> {
+    return this.mimeTypesService.mimeTypesResponse;
   }
 
   @PostUploadOneFileDocs()
