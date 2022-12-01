@@ -8,8 +8,8 @@ import { EnvConfigService } from '../services';
 import { AppBuilder } from './app.builder';
 
 export class OpenApiBuilder {
-  static async exec() {
-    return new OpenApiBuilder().exec();
+  static async build() {
+    return new OpenApiBuilder().bootstrap();
   }
 
   private app: NestExpressApplication;
@@ -19,7 +19,7 @@ export class OpenApiBuilder {
   private openApiPath: string;
   private swaggerFilePath: string;
 
-  async exec() {
+  async bootstrap() {
     this.app = await AppBuilder.bootstrap(true);
 
     this.setServices();
@@ -75,5 +75,3 @@ export class OpenApiBuilder {
     this.app.close();
   }
 }
-
-OpenApiBuilder.exec();
