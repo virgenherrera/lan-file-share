@@ -22,7 +22,7 @@ The Above command, will install all dependencies and build the project.
 
 ## Running the app
 
-afterwards, from your preferred terminal, simply run the following 
+afterwards, from your preferred terminal, simply run the following
 command:
 
 ```bash

@@ -2,7 +2,7 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { networkInterfaces as getNetworkInterfaces } from 'os';
 import * as qrCodeTerminal from 'qrcode-terminal';
 import { Environment } from '../../common/enums';
-import { EnvConfigService } from '../../common/services';
+import { EnvironmentService } from '../../common/services';
 
 @Injectable()
 export class QrStdoutService implements OnApplicationBootstrap {
@@ -10,7 +10,7 @@ export class QrStdoutService implements OnApplicationBootstrap {
   private networkAddresses: string[];
   private messages: string[] = ['\n'];
 
-  constructor(private envConfigService: EnvConfigService) {}
+  constructor(private environmentService: EnvironmentService) {}
 
   onApplicationBootstrap() {
     this.waitToStdoutAddresses();
@@ -26,12 +26,12 @@ export class QrStdoutService implements OnApplicationBootstrap {
 
     const stdoutMessage = this.messages.join('\n');
 
-    if (this.envConfigService.environment !== Environment.test)
+    if (this.environmentService.environment !== Environment.test)
       process.stdout.write(stdoutMessage);
   }
 
   private setUrl() {
-    const { port } = this.envConfigService;
+    const { port } = this.environmentService;
 
     this.url = new URL(`http://localhost:${port}`);
   }

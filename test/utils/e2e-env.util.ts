@@ -1,10 +1,10 @@
-import { mockEnvConfigService } from '../../src/common/services/__mocks__';
+import { ConfigService } from '@nestjs/config';
 
 export const e2eMockENV = {
   SHARED_FOLDER_PATH: './dist/MOCK_SHARED_FOLDER',
 };
 
-export const mockE2eEnvConfigService: typeof mockEnvConfigService = {
-  ...mockEnvConfigService,
+export const mockConfigService: Record<keyof ConfigService, any> = {
   get: jest.fn().mockImplementation(envKey => e2eMockENV[envKey]),
+  getOrThrow: jest.fn(),
 };

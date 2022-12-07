@@ -1,14 +1,15 @@
 {
   "name": "lan-file-share",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "",
   "license": "MIT",
   "keywords": [],
-  "author": "",
-  "private": true,
+  "contributors": [
+    "Hugo Virgen (https://github.com/virgenherrera)"
+  ],
   "engines": {
-    "node": "^16.10.x",
-    "npm": "^8.3.x"
+    "node": ">=16.10.0",
+    "npm": ">=7.24.0"
   },
   "scripts": {
     "test": "npm run local:ci",
@@ -19,7 +20,7 @@
     "UT:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "e2e:develop": "jest --config jest-e2e.config.ts --watch --maxWorkers=1",
     "e2e:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "build:api-docs": "ts-node -r tsconfig-paths/register src/common/builders/open-api.builder.ts",
+    "build:api-docs": "ts-node -r tsconfig-paths/register src/openApi.ts",
     "build:api-docs-ui": "npx redoc-cli build -o api-docs/index.html api-docs/swagger.json",
     "build:app": "nest build --webpack",
     "check:eslint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
@@ -67,9 +68,9 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.45.1",
     "@typescript-eslint/parser": "^5.45.1",
-    "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "eslint": "^8.29.0",
     "jest": "^29.3.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.0",

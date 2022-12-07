@@ -1,12 +1,13 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { createReadStream, existsSync, PathLike } from 'fs';
 import { mkdir, readdir, rename, stat, unlink } from 'fs/promises';
 import { basename, extname, join, parse, resolve } from 'path';
+import { Logger } from '../../common/decorators';
 import { MulterConfig } from '../imports';
 
 @Injectable()
 export class FileSystemService {
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
 
   get sharedFolderPath() {
     return this.multerConfig.sharedFolderPath;

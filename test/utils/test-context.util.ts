@@ -1,9 +1,11 @@
 import { INestApplication } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import * as supertest from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { EnvConfigService } from '../../src/common/services';
-import { mockE2eEnvConfigService } from './e2e-env.util';
+import { EnvironmentService } from '../../src/common/services';
+import { mockEnvironmentService } from '../../src/common/services/__mocks__';
+import { mockConfigService } from './e2e-env.util';
 
 export class TestContext {
   private static instance: TestContext = null;
@@ -25,8 +27,10 @@ export class TestContext {
     const testingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(EnvConfigService)
-      .useValue(mockE2eEnvConfigService)
+      .overrideProvider(EnvironmentService)
+      .useValue(mockEnvironmentService)
+      .overrideProvider(ConfigService)
+      .useValue(mockConfigService)
       .compile();
 
     this.app = testingModule.createNestApplication();

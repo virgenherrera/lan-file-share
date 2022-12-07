@@ -2,11 +2,11 @@ import {
   Body,
   Controller,
   Get,
-  Logger,
   UploadedFile,
   UploadedFiles,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { Logger } from '../../common/decorators';
 import { BadRequest } from '../../common/exceptions';
 import { DtoValidation } from '../../common/pipes';
 import { PostUploadManyFilesDocs, PostUploadOneFileDocs } from '../docs';
@@ -20,7 +20,7 @@ import { MimeTypesService } from '../services';
 
 @Controller()
 export class UploadController {
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
 
   constructor(
     private mimeTypesService: MimeTypesService,

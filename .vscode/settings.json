@@ -29,6 +29,7 @@
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "javascript.updateImportsOnFileMove.enabled": "always",
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
@@ -47,6 +48,7 @@
     "postgres",
     "prebuild",
     "qrcode",
+    "redoc",
     "signin",
     "signup",
     "Streamable",

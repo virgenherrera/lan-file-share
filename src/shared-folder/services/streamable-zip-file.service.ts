@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as Zip from 'adm-zip';
 import { format } from 'date-fns';
+import { Logger } from '../../common/decorators';
 import { ICreate } from '../../common/interfaces';
 import { ZipFilesDto } from '../dto';
 import { DownloadableZipFile } from '../models';
@@ -10,7 +11,7 @@ import { FolderInfoService } from './folder-info.service';
 export class StreamableZipFileService
   implements ICreate<ZipFilesDto, DownloadableZipFile>
 {
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
 
   constructor(private folderInfoService: FolderInfoService) {}
 

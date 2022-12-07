@@ -1,29 +1,28 @@
-import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { existsSync, mkdirSync } from 'fs';
 import { writeFile } from 'fs/promises';
 import { join, resolve } from 'path';
 import { getPackageMetadata } from '../../utils';
-import { EnvConfigService } from '../services';
-import { AppBuilder } from './app.builder';
+import { EnvironmentService } from '../services';
+import { HttpAppBuilder } from './http-app.builder';
 
 export class OpenApiBuilder {
-  static async exec() {
-    return new OpenApiBuilder().exec();
+  static async build() {
+    return new OpenApiBuilder().bootstrap();
   }
 
-  private app: NestExpressApplication;
   private swaggerConfig: Omit<OpenAPIObject, 'paths'>;
-  private appConfigService: EnvConfigService;
+  private appEnvironmentService: EnvironmentService;
   private rootPath: string;
   private openApiPath: string;
   private swaggerFilePath: string;
 
-  async exec() {
-    this.app = await AppBuilder.bootstrap(true);
+  async bootstrap() {
+    await HttpAppBuilder.build(true);
 
     this.setServices();
     this.setFilePaths();
+
     await this.buildSwaggerJson();
   }
 
@@ -32,14 +31,14 @@ export class OpenApiBuilder {
   }
 
   private setServices() {
-    this.appConfigService = this.app.get(EnvConfigService);
+    this.appEnvironmentService = HttpAppBuilder.app.get(EnvironmentService);
   }
 
   private setFilePaths() {
     this.logger(`Setting file paths`);
 
     this.rootPath = resolve(process.cwd());
-    const { openApiPath } = this.appConfigService;
+    const { openApiPath } = this.appEnvironmentService;
     this.openApiPath = join(this.rootPath, openApiPath);
 
     if (!existsSync(this.openApiPath)) {
@@ -60,7 +59,7 @@ export class OpenApiBuilder {
       .setLicense(packageJson.license, null)
       .build();
     const swaggerDocument = SwaggerModule.createDocument(
-      this.app,
+      HttpAppBuilder.app,
       this.swaggerConfig,
     );
     const swaggerFileContent = JSON.stringify(swaggerDocument, null, 2);
@@ -72,8 +71,6 @@ export class OpenApiBuilder {
     });
 
     this.logger(`Closing NestJs application` + '\n');
-    this.app.close();
+    HttpAppBuilder.app.close();
   }
 }
-
-OpenApiBuilder.exec();

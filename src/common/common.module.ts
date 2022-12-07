@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CommonController } from './controllers/common.controller';
-import { EnvConfigService, HealthService } from './services';
+import { HealthController } from './controllers';
+import { EnvironmentService, HealthService } from './services';
 
 @Module({
-  controllers: [CommonController],
-  exports: [EnvConfigService],
+  controllers: [HealthController],
+  exports: [EnvironmentService],
   imports: [ConfigModule],
-  providers: [EnvConfigService, HealthService],
+  providers: [EnvironmentService, HealthService],
 })
 export class CommonModule {}
