@@ -1,26 +1,32 @@
-import { Logger, NestApplicationOptions, VersioningType } from '@nestjs/common';
+import { NestApplicationOptions, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { EnvConfigService } from '../services';
+import { Logger } from '../decorators';
+import { EnvironmentService } from '../services';
 
-export class AppBuilder {
-  static async bootstrap(buildDocs = false) {
-    const instance = new AppBuilder();
+export class HttpAppBuilder {
+  private static _app: NestExpressApplication = null;
 
-    await instance.bootstrap(buildDocs);
-
-    return instance.app;
+  static get app() {
+    return HttpAppBuilder._app;
   }
 
-  private app: NestExpressApplication;
-  private buildDocs: boolean;
-  private logger = new Logger(this.constructor.name);
+  static async build(buildDocs = false) {
+    const httpAppBuilder = new HttpAppBuilder(buildDocs);
+
+    await httpAppBuilder.bootstrap();
+
+    return HttpAppBuilder.app;
+  }
+
+  @Logger() private logger: Logger;
+
   private options: NestApplicationOptions = { logger: [] };
   private prefix = 'api';
 
-  async bootstrap(buildDocs: boolean) {
-    this.buildDocs = buildDocs;
+  constructor(private buildDocs: boolean) {}
 
+  async bootstrap() {
     await this.setLogger();
     await this.initApp();
     await this.setGlobalPrefix();
@@ -42,7 +48,7 @@ export class AppBuilder {
   private async initApp() {
     const { AppModule } = await import('../../app.module');
 
-    this.app = await NestFactory.create<NestExpressApplication>(
+    HttpAppBuilder._app = await NestFactory.create<NestExpressApplication>(
       AppModule,
       this.options,
     );
@@ -50,12 +56,12 @@ export class AppBuilder {
 
   private async setGlobalPrefix() {
     this.logger.log(`setting app prefix: ${this.prefix}`);
-    this.app.setGlobalPrefix(this.prefix);
+    HttpAppBuilder.app.setGlobalPrefix(this.prefix);
   }
 
   private async setVersioning() {
     this.logger.log(`setting app URI version to 1`);
-    this.app.enableVersioning({
+    HttpAppBuilder.app.enableVersioning({
       type: VersioningType.URI,
       defaultVersion: '1',
     });
@@ -67,21 +73,21 @@ export class AppBuilder {
     const { default: helmet } = await import('helmet');
     const compression = await import('compression');
 
-    this.app.use(helmet());
-    this.app.use(compression());
+    HttpAppBuilder.app.use(helmet());
+    HttpAppBuilder.app.use(compression());
   }
 
   private async setAppPort() {
     if (this.buildDocs) return;
 
-    const { port, environment } = this.app.get(EnvConfigService);
+    const { port, environment } = HttpAppBuilder.app.get(EnvironmentService);
 
-    await this.app.listen(port);
+    await HttpAppBuilder.app.listen(port);
 
     this.logger.log(`Server is listening on port: ${port}`);
     this.logger.log(
       `Server is running in "${environment}" environment`,
-      AppBuilder.name,
+      HttpAppBuilder.name,
     );
   }
 }

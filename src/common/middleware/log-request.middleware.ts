@@ -1,10 +1,10 @@
-import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { byteLengthHumanize } from '../../utils';
+import { Logger } from '../decorators';
 
 @Injectable()
 export class LogRequestMiddleware implements NestMiddleware {
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
 
   use(request: Request, response: Response, next: NextFunction) {
     response.on(
@@ -26,9 +26,7 @@ export class LogRequestMiddleware implements NestMiddleware {
     const contentLength = response.get('content-length');
     const diff = process.hrtime(startAt);
     const responseTime = diff[0] * 1e3 + diff[1] / 1e6;
-    const message = `(${userAgent}) ${method} ${originalUrl} ${statusCode} ${byteLengthHumanize(
-      Number(contentLength),
-    )}: - ${responseTime}ms`;
+    const message = `(${userAgent}) ${method} ${originalUrl} ${statusCode} ${contentLength} - ${responseTime}ms`;
 
     this.logger.log(message);
   }

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MockEnvConfigProvider } from '../../common/services/__mocks__';
+import { MockEnvironmentProvider } from '../../common/services/__mocks__';
 import { QrStdoutService } from './qr-stdout.service';
 
 describe(`UT:${QrStdoutService.name}`, () => {
@@ -12,7 +12,7 @@ describe(`UT:${QrStdoutService.name}`, () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MockEnvConfigProvider, QrStdoutService],
+      providers: [MockEnvironmentProvider, QrStdoutService],
     }).compile();
 
     service = module.get(QrStdoutService);
