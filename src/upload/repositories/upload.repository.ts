@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Logger } from '../../common/decorators';
 import { BadRequest } from '../../common/exceptions';
 import {
   IBatchCreate,
@@ -15,7 +16,7 @@ export class UploadRepository
     IBatchCreate<FileWithDestinationPath, SoftBatchCreated<UploadResponse>>,
     ICreate<FileWithDestinationPath, UploadResponse>
 {
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
 
   constructor(private fs: FileSystemService) {}
 

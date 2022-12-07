@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule, MulterOptionsFactory } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
@@ -6,6 +6,7 @@ import { mkdir } from 'fs/promises';
 import { homedir } from 'os';
 import { join, resolve } from 'path';
 import { CommonModule } from '../../common/common.module';
+import { Logger } from '../../common/decorators';
 import { getPackageMetadata } from '../../utils';
 
 @Injectable()
@@ -18,7 +19,8 @@ export class MulterConfig implements MulterOptionsFactory {
     });
   }
 
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
+
   private _sharedFolderPath: string;
 
   constructor(private configService: ConfigService) {

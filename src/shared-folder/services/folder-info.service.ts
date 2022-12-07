@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Logger } from '../../common/decorators';
 import { NotFound } from '../../common/exceptions';
 import { IFindOne } from '../../common/interfaces';
 import { FileSystemService } from '../../upload/services';
@@ -6,7 +7,7 @@ import { FileInfo, FolderInfo } from '../models';
 
 @Injectable()
 export class FolderInfoService implements IFindOne<string, FolderInfo> {
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
 
   constructor(private fs: FileSystemService) {}
 

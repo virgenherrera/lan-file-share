@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Logger } from '../../common/decorators';
 import { BadRequest } from '../../common/exceptions';
 import { IFindOne } from '../../common/interfaces';
 import { mimeTypeSource } from '../../upload/constants';
@@ -10,7 +11,7 @@ import { FolderInfoService } from './folder-info.service';
 export class StreamableFileService
   implements IFindOne<string, DownloadableFile>
 {
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
 
   constructor(
     private fs: FileSystemService,

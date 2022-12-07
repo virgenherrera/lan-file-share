@@ -1,12 +1,12 @@
 import {
   Body,
   Controller,
-  Logger,
   Query,
   Response as ResponseDecorator,
   StreamableFile,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { Logger } from '../../common/decorators';
 import { DtoValidation } from '../../common/pipes';
 import { GetFileDocs, GetSharedFolderDocs, GetZipFileDocs } from '../docs';
 import {
@@ -23,7 +23,7 @@ import {
 
 @Controller()
 export class SharedFolderController {
-  private logger = new Logger(this.constructor.name);
+  @Logger() private logger: Logger;
 
   constructor(
     private folderInfoService: FolderInfoService,
