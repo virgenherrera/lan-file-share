@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
-import * as rimraf from 'rimraf';
+import { rimraf } from 'rimraf';
 import { MulterConfig } from '../../src/upload/imports';
 import { TestContext } from './test-context.util';
 
@@ -36,13 +36,9 @@ export async function initSharedFiles(testCtx: TestContext) {
 }
 
 export function dropSharedFiles(testCtx: TestContext) {
-  return new Promise((Resolve, Reject) => {
-    const { sharedFolderPath } = testCtx.app.get(MulterConfig);
+  const { sharedFolderPath } = testCtx.app.get(MulterConfig);
 
-    return rimraf(sharedFolderPath, { maxBusyTries: 10 }, err =>
-      !err ? Resolve(null) : Reject(err),
-    );
-  });
+  return rimraf(sharedFolderPath, { maxRetries: 10 });
 }
 
 async function createFiles(path: string) {
