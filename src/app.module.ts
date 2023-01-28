@@ -1,7 +1,7 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { publicHtmlPath } from 'lan-file-share-web-ui';
 import { CommonModule } from './common/common.module';
 import { LogRequestMiddleware } from './common/middleware';
 import { QrStdoutModule } from './qr-stdout/qr-stdout.module';
@@ -15,7 +15,7 @@ import { UploadModule } from './upload/upload.module';
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
+      rootPath: publicHtmlPath,
       serveStaticOptions: {
         setHeaders(res) {
           res.setHeader(
