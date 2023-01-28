@@ -47,6 +47,7 @@
     "compression": "^1.7.4",
     "date-fns": "^2.29.3",
     "helmet": "^6.0.1",
+    "lan-file-share-web-ui": "github:virgenherrera/lan-file-share-angular-web-ui#1.1.0",
     "nest-winston": "^1.8.0",
     "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.1.13",
