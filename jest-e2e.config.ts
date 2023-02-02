@@ -5,7 +5,6 @@ export const e2eConfig: Config.InitialOptions = {
   ...BaseConfig,
   collectCoverageFrom: [
     ...BaseConfig.collectCoverageFrom,
-    '!**/env-config.service.ts',
     '!**/environment.service.ts',
     '!**/dto-validation.pipe.ts',
     '!**/*.(config|spec).ts',

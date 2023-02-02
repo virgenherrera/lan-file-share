@@ -4,7 +4,10 @@ import { Test } from '@nestjs/testing';
 import * as supertest from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { EnvironmentService } from '../../src/common/services';
-import { mockEnvironmentService } from '../../src/common/services/__mocks__';
+import {
+  MockEnvironmentProvider,
+  mockEnvironmentService,
+} from '../../src/common/services/__mocks__';
 import { mockConfigService } from './e2e-env.util';
 
 export class TestContext {
@@ -31,6 +34,8 @@ export class TestContext {
       .useValue(mockEnvironmentService)
       .overrideProvider(ConfigService)
       .useValue(mockConfigService)
+      .overrideProvider(MockEnvironmentProvider.provide)
+      .useValue(MockEnvironmentProvider.useValue)
       .compile();
 
     this.app = testingModule.createNestApplication();
