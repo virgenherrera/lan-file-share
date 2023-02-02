@@ -29,6 +29,7 @@ import { UploadModule } from './upload/upload.module';
     UploadModule,
     SharedFolderModule,
     QrStdoutModule,
+    CommonModule,
   ],
   providers: [Logger],
 })
