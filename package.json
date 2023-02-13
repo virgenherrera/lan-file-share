@@ -38,7 +38,7 @@
     "@nestjs/config": "^2.3.0",
     "@nestjs/core": "^9.3.7",
     "@nestjs/platform-express": "^9.3.7",
-    "@nestjs/serve-static": "^3.0.0",
+    "@nestjs/serve-static": "^3.0.1",
     "@nestjs/swagger": "^6.2.1",
     "adm-zip": "^0.5.10",
     "bcryptjs": "^2.4.3",
