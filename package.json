@@ -34,7 +34,7 @@
     "postinstall": "run-s cleanup build:app"
   },
   "dependencies": {
-    "@nestjs/common": "^9.3.8",
+    "@nestjs/common": "^9.3.9",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.3.8",
     "@nestjs/platform-express": "^9.3.8",
