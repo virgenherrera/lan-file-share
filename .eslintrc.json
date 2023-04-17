@@ -1,14 +1,14 @@
 {
   "root": true,
   "env": {
-    "browser": true,
-    "es2021": true,
+    "es2022": true,
     "jest": true,
     "node": true
   },
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint/eslint-plugin"
+    "@typescript-eslint/eslint-plugin",
+    "prettier"
   ],
   "parserOptions": {
     "project": "tsconfig.json",
@@ -19,9 +19,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
   ],
-  "ignorePatterns": [
-    ".eslintrc.js"
-  ],
+  "ignorePatterns": [],
   "rules": {
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",

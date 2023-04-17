@@ -7,21 +7,23 @@
     "source.fixAll.eslint": true
   },
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.minimap.enabled": false,
   "emmet.triggerExpansionOnTab": true,
-  "errorLens.delay": 3000,
+  "errorLens.delay": 2e3,
   "errorLens.messageTemplate": "$severity: $message",
   "eslint.format.enable": true,
   "eslint.options": {
-    "overrideConfigFile": ".eslintrc.json"
+    "overrideConfigFile": ".eslintrc.json",
+    "ignore": true
   },
   "eslint.validate": [
-    "json",
     "javascript",
+    "json",
     "typescript"
   ],
   "git.autofetch": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.referencesCodeLens.enabled": true,
   "typescript.tsdk": "node_modules/typescript/lib",
@@ -29,9 +31,8 @@
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "javascript.updateImportsOnFileMove.enabled": "always",
   "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
+    "editor.defaultFormatter":  "vscode.json-language-features"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
