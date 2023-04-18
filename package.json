@@ -1,9 +1,13 @@
 {
   "name": "lan-file-share-api",
-  "version": "1.1.15",
+  "version": "1.2.15",
   "description": "",
   "license": "MIT",
   "keywords": [],
+  "preferGlobal": true,
+  "bin": {
+    "lfs": "./bin/cli"
+  },
   "homepage": "https://github.com/virgenherrera/lan-file-share-api#readme",
   "bugs": {
     "url": "https://github.com/virgenherrera/lan-file-share-api/issues"
@@ -35,7 +39,7 @@
     "test:unit": "jest",
     "test:e2e": "jest --config jest-e2e.config.ts",
     "cleanup": "rimraf api-docs/ coverage/ dist/",
-    "postinstall": "run-s cleanup build:app"
+    "install": "run-s cleanup build:*"
   },
   "dependencies": {
     "@nestjs/common": "^9.4.0",

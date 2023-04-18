@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+const { join } = require('path');
+const { compilerOptions: { outDir } } = require('../tsconfig.json');
+
+require(
+  join(__dirname, '../', outDir, '/main')
+);

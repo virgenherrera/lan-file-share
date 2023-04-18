@@ -16,6 +16,6 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictBindCallApply": true,
-    "target": "es2017",
+    "target": "es2017"
   }
 }
