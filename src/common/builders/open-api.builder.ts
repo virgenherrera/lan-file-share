@@ -60,7 +60,7 @@ export class OpenApiBuilder {
   private setFilePaths() {
     this.logger.log(`Setting file paths`);
 
-    this.rootPath = resolve(process.cwd());
+    this.rootPath = resolve(join(__dirname, '../../../'));
     const { openApiPath } = this.appEnvironmentService;
     this.openApiPath = join(this.rootPath, openApiPath);
 
