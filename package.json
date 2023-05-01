@@ -53,7 +53,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "compression": "^1.7.4",
-    "date-fns": "^2.29.3",
+    "date-fns": "^2.30.0",
     "helmet": "^6.1.5",
     "lan-file-share-web-ui": "github:virgenherrera/lan-file-share-angular-web-ui#1.2.0",
     "nest-winston": "^1.9.1",
