@@ -1,7 +1,7 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { publicHtmlPath } from 'lan-file-share-web-ui';
+import { publicHtmlPath } from 'lan-file-share-ui';
 import { CommonModule } from './common/common.module';
 import { LogRequestMiddleware } from './common/middleware';
 import { QrStdoutModule } from './qr-stdout/qr-stdout.module';
