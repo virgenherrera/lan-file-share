@@ -1,8 +1,17 @@
 #!/usr/bin/env node
 
 const { join } = require('path');
-const { compilerOptions: { outDir } } = require('../tsconfig.json');
+const {
+  compilerOptions: { outDir },
+} = require('../tsconfig.json');
+const { existsSync } = require('fs');
+const { execSync } = require('child_process');
+const outDirPath = join(__dirname, '../', outDir);
+const mainPath = join(outDirPath, '/main.js');
 
-require(
-  join(__dirname, '../', outDir, '/main')
-);
+if (!existsSync(outDirPath) || !existsSync(mainPath)) {
+  execSync('npm run cleanup');
+  execSync('npm run build:app');
+}
+
+require(mainPath);
