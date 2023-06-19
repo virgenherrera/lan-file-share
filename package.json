@@ -63,7 +63,7 @@
     "winston": "^3.9.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^9.5.0",
+    "@nestjs/cli": "^10.0.2",
     "@nestjs/schematics": "^9.2.0",
     "@nestjs/testing": "^9.4.2",
     "@types/adm-zip": "^0.5.0",
