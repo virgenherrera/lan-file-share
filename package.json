@@ -46,7 +46,7 @@
     "@nestjs/core": "^10.0.4",
     "@nestjs/platform-express": "^10.0.3",
     "@nestjs/serve-static": "^4.0.0",
-    "@nestjs/swagger": "^7.0.10",
+    "@nestjs/swagger": "^7.0.12",
     "adm-zip": "^0.5.10",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
