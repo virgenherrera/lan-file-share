@@ -4,7 +4,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { publicHtmlPath } from 'lan-file-share-ui';
 import { CommonModule } from './common/common.module';
 import { LogRequestMiddleware } from './common/middleware';
-import { QrStdoutModule } from './qr-stdout/qr-stdout.module';
 import { SharedFolderModule } from './shared-folder/shared-folder.module';
 import { UploadModule } from './upload/upload.module';
 
@@ -28,8 +27,6 @@ import { UploadModule } from './upload/upload.module';
     CommonModule,
     UploadModule,
     SharedFolderModule,
-    QrStdoutModule,
-    CommonModule,
   ],
   providers: [Logger],
 })
