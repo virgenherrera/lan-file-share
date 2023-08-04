@@ -10,6 +10,7 @@ export const e2eConfig: Config.InitialOptions = {
     '!**/*.(config|spec).ts',
     '!(dist|test)/**',
     '!src/utils/**',
+    '!src/chat/**', //drop this once e2e written
   ],
   coverageDirectory: 'coverage/e2e',
   maxWorkers: 1,
