@@ -56,6 +56,7 @@
     "signin",
     "signup",
     "Streamable",
-    "typeorm"
+    "typeorm",
+    "websockets"
   ]
 }

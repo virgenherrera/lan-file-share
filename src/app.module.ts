@@ -6,6 +6,7 @@ import { CommonModule } from './common/common.module';
 import { LogRequestMiddleware } from './common/middleware';
 import { SharedFolderModule } from './shared-folder/shared-folder.module';
 import { UploadModule } from './upload/upload.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UploadModule } from './upload/upload.module';
     CommonModule,
     UploadModule,
     SharedFolderModule,
+    ChatModule,
   ],
   providers: [Logger],
 })
