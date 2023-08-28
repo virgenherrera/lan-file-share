@@ -59,7 +59,7 @@
     "date-fns": "^2.30.0",
     "helmet": "^7.0.0",
     "lan-file-share-ui": "github:virgenherrera/lan-file-share-ui",
-    "nest-winston": "^1.9.3",
+    "nest-winston": "^1.9.4",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^5.0.1",
     "rxjs": "^7.8.1",
