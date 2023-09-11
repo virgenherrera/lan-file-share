@@ -10,6 +10,7 @@ export const mockLogger: Record<keyof Logger, any> = {
   debug: () => jest.fn(),
   verbose: () => jest.fn(),
   localInstance: () => jest.fn(),
+  fatal: jest.fn(),
 };
 
 export const MockLoggerProvider: ValueProvider = {
