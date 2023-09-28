@@ -4,6 +4,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { publicHtmlPath } from 'lan-file-share-ui';
 import { join, resolve } from 'path';
 
+import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
 import { CommonModule } from './common/common.module';
 import { LogRequestMiddleware } from './common/middleware';
@@ -23,12 +24,13 @@ import { UploadModule } from './upload/upload.module';
         setHeaders(res) {
           res.setHeader(
             'Content-Security-Policy',
-            `default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src	'self' 'unsafe-inline' *; img-src 'self' data: *`,
+            `default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';`,
           );
         },
       },
     }),
     CommonModule,
+    AuthModule,
     UploadModule,
     SharedFolderModule,
     ChatModule,
