@@ -58,5 +58,6 @@
     "Streamable",
     "typeorm",
     "websockets"
-  ]
+  ],
+  "jest.showCoverageOnLoad": true
 }

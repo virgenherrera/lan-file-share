@@ -2,8 +2,8 @@ import { Body, Controller } from '@nestjs/common';
 
 import { Logger } from '../../common/decorators';
 import { DtoValidation } from '../../common/pipes';
-import { PostAuthLoginDocs } from '../docs/post-auth-login.docs';
-import { PostAuthRegisterDocs } from '../docs/post-auth-register.docs';
+import { PostAuthLoginDocs } from '../docs/post-auth-login.doc';
+import { PostAuthRegisterDocs } from '../docs/post-auth-register.doc';
 import { LoginBodyDto, UserDto } from '../dtos';
 import { AuthRoute } from '../enums';
 import { AuthService } from '../services';
