@@ -35,7 +35,7 @@ export class AuthService {
 
     const storedUser = this.users.get(user.username);
 
-    if (!user)
+    if (!storedUser)
       return this.errorHandler(
         new NotFound(`username: '${user.username}' does not exists`),
       );
@@ -59,6 +59,7 @@ export class AuthService {
 
   private generateJwt({ username }: UserDto): string {
     this.logger.log(`Generating JWT for a user.`);
+
     const payload = { username };
 
     return this.jwtService.sign(payload);
