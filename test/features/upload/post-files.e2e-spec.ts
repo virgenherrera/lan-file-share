@@ -2,10 +2,10 @@ import { NestApplication } from '@nestjs/core';
 import { UploadRoute } from '../../../src/upload/enums';
 import { UploadManyResponse } from '../../../src/upload/models';
 import {
-  dropSharedFiles,
-  initSharedFiles,
-  mockSharedFiles as existentFiles,
   TestContext,
+  dropSharedFiles,
+  mockSharedFiles as existentFiles,
+  initSharedFiles,
 } from '../../utils';
 
 const enum should {
@@ -16,8 +16,8 @@ const enum should {
 
 describe(`e2e: POST${UploadRoute.files}`, () => {
   const nonExistentFiles = [
-    { filename: 'fake_file_1.txt', content: 'mock file content' },
-    { filename: 'fake_file_2.txt', content: 'mock file content' },
+    { filename: `fake_file_1_${Date.now()}.txt`, content: 'mock file content' },
+    { filename: `fake_file_2_${Date.now()}.txt`, content: 'mock file content' },
   ];
 
   let testCtx: TestContext = null;

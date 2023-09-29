@@ -1,1 +1,1 @@
-export * from './upload.route';
+export * from './upload-route.enum';

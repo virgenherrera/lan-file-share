@@ -10,7 +10,7 @@ export const BaseConfig: Config.InitialOptions = {
   collectCoverageFrom: [
     '**/*.ts',
     '!**/(index|main|openApi).ts',
-    '!**/*.(builder|constant|dto|doc|enum|exception|import|interface|mock|module).ts',
+    '!**/*.(builder|constant|dto|doc|enum|exception|import|interface|mock|module|strategy).ts',
     '!**/*.(model|schema).ts',
     '!**/__mocks__.ts',
   ],
@@ -20,7 +20,7 @@ export const BaseConfig: Config.InitialOptions = {
   coverageThreshold: {
     global: { branches: 85, functions: 85, lines: 85, statements: 85 },
   },
-  maxWorkers: '50%',
+  maxWorkers: '100%',
   reporters: ['default', 'summary', 'github-actions'],
   rootDir: 'src',
   testEnvironment: 'node',
