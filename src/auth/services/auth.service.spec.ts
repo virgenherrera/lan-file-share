@@ -16,6 +16,7 @@ describe(`UT:${AuthService.name}`, () => {
     throwErrorForInvalidUser = 'should throw error for invalid user.',
     generateJwtForUser = 'should generate JWT for a user.',
     throwErrorForNonExistentUser = 'should throw error for non-existent user.',
+    checkIfUserExists = 'should check if a user exists',
   }
 
   const mockJwtService: Pick<JwtService, 'sign'> = {
@@ -39,6 +40,7 @@ describe(`UT:${AuthService.name}`, () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   it(should.createInstance, () => {
@@ -50,7 +52,7 @@ describe(`UT:${AuthService.name}`, () => {
     mockJwtService.sign = jest.fn().mockReturnValue(fakeToken);
 
     const signSpy = jest.spyOn(mockJwtService, 'sign');
-    const response = service.add(user);
+    const response = service.addUser(user);
 
     expect(response).toBeInstanceOf(AuthResponse);
     expect(response.accessToken).toBe(fakeToken);
@@ -58,11 +60,11 @@ describe(`UT:${AuthService.name}`, () => {
   });
 
   it(should.throwErrorForDuplicateUser, () => {
-    service.add(user);
+    service.addUser(user);
 
     const signSpy = jest.spyOn(mockJwtService, 'sign');
 
-    expect(() => service.add(user)).toThrowError(
+    expect(() => service.addUser(user)).toThrowError(
       new Conflict(`username: '${user.username}' already exists`),
     );
 
@@ -79,10 +81,10 @@ describe(`UT:${AuthService.name}`, () => {
     mockJwtService.sign = jest.fn().mockReturnValue(fakeToken);
     const signSpy = jest.spyOn(mockJwtService, 'sign');
 
-    expect(() => service.add(user)).not.toThrow();
+    expect(() => service.addUser(user)).not.toThrow();
     expect(
       () =>
-        (response = service.validate({
+        (response = service.validateCredentials({
           username: 'john',
           password: 'password',
         })),
@@ -98,12 +100,15 @@ describe(`UT:${AuthService.name}`, () => {
       .fn()
       .mockReturnValue(false);
 
-    expect(() => service.add(user)).not.toThrow();
+    expect(() => service.addUser(user)).not.toThrow();
 
     const signSpy = jest.spyOn(mockJwtService, 'sign');
 
     expect(() =>
-      service.validate({ username: 'john', password: 'wrong-password' }),
+      service.validateCredentials({
+        username: 'john',
+        password: 'wrong-password',
+      }),
     ).toThrowError(new Unauthorized(`Invalid username or password`));
 
     expect(signSpy).toHaveBeenCalledTimes(1);
@@ -114,7 +119,7 @@ describe(`UT:${AuthService.name}`, () => {
 
     const signSpy = jest.spyOn(mockJwtService, 'sign');
 
-    const response = service.add(user);
+    const response = service.addUser(user);
 
     expect(response).toBeInstanceOf(AuthResponse);
     expect(response.accessToken).toBe(fakeToken);
@@ -127,8 +132,16 @@ describe(`UT:${AuthService.name}`, () => {
       password: 'password',
     };
 
-    expect(() => service.validate(nonExistentUser)).toThrowError(
+    expect(() => service.validateCredentials(nonExistentUser)).toThrowError(
       new NotFound(`username: '${nonExistentUser.username}' does not exists`),
     );
+  });
+
+  it(should.checkIfUserExists, () => {
+    service.addUser(user);
+
+    const exists = service.userExists(user.username);
+
+    expect(exists).toBe(true);
   });
 });

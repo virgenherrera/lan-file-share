@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { genSaltSync } from 'bcryptjs';
 
+import { JWT_SECRET } from './constants';
 import { AuthController } from './controllers';
 import { AuthService } from './services';
-import { LocalStrategy } from './strategies';
+import { LocalWithJwtStrategy } from './strategies';
 
 @Module({
   imports: [
     JwtModule.register({
       global: true,
-      secret: genSaltSync(),
+      secret: JWT_SECRET,
       signOptions: { expiresIn: '60m' },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalWithJwtStrategy],
 })
 export class AuthModule {}

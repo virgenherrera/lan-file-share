@@ -18,7 +18,7 @@ export class AuthController {
   async register(@Body(DtoValidation.pipe) body: UserDto) {
     this.logger.log(`POST ${AuthRoute.register}: register user.`);
 
-    return this.authService.add(body);
+    return this.authService.addUser(body);
   }
 
   @PostAuthLoginDocs()
@@ -27,6 +27,6 @@ export class AuthController {
       `POST ${AuthRoute.login}: attempting to authenticate: '${body.username}'.`,
     );
 
-    return this.authService.validate(body);
+    return this.authService.validateCredentials(body);
   }
 }
