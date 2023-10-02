@@ -15,7 +15,7 @@ export class AuthService {
 
   private readonly users = new Map<string, UserDto>();
 
-  add(user: UserDto): AuthResponse {
+  addUser(user: UserDto): AuthResponse {
     this.logger.log(`Adding new user.`);
 
     if (this.users.has(user.username))
@@ -30,8 +30,8 @@ export class AuthService {
     return new AuthResponse({ accessToken });
   }
 
-  internalValidate(user: LoginBodyDto): UserDto {
-    this.logger.log(`internally validating User.`);
+  validateCredentials(user: LoginBodyDto): AuthResponse {
+    this.logger.log(`Validating User.`);
 
     const storedUser = this.users.get(user.username);
 
@@ -45,13 +45,6 @@ export class AuthService {
         new Unauthorized(`Invalid username or password`),
       );
 
-    return storedUser;
-  }
-
-  validate(user: LoginBodyDto): AuthResponse {
-    this.logger.log(`Validating User.`);
-
-    const storedUser = this.internalValidate(user);
     const accessToken = this.generateJwt(storedUser);
 
     return new AuthResponse({ accessToken });
@@ -65,6 +58,11 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
+  userExists(username: string): boolean {
+    this.logger.verbose(`validating if User exists.`);
+
+    return this.users.has(username);
+  }
   private errorHandler(error: Error): never {
     this.logger.error(error.message, error.stack);
 

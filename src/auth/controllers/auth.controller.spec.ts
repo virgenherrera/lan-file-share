@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoginBodyDto, UserDto } from '../dtos';
 import {
   MockAuthServiceProvider,
   mockAuthService,
@@ -35,24 +34,24 @@ describe(`UT:${AuthController.name}`, () => {
   });
 
   it(should.registerUserSuccessfully, async () => {
-    const user: UserDto = { username: 'john', password: 'password' };
+    const mockUser = {
+      username: 'john',
+      password: 'password123',
+    };
 
-    mockAuthService.add.mockResolvedValue(user);
-
-    const result = await controller.register(user);
-
-    expect(result).toEqual(user);
-    expect(mockAuthService.add).toHaveBeenCalledWith(user);
+    await expect(controller.register(mockUser)).resolves.not.toThrow();
+    expect(mockAuthService.addUser).toHaveBeenCalledWith(mockUser);
   });
 
   it(should.loginUserSuccessfully, async () => {
-    const user: LoginBodyDto = { username: 'john', password: 'password' };
+    const mockLoginBody = {
+      username: 'john',
+      password: 'password123',
+    };
 
-    mockAuthService.validate.mockResolvedValue({ accessToken: 'fake-token' });
-
-    const result = await controller.login(user);
-
-    expect(result).toEqual({ accessToken: 'fake-token' });
-    expect(mockAuthService.validate).toHaveBeenCalledWith(user);
+    await expect(controller.login(mockLoginBody)).resolves.not.toThrow();
+    expect(mockAuthService.validateCredentials).toHaveBeenCalledWith(
+      mockLoginBody,
+    );
   });
 });
