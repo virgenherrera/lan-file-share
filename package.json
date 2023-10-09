@@ -51,7 +51,7 @@
     "@nestjs/platform-express": "^10.2.6",
     "@nestjs/platform-socket.io": "^10.2.6",
     "@nestjs/serve-static": "^4.0.0",
-    "@nestjs/swagger": "^7.1.12",
+    "@nestjs/swagger": "^7.1.13",
     "@nestjs/websockets": "^10.2.6",
     "adm-zip": "^0.5.10",
     "axios": "^1.5.1",
