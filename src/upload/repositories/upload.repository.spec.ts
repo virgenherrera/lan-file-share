@@ -1,34 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import * as fs from 'fs';
+
 import { BadRequest } from '../../common/exceptions';
-import { MockLoggerProvider } from '../../common/services/__mocks__';
-import { FileWithDestinationPath } from '../interfaces';
-import { UploadManyResponse, UploadResponse } from '../models';
-import {
-  FileSystemServiceProvider,
-  mockFileSystemService,
-} from '../services/__mocks__';
+import { UploadPathDto } from '../dto';
+import { UploadResponse } from '../models';
 import { UploadRepository } from './upload.repository';
 
 describe(`UT:${UploadRepository.name}`, () => {
   const enum should {
     createInstance = 'should create instance Properly.',
-    throwBadRequestOnAlreadyExistingFile = 'should throw BadRequest on already existing file.',
-    createFile = 'should upload a file properly.',
-    createManyFiles = 'should upload a bunch of files properly.',
+    uploadFileSuccessfully = 'should upload a file successfully.',
+    failWhenFileExists = 'should fail when file exists and overwrite is false.',
+    overwriteWhenFileExistsAndOverwriteIsTrue = 'should overwrite when file exists and overwrite is true.',
+    failBatchUploadWhenSomeFilesExist = 'should fail batch upload when some files exist.',
+    overwriteBatchUploadWhenSomeFilesExistAndOverwriteIsTrue = 'should overwrite batch upload when some files exist and overwrite is true.',
   }
 
   let service: UploadRepository = null;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        MockLoggerProvider,
-        FileSystemServiceProvider,
-        UploadRepository,
-      ],
+      providers: [UploadRepository],
     }).compile();
 
     service = module.get(UploadRepository);
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   it(should.createInstance, () => {
@@ -36,62 +35,166 @@ describe(`UT:${UploadRepository.name}`, () => {
     expect(service).toBeInstanceOf(UploadRepository);
   });
 
-  it(should.throwBadRequestOnAlreadyExistingFile, async () => {
-    const file = {
-      destination: 'fake/destination/path',
-      originalname: 'fake-file.ext',
-      path: 'fake/shared/folder/uploaded-file.ext',
-    } as FileWithDestinationPath;
+  it(should.uploadFileSuccessfully, async () => {
+    const mockFile = {
+      destination: '/tmp',
+      originalname: 'testFile.txt',
+      path: '/tmp/testFile.txt',
+    } as Express.Multer.File;
 
-    mockFileSystemService.join = jest
-      .fn()
-      .mockImplementation((...args: any[]) => args.pop());
-    mockFileSystemService.existsSync = jest.fn().mockReturnValue(true);
-    mockFileSystemService.unlink = jest.fn().mockResolvedValue(undefined);
+    const mockUploadPathDto: UploadPathDto = {
+      path: '/upload',
+      overwrite: false,
+    };
 
-    await expect(service.create(file)).rejects.toBeInstanceOf(BadRequest);
+    const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(false);
+    const mkdirSpy = jest
+      .spyOn(fs.promises, 'mkdir')
+      .mockResolvedValue(undefined);
+    const renameSpy = jest
+      .spyOn(fs.promises, 'rename')
+      .mockResolvedValue(undefined);
+    const unlinkSpy = jest
+      .spyOn(fs.promises, 'unlink')
+      .mockResolvedValue(undefined);
+
+    await expect(
+      service.create(mockFile, mockUploadPathDto),
+    ).resolves.toBeInstanceOf(UploadResponse);
+
+    expect(existsSyncSpy).toHaveBeenCalledWith(expect.any(String));
+    expect(mkdirSpy).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(Object),
+    );
+    expect(renameSpy).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(String),
+    );
+    expect(unlinkSpy).not.toHaveBeenCalled();
   });
 
-  it(should.createFile, async () => {
-    const file = {
-      destination: 'fake/destination/path',
-      originalname: 'fake-file.ext',
-      path: 'fake/shared/folder/uploaded-file.ext',
-    } as FileWithDestinationPath;
+  it(should.failWhenFileExists, async () => {
+    const mockFile = {
+      destination: '/tmp',
+      originalname: 'testFile.txt',
+      path: '/tmp/testFile.txt',
+    } as Express.Multer.File;
 
-    mockFileSystemService.join = jest
-      .fn()
-      .mockImplementation((...args: any[]) => args.pop());
-    mockFileSystemService.existsSync = jest.fn().mockReturnValue(false);
+    const mockUploadPathDto: UploadPathDto = {
+      path: '/upload',
+      overwrite: false,
+    };
 
-    mockFileSystemService.mkdir = jest.fn();
-    mockFileSystemService.rename = jest.fn();
+    const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+    const unlinkSpy = jest
+      .spyOn(fs.promises, 'unlink')
+      .mockResolvedValue(undefined);
 
-    await expect(service.create(file)).resolves.toBeInstanceOf(UploadResponse);
+    await expect(
+      service.create(mockFile, mockUploadPathDto),
+    ).rejects.toBeInstanceOf(BadRequest);
+
+    expect(existsSyncSpy).toHaveBeenCalledWith(expect.any(String));
+    expect(unlinkSpy).toHaveBeenCalledWith(mockFile.path);
   });
 
-  it(should.createFile, async () => {
-    const file = {
-      destination: 'fake/destination/path',
-      originalname: 'fake-file.ext',
-      path: 'fake/shared/folder/uploaded-file.ext',
-      destinationPath: '',
-    } as FileWithDestinationPath;
-    const payload = [file, file];
+  it(should.overwriteWhenFileExistsAndOverwriteIsTrue, async () => {
+    const mockFile = {
+      destination: '/tmp',
+      originalname: 'testFile.txt',
+      path: '/tmp/testFile.txt',
+    } as Express.Multer.File;
 
-    mockFileSystemService.join = jest
-      .fn()
-      .mockImplementation((...args: any[]) => args.pop());
-    mockFileSystemService.existsSync = jest
-      .fn()
-      .mockImplementationOnce(() => true)
-      .mockImplementationOnce(() => false);
+    const mockUploadPathDto: UploadPathDto = {
+      path: '/upload',
+      overwrite: true, // Aquí se establece la sobreescritura.
+    };
 
-    mockFileSystemService.mkdir = jest.fn();
-    mockFileSystemService.rename = jest.fn();
+    const existsSyncSpy = jest.spyOn(fs, 'existsSync');
+    const mkdirSpy = jest
+      .spyOn(fs.promises, 'mkdir')
+      .mockResolvedValue(undefined);
+    const renameSpy = jest
+      .spyOn(fs.promises, 'rename')
+      .mockResolvedValue(undefined);
 
-    await expect(service.batchCreate(payload)).resolves.toBeInstanceOf(
-      UploadManyResponse,
+    await expect(
+      service.create(mockFile, mockUploadPathDto),
+    ).resolves.toBeInstanceOf(UploadResponse);
+
+    expect(existsSyncSpy).not.toHaveBeenCalled();
+    expect(mkdirSpy).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(Object),
+    );
+    expect(renameSpy).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(String),
     );
   });
+
+  it(should.failBatchUploadWhenSomeFilesExist, async () => {
+    const mockFiles = [
+      {
+        destination: '/tmp',
+        originalname: 'testFile1.txt',
+        path: '/tmp/testFile1.txt',
+      },
+      {
+        destination: '/tmp',
+        originalname: 'testFile2.txt',
+        path: '/tmp/testFile2.txt',
+      },
+    ] as Express.Multer.File[];
+
+    const mockUploadPathDto: UploadPathDto = {
+      path: '/upload',
+      overwrite: false,
+    };
+
+    const existsSyncSpy = jest
+      .spyOn(fs, 'existsSync')
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(true);
+
+    const result = await service.batchCreate(mockFiles, mockUploadPathDto);
+
+    expect(result.errors).toHaveProperty('1');
+    expect(existsSyncSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it(
+    should.overwriteBatchUploadWhenSomeFilesExistAndOverwriteIsTrue,
+    async () => {
+      const mockFiles = [
+        {
+          destination: '/tmp',
+          originalname: 'testFile1.txt',
+          path: '/tmp/testFile1.txt',
+        },
+        {
+          destination: '/tmp',
+          originalname: 'testFile2.txt',
+          path: '/tmp/testFile2.txt',
+        },
+      ] as Express.Multer.File[];
+
+      const mockUploadPathDto: UploadPathDto = {
+        path: '/upload',
+        overwrite: true,
+      };
+
+      const existsSyncSpy = jest
+        .spyOn(fs, 'existsSync')
+        .mockReturnValueOnce(false)
+        .mockReturnValueOnce(true);
+
+      const result = await service.batchCreate(mockFiles, mockUploadPathDto);
+
+      expect(result.successes).toHaveProperty('0');
+      expect(result.successes).toHaveProperty('1');
+      expect(existsSyncSpy).not.toHaveBeenCalled();
+    },
+  );
 });

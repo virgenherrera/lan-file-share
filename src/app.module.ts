@@ -5,7 +5,6 @@ import { publicHtmlPath } from 'lan-file-share-ui';
 import { join, resolve } from 'path';
 
 import { AuthModule } from './auth/auth.module';
-import { ChatModule } from './chat/chat.module';
 import { CommonModule } from './common/common.module';
 import { LogRequestMiddleware } from './common/middleware';
 import { SharedFolderModule } from './shared-folder/shared-folder.module';
@@ -33,7 +32,6 @@ import { UploadModule } from './upload/upload.module';
     AuthModule,
     UploadModule,
     SharedFolderModule,
-    ChatModule,
   ],
   providers: [Logger],
 })

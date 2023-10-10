@@ -1,14 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  FileSystemServiceProvider,
-  mockFileSystemService,
-} from '../../upload/services/__mocks__';
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { DownloadableFile } from '../models';
+import { FolderInfoServiceMockProvider } from './__mocks__';
 import { StreamableFileService } from './streamable-file.service';
-import {
-  FolderInfoServiceMockProvider,
-  mockFolderInfoService,
-} from './__mocks__';
+
+jest.mock('mime', () => {
+  return jest.fn().mockImplementation(() => {
+    return { getType: jest.fn().mockReturnValue('application/octet-stream') };
+  });
+});
 
 describe(`UT:${StreamableFileService.name}`, () => {
   const enum should {
@@ -26,16 +28,16 @@ describe(`UT:${StreamableFileService.name}`, () => {
   };
   let service: StreamableFileService = null;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        FileSystemServiceProvider,
-        FolderInfoServiceMockProvider,
-        StreamableFileService,
-      ],
+      providers: [FolderInfoServiceMockProvider, StreamableFileService],
     }).compile();
 
     service = module.get(StreamableFileService);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it(should.createInstance, () => {
@@ -44,24 +46,33 @@ describe(`UT:${StreamableFileService.name}`, () => {
   });
 
   it(should.getDownloadableFile, async () => {
-    const mockPath = '/public/index.html';
-    const parsed = {
-      base: 'index',
-      ext: '.html',
-    };
-    mockFileSystemService.resolve = jest.fn().mockReturnValue(mockPath);
-    mockFileSystemService.existsSync = jest.fn().mockReturnValue(true);
-    mockFileSystemService.stat = jest.fn().mockResolvedValue({ size: 0 });
-    mockFileSystemService.parse = jest.fn().mockReturnValue(parsed);
-    mockFileSystemService.createReadStream = jest
-      .fn()
-      .mockReturnValue(mockReadStream);
+    const mockPath = 'mock-path';
+    const mockFullPath = 'mock-full-path';
+    const mockFileName = 'mock-file';
+    const mockFileSize = 12345;
 
-    const existsSyncSpy = jest.spyOn(mockFolderInfoService, 'getFullPath');
+    jest.spyOn(path, 'parse').mockReturnValue({
+      base: mockFileName,
+      ext: '.mock',
+    } as any as path.ParsedPath);
+
+    const statSpy = jest.spyOn(fs.promises, 'stat').mockResolvedValue({
+      size: mockFileSize,
+    } as fs.Stats);
+
+    const createReadStreamSpy = jest
+      .spyOn(fs, 'createReadStream')
+      .mockReturnValue(mockReadStream as any);
+
+    jest
+      .spyOn(service['folderInfoService'], 'getFullPath')
+      .mockReturnValue(mockFullPath);
 
     await expect(service.findOne(mockPath)).resolves.toBeInstanceOf(
       DownloadableFile,
     );
-    expect(existsSyncSpy).toHaveBeenCalledWith(mockPath);
+
+    expect(statSpy).toHaveBeenCalledWith(mockFullPath);
+    expect(createReadStreamSpy).toHaveBeenCalledWith(mockFullPath);
   });
 });

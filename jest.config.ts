@@ -13,7 +13,6 @@ export const BaseConfig: Config.InitialOptions = {
     '!**/*.(builder|constant|dto|doc|enum|exception|import|interface|mock|module|strategy).ts',
     '!**/*.(model|schema).ts',
     '!**/__mocks__.ts',
-    '!src/chat/**', //drop this once e2e written
   ],
   coverageDirectory: '../coverage/unit',
   coverageProvider: 'v8',

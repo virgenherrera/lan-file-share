@@ -1,37 +1,50 @@
 import { applyDecorators, Post, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConsumes,
-  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiHeader,
   ApiOperation,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
 import { BadRequest } from '../../common/exceptions';
-import { AllowedMimeTypes } from '../constants';
 import { UploadFileDto } from '../dto';
 import { UploadRoute } from '../enums';
-import { UploadedFileInterceptor } from '../interceptors';
 import { UploadResponse } from '../models';
 
 export function PostUploadOneFileDocs() {
   return applyDecorators(
     Post(UploadRoute.file),
+    UseInterceptors(
+      FileInterceptor('file', {
+        preservePath: true,
+        limits: { files: 1 },
+      }),
+    ),
     ApiOperation({
       summary: `POST ${UploadRoute.file}`,
       description:
         'an endpoint to Upload a single file and share it across your LAN.',
     }),
-    UseInterceptors(UploadedFileInterceptor(AllowedMimeTypes)),
     ApiConsumes('multipart/form-data'),
+    ApiHeader({
+      name: 'Authorization',
+      description: 'Bearer token',
+    }),
     ApiBody({
       type: UploadFileDto,
+    }),
+    ApiUnauthorizedResponse({
+      description: 'Unauthorized. JWT token is missing or invalid.',
     }),
     ApiBadRequestResponse({
       type: BadRequest,
     }),
-    ApiOkResponse({
+    ApiCreatedResponse({
       type: UploadResponse,
-      status: 200,
       description: `${UploadResponse.name} object containing data about uploaded file.`,
     }),
   );

@@ -16,9 +16,9 @@ export class DownloadableFile {
 
   constructor(
     fileName: string,
-    mimeType: string,
     fileStream: ReadStream,
     fileSize: number,
+    mimeType: string = 'application/octet-stream',
   ) {
     this.headers['Content-Disposition'] = `attachment; filename="${fileName}"`;
     this.headers['Content-Length'] = `${fileSize}`;

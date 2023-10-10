@@ -1,54 +1,47 @@
 import { Injectable } from '@nestjs/common';
+import { existsSync } from 'fs';
+import { mkdir, rename, unlink } from 'fs/promises';
+import { join } from 'path';
+
 import { Logger } from '../../common/decorators';
 import { BadRequest } from '../../common/exceptions';
-import {
-  IBatchCreate,
-  ICreate,
-  SoftBatchCreated,
-} from '../../common/interfaces';
-import { FileWithDestinationPath } from '../interfaces';
+import { SoftBatchCreated } from '../../common/interfaces';
+import { UploadPathDto } from '../dto';
 import { UploadManyResponse, UploadResponse } from '../models';
-import { FileSystemService } from '../services';
 
 @Injectable()
-export class UploadRepository
-  implements
-    IBatchCreate<FileWithDestinationPath, SoftBatchCreated<UploadResponse>>,
-    ICreate<FileWithDestinationPath, UploadResponse>
-{
+export class UploadRepository {
   @Logger() private logger: Logger;
 
-  constructor(private fs: FileSystemService) {}
-
   async batchCreate(
-    dtos: FileWithDestinationPath[],
+    files: Express.Multer.File[],
+    opts: UploadPathDto,
   ): Promise<SoftBatchCreated<UploadResponse>> {
-    const filePromises = dtos.map(file => this.create(file));
+    const filePromises = files.map(file => this.create(file, opts));
     const settledPromises = await Promise.allSettled(filePromises);
 
     return this.mapSettledToResponse(settledPromises);
   }
 
-  async create(dto: FileWithDestinationPath): Promise<UploadResponse> {
-    const destinyFile = this.fs.join(
-      dto.destination,
-      dto.destinationPath,
-      dto.originalname,
-    );
-    const unixPath = this.fs.toUrlPath(dto.destinationPath, dto.originalname);
+  async create(
+    file: Express.Multer.File,
+    { path, overwrite }: UploadPathDto,
+  ): Promise<UploadResponse> {
+    const destinyFile = join(file.destination, path, file.originalname);
+    const unixPath = join(path, file.originalname).replace(/\\/g, '/');
 
-    if (this.fs.existsSync(destinyFile)) {
+    if (!overwrite && existsSync(destinyFile)) {
       const errorMessage = `File: '${unixPath}' already exists.`;
 
       this.logger.log(errorMessage);
 
-      await this.fs.unlink(dto.path);
+      await unlink(file.path);
 
       throw new BadRequest(errorMessage);
     }
 
-    await this.fs.mkdir(dto.destinationPath);
-    await this.fs.rename(dto.path, destinyFile);
+    await mkdir(path, { recursive: true });
+    await rename(file.path, destinyFile);
 
     const res = new UploadResponse(unixPath);
 

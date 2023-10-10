@@ -1,28 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { existsSync } from 'fs';
+import { readdir, stat } from 'fs/promises';
+import { join, parse as pathParse, resolve } from 'path';
+
 import { Logger } from '../../common/decorators';
 import { NotFound } from '../../common/exceptions';
 import { IFindOne } from '../../common/interfaces';
-import { FileSystemService } from '../../upload/services';
+import { MulterConfig } from '../../upload/imports';
 import { FileInfo, FolderInfo } from '../models';
 
 @Injectable()
 export class FolderInfoService implements IFindOne<string, FolderInfo> {
-  @Logger() private logger: Logger;
+  constructor(private multerConfig: MulterConfig) {}
 
-  constructor(private fs: FileSystemService) {}
+  @Logger() private logger: Logger;
 
   async findOne(path: string): Promise<FolderInfo> {
     this.logger.log(`Getting shared folder ${path}`);
 
     const fullPath = this.getFullPath(path);
     const folderInfo = new FolderInfo();
-    const pathContentList = await this.fs.readdir(fullPath);
+    const pathContentList = await readdir(fullPath);
 
     for await (const pathElement of pathContentList) {
-      const elementPath = this.fs.join(fullPath, pathElement);
-      const elementStats = await this.fs.stat(elementPath);
-      const parsedPath = this.fs.parse(elementPath);
-      const urlPath = this.fs.toUrlPath(path, parsedPath.base);
+      const elementPath = join(fullPath, pathElement);
+      const elementStats = await stat(elementPath);
+      const parsedPath = pathParse(elementPath);
+      const urlPath = join(path, parsedPath.base).replace(/\\/g, '/');
 
       if (elementStats.isDirectory()) {
         folderInfo.folders.push(urlPath);
@@ -41,9 +45,9 @@ export class FolderInfoService implements IFindOne<string, FolderInfo> {
   }
 
   getFullPath(path: string): string {
-    const fullPath = this.fs.resolve(this.fs.sharedFolderPath, path);
+    const fullPath = resolve(this.multerConfig.sharedFolderPath, path);
 
-    if (!this.fs.existsSync(fullPath)) {
+    if (!existsSync(fullPath)) {
       const errMsg = `Path '${path}' does not exist`;
 
       this.logger.error(errMsg);
