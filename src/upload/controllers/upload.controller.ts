@@ -1,9 +1,9 @@
 import { Body, Controller, UploadedFile, UploadedFiles } from '@nestjs/common';
+
 import { Logger } from '../../common/decorators';
 import { DtoValidation } from '../../common/pipes';
 import { PostUploadManyFilesDocs, PostUploadOneFileDocs } from '../docs';
 import { UploadFileDto, UploadFilesDto } from '../dto';
-import { MulterFile } from '../interfaces';
 import { UploadManyResponse, UploadResponse } from '../models';
 import { UploadRepository } from '../repositories';
 
@@ -16,7 +16,7 @@ export class UploadController {
   @PostUploadOneFileDocs()
   async uploadOneFile(
     @Body(DtoValidation.pipe) { path, overwrite }: UploadFileDto,
-    @UploadedFile('file') file: MulterFile,
+    @UploadedFile('file') file: Express.Multer.File,
   ): Promise<UploadResponse> {
     this.logger.log(`processing uploaded File`);
 
@@ -26,7 +26,7 @@ export class UploadController {
   @PostUploadManyFilesDocs()
   async uploadManyFiles(
     @Body(DtoValidation.pipe) { path, overwrite }: UploadFilesDto,
-    @UploadedFiles() files: MulterFile[],
+    @UploadedFiles() files: Express.Multer.File[],
   ): Promise<UploadManyResponse> {
     this.logger.log(`processing uploaded Files`);
 

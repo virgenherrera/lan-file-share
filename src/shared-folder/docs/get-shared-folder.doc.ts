@@ -1,10 +1,13 @@
-import { applyDecorators, Get } from '@nestjs/common';
+import { applyDecorators, Get, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
   ApiOperation,
   ApiQuery,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
+import { JwtAuthGuard } from '../../auth/guards';
 import { NotFound } from '../../common/exceptions';
 import { GetSharedFolderQueryDto } from '../dto';
 import { SharedFolderRoute } from '../enums';
@@ -13,12 +16,16 @@ import { FolderInfo } from '../models';
 export function GetSharedFolderDocs() {
   return applyDecorators(
     Get(SharedFolderRoute.sharedFolder),
+    UseGuards(JwtAuthGuard),
     ApiOperation({
       summary: `GET ${SharedFolderRoute.sharedFolder}`,
       description: 'Get folder content defined by path queryParam.',
     }),
     ApiQuery({
       type: GetSharedFolderQueryDto,
+    }),
+    ApiUnauthorizedResponse({
+      description: 'Unauthorized. JWT token is missing or invalid.',
     }),
     ApiBadRequestResponse({
       type: NotFound,

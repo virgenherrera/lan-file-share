@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
+
 import {
   GetFileStreamQueryDto,
   GetSharedFolderQueryDto,
@@ -7,11 +8,11 @@ import {
 } from '../dto';
 import {
   FolderInfoServiceMockProvider,
+  StreamableFileMockService,
+  StreamableZipFileMockService,
   mockFolderInfoService,
   mockStreamableFileService,
   mockStreamableZipFileService,
-  StreamableFileMockService,
-  StreamableZipFileMockService,
 } from '../services/__mocks__';
 import { SharedFolderController } from './shared-folder.controller';
 
