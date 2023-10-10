@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { ZipFilesDto } from '../dto';
 import { DownloadableZipFile } from '../models';
-import { StreamableZipFileService } from './streamable-zip-file.service';
 import {
   FolderInfoServiceMockProvider,
   mockFolderInfoService,
 } from './__mocks__';
+import { StreamableZipFileService } from './streamable-zip-file.service';
 
 jest.mock(
   'adm-zip',

@@ -2,15 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import {
+  MockMimeServiceProvider,
+  mockMimeService,
+} from '../../mime/services/__mocks__';
 import { DownloadableFile } from '../models';
-import { FolderInfoServiceMockProvider } from './__mocks__';
+import {
+  FolderInfoServiceMockProvider,
+  mockFolderInfoService,
+} from './__mocks__';
 import { StreamableFileService } from './streamable-file.service';
-
-jest.mock('mime', () => {
-  return jest.fn().mockImplementation(() => {
-    return { getType: jest.fn().mockReturnValue('application/octet-stream') };
-  });
-});
 
 describe(`UT:${StreamableFileService.name}`, () => {
   const enum should {
@@ -30,7 +31,11 @@ describe(`UT:${StreamableFileService.name}`, () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FolderInfoServiceMockProvider, StreamableFileService],
+      providers: [
+        FolderInfoServiceMockProvider,
+        MockMimeServiceProvider,
+        StreamableFileService,
+      ],
     }).compile();
 
     service = module.get(StreamableFileService);
@@ -65,8 +70,10 @@ describe(`UT:${StreamableFileService.name}`, () => {
       .mockReturnValue(mockReadStream as any);
 
     jest
-      .spyOn(service['folderInfoService'], 'getFullPath')
+      .spyOn(mockFolderInfoService, 'getFullPath')
       .mockReturnValue(mockFullPath);
+
+    jest.spyOn(mockMimeService, 'getMime').mockReturnValue('.ext');
 
     await expect(service.findOne(mockPath)).resolves.toBeInstanceOf(
       DownloadableFile,

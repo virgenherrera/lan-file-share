@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { CommonModule } from '../common/common.module';
+import { MimeModule } from '../mime/mime.module';
 import { MulterConfig } from '../upload/imports';
 import { SharedFolderController } from './controllers';
 import {
@@ -10,7 +11,7 @@ import {
 } from './services';
 
 @Module({
-  imports: [CommonModule],
+  imports: [CommonModule, MimeModule],
   controllers: [SharedFolderController],
   providers: [
     MulterConfig,
