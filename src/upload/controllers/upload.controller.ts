@@ -5,13 +5,13 @@ import { DtoValidation } from '../../common/pipes';
 import { PostUploadManyFilesDocs, PostUploadOneFileDocs } from '../docs';
 import { UploadFileDto, UploadFilesDto } from '../dto';
 import { UploadManyResponse, UploadResponse } from '../models';
-import { UploadRepository } from '../repositories';
+import { UploadService } from '../services';
 
 @Controller()
 export class UploadController {
   @Logger() private logger: Logger;
 
-  constructor(private uploadRepository: UploadRepository) {}
+  constructor(private uploadService: UploadService) {}
 
   @PostUploadOneFileDocs()
   async uploadOneFile(
@@ -20,7 +20,7 @@ export class UploadController {
   ): Promise<UploadResponse> {
     this.logger.log(`processing uploaded File`);
 
-    return await this.uploadRepository.create(file, { path, overwrite });
+    return await this.uploadService.create(file, { path, overwrite });
   }
 
   @PostUploadManyFilesDocs()
@@ -30,6 +30,6 @@ export class UploadController {
   ): Promise<UploadManyResponse> {
     this.logger.log(`processing uploaded Files`);
 
-    return await this.uploadRepository.batchCreate(files, { path, overwrite });
+    return await this.uploadService.batchCreate(files, { path, overwrite });
   }
 }

@@ -10,7 +10,7 @@ import { UploadPathDto } from '../dto';
 import { UploadManyResponse, UploadResponse } from '../models';
 
 @Injectable()
-export class UploadRepository {
+export class UploadService {
   @Logger() private logger: Logger;
 
   async batchCreate(

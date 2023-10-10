@@ -2,11 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as fs from 'fs';
 
 import { BadRequest } from '../../common/exceptions';
+import { MockLoggerProvider } from '../../common/services/__mocks__';
 import { UploadPathDto } from '../dto';
 import { UploadResponse } from '../models';
-import { UploadRepository } from './upload.repository';
+import { UploadService } from './upload.service';
 
-describe(`UT:${UploadRepository.name}`, () => {
+describe(`UT:${UploadService.name}`, () => {
   const enum should {
     createInstance = 'should create instance Properly.',
     uploadFileSuccessfully = 'should upload a file successfully.',
@@ -16,14 +17,14 @@ describe(`UT:${UploadRepository.name}`, () => {
     overwriteBatchUploadWhenSomeFilesExistAndOverwriteIsTrue = 'should overwrite batch upload when some files exist and overwrite is true.',
   }
 
-  let service: UploadRepository = null;
+  let service: UploadService = null;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UploadRepository],
+      providers: [MockLoggerProvider, UploadService],
     }).compile();
 
-    service = module.get(UploadRepository);
+    service = module.get(UploadService);
   });
 
   afterEach(() => {
@@ -32,7 +33,7 @@ describe(`UT:${UploadRepository.name}`, () => {
 
   it(should.createInstance, () => {
     expect(service).not.toBeNull();
-    expect(service).toBeInstanceOf(UploadRepository);
+    expect(service).toBeInstanceOf(UploadService);
   });
 
   it(should.uploadFileSuccessfully, async () => {
@@ -108,7 +109,7 @@ describe(`UT:${UploadRepository.name}`, () => {
 
     const mockUploadPathDto: UploadPathDto = {
       path: '/upload',
-      overwrite: true, // Aquí se establece la sobreescritura.
+      overwrite: true,
     };
 
     const existsSyncSpy = jest.spyOn(fs, 'existsSync');

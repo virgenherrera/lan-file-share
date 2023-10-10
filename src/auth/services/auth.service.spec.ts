@@ -3,6 +3,7 @@ import { compareSync } from 'bcryptjs';
 
 import { JwtService } from '@nestjs/jwt';
 import { Conflict, NotFound, Unauthorized } from '../../common/exceptions';
+import { MockLoggerProvider } from '../../common/services/__mocks__';
 import { UserDto } from '../dtos';
 import { AuthResponse } from '../models';
 import { AuthService } from './auth.service';
@@ -30,8 +31,9 @@ describe(`UT:${AuthService.name}`, () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AuthService,
         { provide: JwtService, useValue: mockJwtService },
+        MockLoggerProvider,
+        AuthService,
       ],
     }).compile();
 
