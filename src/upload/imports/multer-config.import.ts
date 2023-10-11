@@ -21,22 +21,9 @@ export class MulterConfig implements MulterOptionsFactory {
 
   @Logger() private logger: Logger;
 
-  private _sharedFolderPath: string;
-
-  constructor(private configService: ConfigService) {
-    this.setSharedFolderPath();
-  }
-
-  private setSharedFolderPath() {
-    const { name } = getPackageMetadata();
-    const defaultValue = join(homedir(), 'Downloads', name);
-    const SHARED_FOLDER_PATH = this.configService.get(
-      'SHARED_FOLDER_PATH',
-      defaultValue,
-    );
-
-    this._sharedFolderPath = resolve(SHARED_FOLDER_PATH);
-  }
+  private readonly _sharedFolderPath = resolve(
+    join(homedir(), 'Downloads', getPackageMetadata().name),
+  );
 
   get sharedFolderPath(): string {
     return this._sharedFolderPath;

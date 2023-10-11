@@ -10,10 +10,9 @@ export const BaseConfig: Config.InitialOptions = {
   collectCoverageFrom: [
     '**/*.ts',
     '!**/(index|main|openApi).ts',
-    '!**/*.(builder|constant|dto|doc|enum|exception|import|interface|mock|module|strategy).ts',
+    '!**/*.(builder|constant|dto|doc|enum|exception|guard|import|interface|mock|module).ts',
     '!**/*.(model|schema).ts',
     '!**/__mocks__.ts',
-    '!src/chat/**', //drop this once e2e written
   ],
   coverageDirectory: '../coverage/unit',
   coverageProvider: 'v8',

@@ -22,8 +22,11 @@
     "json",
     "typescript"
   ],
+  "files.eol": "\n",
   "git.autofetch": true,
   "javascript.updateImportsOnFileMove.enabled": "always",
+  "jest.showCoverageOnLoad": true,
+  "jest.autoRun": "off",
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.referencesCodeLens.enabled": true,
   "typescript.tsdk": "node_modules/typescript/lib",
@@ -58,6 +61,5 @@
     "Streamable",
     "typeorm",
     "websockets"
-  ],
-  "jest.showCoverageOnLoad": true
+  ]
 }

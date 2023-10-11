@@ -6,6 +6,6 @@ export class DownloadableZipFile extends DownloadableFile {
     const memoryZipBuffer = zip.toBuffer();
     const intArray = new Uint8Array(memoryZipBuffer);
 
-    super(fileName, 'application/zip', intArray as any, intArray.byteLength);
+    super(fileName, intArray as any, intArray.byteLength, 'application/zip');
   }
 }

@@ -2,6 +2,7 @@ import { NestApplication } from '@nestjs/core';
 import { UploadRoute } from '../../../src/upload/enums';
 import { UploadManyResponse } from '../../../src/upload/models';
 import {
+  AuthUtil,
   TestContext,
   dropSharedFiles,
   mockSharedFiles as existentFiles,
@@ -10,6 +11,7 @@ import {
 
 const enum should {
   initTestContext = 'Should test Context be properly initialized.',
+  throw401 = 'Should GET 401 when a request with no token occurs.',
   throwPostFile = `Should respond with 400 when calling the endpoint without a file.`,
   postFiles = `Should POST many files and get proper info about success and failures preserving post order.`,
 }
@@ -38,8 +40,20 @@ describe(`e2e: POST${UploadRoute.files}`, () => {
     expect(testCtx.app).toBeInstanceOf(NestApplication);
   });
 
-  it(should.throwPostFile, async () => {
+  it(should.throw401, async () => {
     const { status, body } = await testCtx.request.post(UploadRoute.files);
+
+    expect(status).toBe(401);
+    expect(body).toMatchObject({
+      message: 'Unauthorized',
+    });
+  });
+
+  it(should.throwPostFile, async () => {
+    const accessToken = await AuthUtil.getToken(testCtx);
+    const { status, body } = await testCtx.request
+      .post(UploadRoute.files)
+      .set(accessToken);
 
     expect(status).toBe(400);
     expect(body).toMatchObject({
@@ -50,6 +64,7 @@ describe(`e2e: POST${UploadRoute.files}`, () => {
   });
 
   it(should.postFiles, async () => {
+    const accessToken = await AuthUtil.getToken(testCtx);
     const matcher: Record<keyof UploadManyResponse, any> = {
       successes: {
         0: {
@@ -68,6 +83,7 @@ describe(`e2e: POST${UploadRoute.files}`, () => {
     };
     const { status, body } = await testCtx.request
       .post(UploadRoute.files)
+      .set(accessToken)
       .attach(
         'file[]',
         Buffer.from(nonExistentFiles[0].content),

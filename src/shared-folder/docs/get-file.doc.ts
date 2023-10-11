@@ -1,19 +1,21 @@
-import { applyDecorators, Get } from '@nestjs/common';
+import { applyDecorators, Get, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiProduces,
   ApiQuery,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
+import { JwtAuthGuard } from '../../auth/guards';
 import { NotFound } from '../../common/exceptions';
-import { AllowedMimeTypes } from '../../upload/constants';
 import { GetFileStreamQueryDto } from '../dto';
 import { SharedFolderRoute } from '../enums';
 
 export function GetFileDocs() {
   return applyDecorators(
     Get(SharedFolderRoute.fileStream),
+    UseGuards(JwtAuthGuard),
     ApiOperation({
       summary: `GET ${SharedFolderRoute.fileStream}`,
       description: 'Get a file to download.',
@@ -21,10 +23,12 @@ export function GetFileDocs() {
     ApiQuery({
       type: GetFileStreamQueryDto,
     }),
+    ApiUnauthorizedResponse({
+      description: 'Unauthorized. JWT token is missing or invalid.',
+    }),
     ApiBadRequestResponse({
       type: NotFound,
     }),
-    ApiProduces(...AllowedMimeTypes),
     ApiOkResponse({
       description: `Raw File to download.`,
       headers: {

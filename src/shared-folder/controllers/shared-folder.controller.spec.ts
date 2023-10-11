@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
+
 import {
   GetFileStreamQueryDto,
   GetSharedFolderQueryDto,
@@ -7,11 +8,11 @@ import {
 } from '../dto';
 import {
   FolderInfoServiceMockProvider,
+  StreamableFileMockService,
+  StreamableZipFileMockService,
   mockFolderInfoService,
   mockStreamableFileService,
   mockStreamableZipFileService,
-  StreamableFileMockService,
-  StreamableZipFileMockService,
 } from '../services/__mocks__';
 import { SharedFolderController } from './shared-folder.controller';
 
@@ -49,7 +50,7 @@ describe(`UT:${SharedFolderController.name}`, () => {
     };
     const mockData = { key: 1, arr: [1, 2.3] };
 
-    mockFolderInfoService.findOne = jest.fn().mockResolvedValue(mockData);
+    mockFolderInfoService.findOne.mockResolvedValue(mockData);
 
     const findOneSpy = jest.spyOn(mockFolderInfoService, 'findOne');
 
@@ -69,7 +70,7 @@ describe(`UT:${SharedFolderController.name}`, () => {
       streamableFile: { foo: 'bar' },
     };
 
-    mockStreamableFileService.findOne = jest.fn().mockResolvedValue(mockData);
+    mockStreamableFileService.findOne.mockResolvedValue(mockData);
 
     const responseSetSpy = jest.spyOn(response, 'set');
     const findOneSpy = jest.spyOn(mockStreamableFileService, 'findOne');
@@ -97,7 +98,7 @@ describe(`UT:${SharedFolderController.name}`, () => {
       streamableFile: { foo: 'bar' },
     };
 
-    mockStreamableZipFileService.create = jest.fn().mockResolvedValue(mockData);
+    mockStreamableZipFileService.create.mockResolvedValue(mockData);
 
     const responseSetSpy = jest.spyOn(response, 'set');
     const createSpy = jest.spyOn(mockStreamableZipFileService, 'create');

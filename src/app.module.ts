@@ -5,9 +5,9 @@ import { publicHtmlPath } from 'lan-file-share-ui';
 import { join, resolve } from 'path';
 
 import { AuthModule } from './auth/auth.module';
-import { ChatModule } from './chat/chat.module';
 import { CommonModule } from './common/common.module';
 import { LogRequestMiddleware } from './common/middleware';
+import { MimeModule } from './mime/mime.module';
 import { SharedFolderModule } from './shared-folder/shared-folder.module';
 import { UploadModule } from './upload/upload.module';
 
@@ -31,9 +31,9 @@ import { UploadModule } from './upload/upload.module';
     }),
     CommonModule,
     AuthModule,
+    MimeModule,
     UploadModule,
     SharedFolderModule,
-    ChatModule,
   ],
   providers: [Logger],
 })
