@@ -2,15 +2,11 @@ import { ValueProvider } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 
-type MockedAuthService = {
-  [K in keyof AuthService]: jest.MockedFunction<AuthService[K]>;
-};
-
-export const mockAuthService: MockedAuthService = {
+export const mockAuthService = {
   addUser: jest.fn(),
   validateCredentials: jest.fn(),
   userExists: jest.fn(),
-};
+} as const;
 
 export const MockAuthServiceProvider: ValueProvider = {
   provide: AuthService,

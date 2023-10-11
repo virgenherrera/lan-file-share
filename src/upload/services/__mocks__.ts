@@ -1,14 +1,10 @@
 import { ValueProvider } from '@nestjs/common';
 import { UploadService } from './upload.service';
 
-type MockUploadService = {
-  [K in keyof UploadService]: jest.MockedFunction<UploadService[K]>;
-};
-
-export const mockUploadService: MockUploadService = {
+export const mockUploadService = {
   batchCreate: jest.fn(),
   create: jest.fn(),
-};
+} as const;
 
 export const MockMockUploadServiceProvider: ValueProvider = {
   provide: UploadService,

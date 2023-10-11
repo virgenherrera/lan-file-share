@@ -47,7 +47,7 @@ describe(`UT:${StreamableZipFileService.name}`, () => {
       ],
     };
 
-    mockFolderInfoService.getFullPath = jest.fn().mockImplementation(v => v);
+    mockFolderInfoService.getFullPath.mockImplementation(v => v);
 
     const getFullPathSpy = jest.spyOn(mockFolderInfoService, 'getFullPath');
 

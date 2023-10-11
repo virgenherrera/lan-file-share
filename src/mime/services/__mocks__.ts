@@ -2,14 +2,10 @@ import { ValueProvider } from '@nestjs/common';
 
 import { MimeService } from './mime.service';
 
-type MockedMimeService = {
-  [K in keyof MimeService]: jest.MockedFunction<MimeService[K]>;
-};
-
-export const mockMimeService: MockedMimeService = {
+export const mockMimeService = {
   getMime: jest.fn(),
   getDescription: jest.fn(),
-};
+} as const;
 
 export const MockMimeServiceProvider: ValueProvider = {
   provide: MimeService,
