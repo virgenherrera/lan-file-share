@@ -48,11 +48,8 @@ describe(`e2e:(GET)${SharedFolderRoute.fileStream}`, () => {
     });
   });
 
-  it.only(should.throw404, async () => {
+  it(should.throw404, async () => {
     const accessToken = await AuthUtil.getToken(testCtx);
-
-    console.log(accessToken);
-
     const path = 'path/to/non/existent/file.ext';
     const { status, body } = await testCtx.request
       .get(SharedFolderRoute.fileStream)
@@ -68,11 +65,13 @@ describe(`e2e:(GET)${SharedFolderRoute.fileStream}`, () => {
   });
 
   it(should.getFile, async () => {
+    const accessToken = await AuthUtil.getToken(testCtx);
     const [firstFile] = mockSharedFiles;
     const { filename } = firstFile;
 
     const { status, headers } = await testCtx.request
       .get(SharedFolderRoute.fileStream)
+      .set(accessToken)
       .query({ path: filename });
     const fileHeadersMatcher = getDownloadableFileHeaders(filename);
 
