@@ -1,6 +1,7 @@
 import { Body, Controller, UploadedFile, UploadedFiles } from '@nestjs/common';
 
 import { Logger } from '../../common/decorators';
+import { BadRequest } from '../../common/exceptions';
 import { DtoValidation } from '../../common/pipes';
 import { PostUploadManyFilesDocs, PostUploadOneFileDocs } from '../docs';
 import { UploadFileDto, UploadFilesDto } from '../dto';
@@ -18,6 +19,8 @@ export class UploadController {
     @Body(DtoValidation.pipe) { path, overwrite }: UploadFileDto,
     @UploadedFile('file') file: Express.Multer.File,
   ): Promise<UploadResponse> {
+    if (!file) throw new BadRequest('No file uploaded.');
+
     this.logger.log(`processing uploaded File`);
 
     return await this.uploadService.create(file, { path, overwrite });
@@ -28,6 +31,8 @@ export class UploadController {
     @Body(DtoValidation.pipe) { path, overwrite }: UploadFilesDto,
     @UploadedFiles() files: Express.Multer.File[],
   ): Promise<UploadManyResponse> {
+    if (!files?.length) throw new BadRequest('No files uploaded.');
+
     this.logger.log(`processing uploaded Files`);
 
     return await this.uploadService.batchCreate(files, { path, overwrite });

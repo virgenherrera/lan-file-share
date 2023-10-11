@@ -27,10 +27,11 @@ export class UploadService {
     file: Express.Multer.File,
     { path, overwrite }: UploadPathDto,
   ): Promise<UploadResponse> {
-    const destinyFile = join(file.destination, path, file.originalname);
+    const destinyPath = join(file.destination, path);
+    const destinyFilePath = join(destinyPath, file.originalname);
     const unixPath = join(path, file.originalname).replace(/\\/g, '/');
 
-    if (!overwrite && existsSync(destinyFile)) {
+    if (!overwrite && existsSync(destinyFilePath)) {
       const errorMessage = `File: '${unixPath}' already exists.`;
 
       this.logger.log(errorMessage);
@@ -40,8 +41,8 @@ export class UploadService {
       throw new BadRequest(errorMessage);
     }
 
-    await mkdir(path, { recursive: true });
-    await rename(file.path, destinyFile);
+    await mkdir(destinyPath, { recursive: true });
+    await rename(file.path, destinyFilePath);
 
     const res = new UploadResponse(unixPath);
 
