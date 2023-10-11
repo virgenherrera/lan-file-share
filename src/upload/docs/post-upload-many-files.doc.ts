@@ -33,7 +33,7 @@ export function PostUploadManyFilesDocs() {
     UseInterceptors(
       FilesInterceptor('file[]', 50, {
         preservePath: true,
-        limits: { files: 1 },
+        limits: { files: 50 },
       }),
     ),
     ApiConsumes('multipart/form-data'),

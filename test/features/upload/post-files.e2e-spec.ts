@@ -63,7 +63,7 @@ describe(`e2e: POST${UploadRoute.files}`, () => {
     });
   });
 
-  it.skip(should.postFiles, async () => {
+  it(should.postFiles, async () => {
     const accessToken = await AuthUtil.getToken(testCtx);
     const matcher: Record<keyof UploadManyResponse, any> = {
       successes: {
