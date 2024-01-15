@@ -53,7 +53,7 @@
     "adm-zip": "^0.5.10",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.0",
+    "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "date-fns": "^3.2.0",
     "helmet": "^7.0.0",
