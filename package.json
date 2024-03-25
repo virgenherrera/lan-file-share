@@ -1,6 +1,6 @@
 {
   "name": "lan-file-share",
-  "version": "1.4.29",
+  "version": "1.4.30",
   "description": "",
   "license": "MIT",
   "keywords": [],
@@ -42,15 +42,15 @@
     "cleanup": "rimraf api-docs/ coverage/ dist/"
   },
   "dependencies": {
-    "@nestjs/common": "^10.3.3",
-    "@nestjs/config": "^3.2.0",
-    "@nestjs/core": "^10.3.3",
+    "@nestjs/common": "^10.3.5",
+    "@nestjs/config": "^3.2.1",
+    "@nestjs/core": "^10.3.5",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
-    "@nestjs/platform-express": "^10.3.3",
+    "@nestjs/platform-express": "^10.3.5",
     "@nestjs/serve-static": "^4.0.1",
     "@nestjs/swagger": "^7.3.0",
-    "adm-zip": "^0.5.10",
+    "adm-zip": "^0.5.12",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -64,19 +64,19 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.14",
     "rxjs": "^7.8.1",
-    "winston": "^3.12.0"
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",
     "@nestjs/schematics": "^10.1.1",
-    "@nestjs/testing": "^10.3.3",
-    "@redocly/cli": "^1.10.3",
+    "@nestjs/testing": "^10.3.5",
+    "@redocly/cli": "^1.10.5",
     "@types/adm-zip": "^0.5.5",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/multer": "^1.4.11",
-    "@types/node": "^20.11.26",
+    "@types/node": "^20.11.30",
     "@types/supertest": "^2.0.16",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
@@ -92,6 +92,6 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.3"
   }
 }
