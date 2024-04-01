@@ -24,7 +24,7 @@ export class TestContext {
   }
 
   app: INestApplication = null;
-  request: supertest.SuperTest<supertest.Test> = null;
+  request: ReturnType<typeof supertest> = null;
 
   private async initContext() {
     const testingModule = await Test.createTestingModule({
