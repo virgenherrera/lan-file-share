@@ -2,6 +2,7 @@ import { Controller, Param, StreamableFile } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Logger } from '../../common/decorators';
+import { WildCardToPathPipe } from '../pipes';
 import { DownloadService } from '../services';
 import { GetDownloadFileDocs } from './docs';
 
@@ -14,10 +15,10 @@ export class DownloadController {
 
   @GetDownloadFileDocs()
   async downloadFile(
-    @Param('filename') filename: string,
+    @Param('pathToFile', WildCardToPathPipe) pathToFile: string,
   ): Promise<StreamableFile> {
-    this.logger.log(`Starting file download: ${filename}`);
+    this.logger.log(`Starting file download: ${pathToFile}`);
 
-    return this.downloadService.getStreamableFile(filename);
+    return this.downloadService.getStreamableFile(pathToFile);
   }
 }

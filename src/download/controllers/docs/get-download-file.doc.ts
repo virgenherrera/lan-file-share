@@ -9,12 +9,13 @@ import {
 
 export function GetDownloadFileDocs() {
   return applyDecorators(
-    Get(':filename'),
+    Get('*pathToFile'),
     ApiOperation({ summary: 'Download a file' }),
     ApiParam({
-      name: 'filename',
-      description: 'The name of the file to download',
-      example: 'reports/summary.pdf',
+      name: 'pathToFile',
+      required: true,
+      description: 'Path to the file, with segments separated by slashes',
+      schema: { type: 'string' },
     }),
     ApiProduces('application/octet-stream'),
     ApiOkResponse({
