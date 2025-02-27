@@ -35,7 +35,6 @@ describe(`e2e:(GET)${API_PATH}`, () => {
   it(should.getSharedFolder, async () => {
     const { status, body } = await testCtx.request.get(API_PATH);
 
-    console.log(body);
     expect(status).toBe(200);
     expect(body).toMatchObject({
       rows: expect.arrayContaining([FolderDtoMatcher, FileDtoMatcher]),

@@ -20,8 +20,8 @@
     "Hugo Virgen (https://github.com/virgenherrera)"
   ],
   "engines": {
-    "node": ">=22.13.1 <23",
-    "pnpm": ">=10.2.0"
+    "node": ">=22.14.0 <23",
+    "pnpm": ">=10.5.2"
   },
   "scripts": {
     "start:dev": "nest start --watch",
@@ -40,8 +40,8 @@
     "eslintCheck": "eslint '{apps,libs,scripts,src,test}/**/*.ts'",
     "prettierCheck": "prettier --check '{apps,libs,scripts,src,test}/**/*.ts'",
     "prepare": "husky",
-    "cleanup": "pnpm dlx rimraf api-docs/ coverage/ dist/",
-    "bumpDependencies": "pnpm dlx npm-check-updates -u --doctor --doctorInstall='pnpm install'"
+    "cleanup": "rimraf api-docs/ coverage/ dist/",
+    "bumpDependencies": "pnpm dlx npm-check-updates --enginesNode -u --doctor --doctorInstall='pnpm install'"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.7",
@@ -76,6 +76,7 @@
     "jest": "^29.7.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",

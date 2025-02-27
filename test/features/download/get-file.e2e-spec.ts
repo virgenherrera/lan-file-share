@@ -41,7 +41,7 @@ describe(`e2e:(GET)${API_PATH}`, () => {
 
     expect(status).toBe(404);
     expect(body).toMatchObject({
-      message: `Cannot GET ${apiPath}`,
+      message: 'File not found',
       error: 'Not Found',
       statusCode: 404,
     });
@@ -51,7 +51,6 @@ describe(`e2e:(GET)${API_PATH}`, () => {
     const path = '../path/that/attemps/to/traverse/to/outer/file.ext';
     const apiPath = `${API_PATH}/${path}`;
 
-    console.log(apiPath);
     const { status, body } = await testCtx.request.get(apiPath);
 
     expect(status).toBe(404);
