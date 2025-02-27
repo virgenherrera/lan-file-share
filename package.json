@@ -41,7 +41,7 @@
     "prettierCheck": "prettier --check '{apps,libs,scripts,src,test}/**/*.ts'",
     "prepare": "husky",
     "cleanup": "rimraf api-docs/ coverage/ dist/",
-    "bumpDependencies": "pnpm dlx npm-check-updates --enginesNode -u --doctor --doctorInstall='pnpm install'"
+    "bumpDependencies": "pnpm dlx npm-check-updates"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.7",
