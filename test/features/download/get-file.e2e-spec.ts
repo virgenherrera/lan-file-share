@@ -1,5 +1,6 @@
 import { NestApplication } from '@nestjs/core';
 
+import { getNotFoundMatcher } from '../../matchers';
 import {
   dropSharedFiles,
   initSharedFiles,
@@ -40,11 +41,7 @@ describe(`e2e:(GET)${API_PATH}`, () => {
     const { status, body } = await testCtx.request.get(apiPath);
 
     expect(status).toBe(404);
-    expect(body).toMatchObject({
-      message: 'File not found',
-      error: 'Not Found',
-      statusCode: 404,
-    });
+    expect(body).toMatchObject(getNotFoundMatcher('File not found'));
   });
 
   it(should.throw404 + 'Foo', async () => {

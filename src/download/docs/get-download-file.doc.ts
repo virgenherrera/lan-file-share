@@ -4,8 +4,8 @@ import {
   ApiOperation,
   ApiParam,
   ApiProduces,
-  ApiResponse,
 } from '@nestjs/swagger';
+import { HttpExceptionFilter } from '../../application/filters';
 
 export function GetDownloadFileDocs() {
   return applyDecorators(
@@ -18,6 +18,7 @@ export function GetDownloadFileDocs() {
       schema: { type: 'string' },
     }),
     ApiProduces('application/octet-stream'),
+    ...HttpExceptionFilter.getDocs(),
     ApiOkResponse({
       description: 'File downloaded successfully',
       content: {
@@ -26,6 +27,5 @@ export function GetDownloadFileDocs() {
         },
       },
     }),
-    ApiResponse({ status: 404, description: 'File not found' }),
   );
 }

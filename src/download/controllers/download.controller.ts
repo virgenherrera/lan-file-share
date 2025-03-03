@@ -2,9 +2,9 @@ import { Controller, Param, StreamableFile } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Logger } from '../../common/decorators';
+import { GetDownloadFileDocs } from '../docs';
 import { WildCardToPathPipe } from '../pipes';
 import { DownloadService } from '../services';
-import { GetDownloadFileDocs } from './docs';
 
 @ApiTags('download')
 @Controller('download')
