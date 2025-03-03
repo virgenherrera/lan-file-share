@@ -1,23 +1,9 @@
-import {
-  Body,
-  Controller,
-  Post,
-  UploadedFile,
-  UploadedFiles,
-  UseInterceptors,
-} from '@nestjs/common';
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiCreatedResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { Logger } from '../../common/decorators';
-import { PostUploadManyFilesDocs } from '../docs';
+import { PostUploadFileDocs, PostUploadManyFilesDocs } from '../docs';
 import { UploadFileDto, UploadManyResponse, UploadResponse } from '../dto';
-import { RequiredFileInterceptor } from '../interceptors';
 import { UploadService } from '../services';
 import { IncomingFile } from '../types';
 
@@ -28,20 +14,7 @@ export class UploadController {
 
   constructor(private readonly uploadService: UploadService) {}
 
-  @Post('file')
-  @UseInterceptors(
-    RequiredFileInterceptor('file', {
-      preservePath: true,
-      limits: { files: 1 },
-    }),
-  )
-  @ApiOperation({
-    description:
-      'an endpoint to Upload a single file and share it across your LAN.',
-  })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadFileDto })
-  @ApiCreatedResponse({ type: UploadResponse })
+  @PostUploadFileDocs()
   async uploadFile(
     @UploadedFile() file: IncomingFile,
     @Body() { path, overwrite }: UploadFileDto,

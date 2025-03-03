@@ -8,6 +8,7 @@ export class UploadResponse {
 
   @ApiProperty({
     description: 'Message describing status of Upload.',
+    type: String,
   })
   message = `successfully uploaded file`;
 }

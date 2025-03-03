@@ -1,5 +1,6 @@
 import { NestApplication } from '@nestjs/core';
 
+import { getBadRequestMatcher } from '../../matchers';
 import {
   dropSharedFiles,
   initSharedFiles,
@@ -39,11 +40,9 @@ describe(`e2e:(POST)${API_PATH}`, () => {
     const { status, body } = await testCtx.request.post(API_PATH);
 
     expect(status).toBe(400);
-    expect(body).toMatchObject({
-      message: 'No file was received in field: "file"',
-      error: 'Bad Request',
-      statusCode: 400,
-    });
+    expect(body).toMatchObject(
+      getBadRequestMatcher('No file was received in field: "file"'),
+    );
   });
 
   it(should.throwAlreadyExists, async () => {
@@ -54,11 +53,9 @@ describe(`e2e:(POST)${API_PATH}`, () => {
       .attach('file', mockBuffer, file.filename);
 
     expect(status).toBe(400);
-    expect(body).toMatchObject({
-      message: "File: 'file-01.txt' already exists.",
-      error: 'Bad Request',
-      statusCode: 400,
-    });
+    expect(body).toMatchObject(
+      getBadRequestMatcher(`File: '${file.filename}' already exists.`),
+    );
   });
 
   it(should.postFile, async () => {
