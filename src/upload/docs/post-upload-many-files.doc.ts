@@ -5,6 +5,7 @@ import {
   ApiCreatedResponse,
   ApiOperation,
 } from '@nestjs/swagger';
+import { HttpExceptionFilter } from '../../application/filters';
 import { UploadFilesDto, UploadManyResponse } from '../dto';
 import { RequiredFilesInterceptor } from '../interceptors';
 
@@ -22,6 +23,7 @@ export function PostUploadManyFilesDocs() {
       }),
     ),
     ApiConsumes('multipart/form-data'),
+    ...HttpExceptionFilter.getDocs(),
     ApiBody({
       type: UploadFilesDto,
     }),

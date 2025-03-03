@@ -1,5 +1,6 @@
 import { NestApplication } from '@nestjs/core';
 import { UploadManyResponse } from '../../../src/upload/dto';
+import { getBadRequestMatcher } from '../../matchers';
 import {
   TestContext,
   dropSharedFiles,
@@ -41,11 +42,9 @@ describe(`e2e: POST${API_PATH}`, () => {
     const { status, body } = await testCtx.request.post(API_PATH);
 
     expect(status).toBe(400);
-    expect(body).toMatchObject({
-      message: `No file was received in field: "files[]"`,
-      error: 'Bad Request',
-      statusCode: 400,
-    });
+    expect(body).toMatchObject(
+      getBadRequestMatcher(`No file was received in field: "files[]"`),
+    );
   });
 
   it(should.postFiles, async () => {
