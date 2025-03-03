@@ -1,6 +1,11 @@
 import { NestApplication } from '@nestjs/core';
 
-import { FileDtoMatcher, FolderDtoMatcher } from '../../matchers';
+import {
+  FileDtoMatcher,
+  FolderDtoMatcher,
+  getBadRequestMatcher,
+  getNotFoundMatcher,
+} from '../../matchers';
 import { dropSharedFiles, initSharedFiles, TestContext } from '../../utils';
 
 const API_PATH = '/shared-folder';
@@ -75,11 +80,9 @@ describe(`e2e:(GET)${API_PATH}`, () => {
       .query({ page });
 
     expect(status).toBe(400);
-    expect(body).toMatchObject({
-      message: `Page ${page} is out of range`,
-      error: 'Bad Request',
-      statusCode: 400,
-    });
+    expect(body).toMatchObject(
+      getBadRequestMatcher(`Page ${page} is out of range`),
+    );
   });
 
   it(should.throw404, async () => {
@@ -89,10 +92,8 @@ describe(`e2e:(GET)${API_PATH}`, () => {
       .query({ path });
 
     expect(status).toBe(404);
-    expect(body).toMatchObject({
-      message: `Path '${path}' does not exist`,
-      error: 'Not Found',
-      statusCode: 404,
-    });
+    expect(body).toMatchObject(
+      getNotFoundMatcher(`Path '${path}' does not exist`),
+    );
   });
 });
